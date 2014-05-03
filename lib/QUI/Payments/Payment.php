@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains \QUI\Payments\
+ * This file contains \QUI\Payments\Payment
  */
 
 namespace QUI\Payments;

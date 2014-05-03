@@ -1,0 +1,56 @@
+@CHARSET "UTF-8";
+
+.plugin-payment {
+    clear: both;
+    cursor: pointer;
+    float: left;
+    padding: 20px 10px;
+    width: 100%;
+}
+
+.plugin-payment-selected,
+.plugin-payment:hover {
+    background: #B1C6CE;
+    color: #FFFFFF;
+}
+
+.plugin-payment:hover h2,
+.plugin-payment:hover h3 {
+    color: #FFFFFF;
+}
+
+.plugin-payment input[type="radio"] {
+    display: none;
+}
+
+/** Payment Information
+ ==================================================== */
+
+.plugin-payment-information {
+    float: left;
+    width: 70%;
+}
+
+.plugin-payment-information h2 {
+    clear: both;
+    margin: 0 !important;
+    padding: 0 0 10px 0;
+    width: 100%;
+}
+
+.plugin-payment-description {
+    clear: both;
+    width: 100%;
+}
+
+/** Payment Image
+ ==================================================== */
+
+.plugin-payment-image {
+    float: left;
+    min-height: 70px;
+    width: 30%;
+
+    background-position: top center;
+    background-repeat: no-repeat;
+}
