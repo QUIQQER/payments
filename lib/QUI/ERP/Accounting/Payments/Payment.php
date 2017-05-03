@@ -1,10 +1,12 @@
 <?php
 
 /**
- * This file contains \QUI\Payments\Payment
+ * This file contains \QUI\ERP\Accounting\Payments\Payment
  */
 
-namespace QUI\Payments;
+namespace QUI\ERP\Accounting\Payments;
+
+use QUI;
 
 /**
  * Payment abstract class
@@ -12,84 +14,85 @@ namespace QUI\Payments;
  *
  * @author www.pcsg.de (Henning Leutz)
  */
-
-abstract class Payment
+abstract class Payment implements PaymentsInterface
 {
     /**
      * payment fields - extra fields for the payment / accounting
      *
-     * @var Array
+     * @var array
      */
-    protected $_paymentfields = array();
+    protected $paymentFields = array();
 
     /**
      * default settings
-     * @var Array
+     *
+     * @var array
      */
-    protected $_defaults = array();
+    protected $defaults = array();
 
     /**
      * Locale object for the payment
-     * @var Locale
+     *
+     * @var QUI\Locale
      */
-    protected $_Locale = null;
+    protected $Locale = null;
 
     /**
      * Return the payments fields for the user
      * Like extra data
      *
-     * @param string $User
+     * @param QUI\ERP\User|null $User
      * @return array
      */
-    public function getPaymentUserData($User=false)
+    public function getPaymentUserData($User = null)
     {
-        return $this->_paymentfields;
+        return $this->paymentFields;
     }
 
     /**
      * Set the payment fields
      * In accounting -> paymentfields
      *
-     * @param Array $params
+     * @param array $params
      */
     public function setPaymentUserData(array $params)
     {
-        foreach ( $params as $key => $value ) {
-            $this->_paymentfields[ $key ] = $value;
+        foreach ($params as $key => $value) {
+            $this->paymentFields[$key] = $value;
         }
     }
 
     /**
      * Set the locale object to the payment
      *
-     * @param Locale $Locale
+     * @param QUI\Locale $Locale
      */
-    public function setLocale(Locale $Locale)
+    public function setLocale(QUI\Locale $Locale)
     {
-        $this->_Locale = $Locale;
+        $this->Locale = $Locale;
     }
 
     /**
      * Return the Locale of the payment
      *
-     * @return Locale
+     * @return QUI\Locale
      */
     public function getLocale()
     {
-        if ( !$this->_Locale ) {
-            $this->_Locale = \QUI::getLocale();
+        if (!$this->Locale) {
+            $this->Locale = QUI::getLocale();
         }
 
-        return $this->_Locale;
+        return $this->Locale;
     }
 
     /**
      * The check method
      * Checks if all required fields are available and the payment can be executed
      *
-     * @param \QUI\Users\User $User
+     * @param QUI\ERP\User $User
      */
-    public function checkUserData(\QUI\Users\User $User)
+    public function checkUserData(QUI\ERP\User $User)
     {
         // nothing
     }
@@ -102,30 +105,31 @@ abstract class Payment
      */
     public function getSettings()
     {
-        $settings = Plugin_payment::getConf()->get(
-            strtolower( $this->getAttribute( 'name' ) )
-        );
-
-        return !empty( $settings ) ? $settings : array();
+//        $settings = Plugin_payment::getConf()->get(
+//            strtolower($this->getAttribute('name'))
+//        );
+//
+//        return !empty($settings) ? $settings : array();
+        return array();
     }
 
     /**
      * Return a setting from the payment
      *
-     * @param unknown $name
+     * @param string $name
      *
-     * @return unknown_type|null
+     * @return string|int|float|array|null
      */
     public function getSetting($name)
     {
         $settings = $this->getSettings();
 
-        if ( isset( $settings[ $name ] ) ) {
-            return $settings[ $name ];
+        if (isset($settings[$name])) {
+            return $settings[$name];
         }
 
-        if ( isset( $this->_defaults[ $name ] ) ) {
-            return $this->_defaults[ $name ];
+        if (isset($this->defaults[$name])) {
+            return $this->defaults[$name];
         }
 
         return null;
@@ -135,11 +139,11 @@ abstract class Payment
      * Return the Success Type of the Payment
      * When is the payment successful
      *
-     * @return number Plugin_payment::SUCCESS_TYPE_*
+     * @return int - Handler::SUCCESS_TYPE_*
      */
     public function getSuccessType()
     {
-        return \QUI\Payments\Manager::SUCCESS_TYPE_PAY;
+        return Handler::SUCCESS_TYPE_PAY;
     }
 
     /**
@@ -152,7 +156,7 @@ abstract class Payment
      *
      * @return String
      */
-    public function getOrderSuccessTpl($Bill, $Project=false)
+    public function getOrderSuccessTpl($Bill, $Project = false)
     {
         return '';
     }
@@ -161,16 +165,15 @@ abstract class Payment
      * Display the needed data
      * eq: The Basket display this template at the order
      *
-     * @param User $User
+     * @param QUI\ERP\User $User
      * @return String
      */
-    public function getPaymentUserDataTpl(User $User)
+    public function getPaymentUserDataTpl(QUI\ERP\User $User)
     {
-        if ( $this->getAttribute('icon') )
-        {
+        if ($this->getSetting('icon')) {
             return '<img
                     class="plugin-payment-image-confirm"
-                    src="'. URL_OPT_DIR .'payment/moduls/'. strtolower($this->getAttribute('name')) .'/bin/'. $this->getAttribute('icon') .'" />';
+                    src="' . URL_OPT_DIR . 'payment/moduls/' . strtolower($this->getSetting('name')) . '/bin/' . $this->getSetting('icon') . '" />';
 
         }
 
@@ -180,10 +183,10 @@ abstract class Payment
     /**
      * Display the needed data for editing
      *
-     * @param User $User
+     * @param QUI\ERP\User $User
      * @return String
      */
-    public function getEditUserDataTpl(User $User)
+    public function getEditUserDataTpl(QUI\ERP\User $User)
     {
         return '';
     }
@@ -193,7 +196,7 @@ abstract class Payment
      *
      * @return string
      */
-    public function getAdminDataTpl(User $User)
+    public function getAdminDataTpl(QUI\ERP\User $User)
     {
         return '';
     }
@@ -211,7 +214,7 @@ abstract class Payment
     {
         return $this->getLocale()->get(
             'plugin/payment',
-            strtolower($this->getAttribute('name')) .'.order.mailtext'
+            strtolower($this->getSetting('name')) . '.order.mailtext'
         );
     }
 
@@ -224,7 +227,7 @@ abstract class Payment
     {
         return $this->getLocale()->get(
             'plugin/payment',
-            strtolower($this->getAttribute('name')) .'.bill.text'
+            strtolower($this->getSetting('name')) . '.bill.text'
         );
     }
 }

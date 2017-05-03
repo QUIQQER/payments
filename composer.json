@@ -1,33 +1,32 @@
 {
-    "name" : "quiqqer/payments",
-    "type" : "quiqqer-plugin",
-    "description" : "Provided the payment management for QUIQQER. Can manage payment method",
-    "version" : "dev-dev",
-    "license" : "",
-
-    "authors" : [{
-        "name": "Henning Leutz",
-        "email": "leutz@pcsg.de",
-        "homepage": "http://www.pcsg.de",
-        "role": "Developer"
-    }, {
-        "name": "Moritz Scholz",
-        "email": "scholz@pcsg.de",
-        "homepage": "http://www.pcsg.de",
-        "role": "Developer"
-    }],
-
-    "support" : {
-        "email" : "support@pcsg.de"
+  "name": "quiqqer/payments",
+  "type": "quiqqer-plugin",
+  "description": "Provided the payment management for QUIQQER. Can manage payment method",
+  "version": "dev-dev",
+  "license": "",
+  "authors": [
+    {
+      "name": "Henning Leutz",
+      "email": "leutz@pcsg.de",
+      "homepage": "http://www.pcsg.de",
+      "role": "Developer"
     },
-
-    "require": {
-        "quiqqer/quiqqer" : "*"
-    },
-
-    "autoload": {
-        "psr-0" : {
-            "QUI" : "lib/"
-        }
+    {
+      "name": "Moritz Scholz",
+      "email": "scholz@pcsg.de",
+      "homepage": "http://www.pcsg.de",
+      "role": "Developer"
     }
+  ],
+  "support": {
+    "email": "support@pcsg.de"
+  },
+  "require": {
+    "quiqqer/quiqqer": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "QUI\\ERP\\Accounting\\Payments\\": "src\/QUI\/ERP\/Accounting\/Payments"
+    }
+  }
 }

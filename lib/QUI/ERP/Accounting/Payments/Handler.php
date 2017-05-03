@@ -1,20 +1,21 @@
 <?php
 
 /**
- * This class contains \QUI\Payments\Manager
+ * This class contains \QUI\ERP\Accounting\Payments\Handler
  */
 
-namespace QUI\Payments;
+namespace QUI\ERP\Accounting\Payments;
+
+use QUI;
 
 /**
- * Payment manager
+ * Payment handler
  *
  * @author www.pcsg.de (Henning Leutz)
  */
-
-class Manager
+class Handler
 {
-    const SUCCESS_TYPE_PAY  = 1;
+    const SUCCESS_TYPE_PAY = 1;
     const SUCCESS_TYPE_BILL = 2;
 
     protected $_payments = array();
@@ -25,16 +26,14 @@ class Manager
     public function __construct()
     {
         // cache?
-        try
-        {
+        try {
             $this->_payments = \QUI\Cache\Manager::get(
                 'package/quiqqer/payments/list'
             );
 
             return;
 
-        } catch ( \QUI\Exception $Exception )
-        {
+        } catch (\QUI\Exception $Exception) {
 
         }
 
@@ -44,22 +43,20 @@ class Manager
 
         $list = array();
 
-        foreach ( $packages as $package )
-        {
+        foreach ($packages as $package) {
             $name     = $package['name'];
-            $xml_file = OPT_DIR . $name .'/payments.xml';
+            $xml_file = OPT_DIR . $name . '/payments.xml';
 
-            $Dom      = \QUI\Utils\XML::getDomFromXml( $xml_file );
-            $payments = $Dom->getElementsByTagName( 'payments' );
+            $Dom      = \QUI\Utils\XML::getDomFromXml($xml_file);
+            $payments = $Dom->getElementsByTagName('payments');
 
-            for ( $i = 0, $len = $payments->length; $i < $len; $i++ )
-            {
-                $Payment     = $payments->item( $i );
-                $paymentName = $Payment->getAttribute( 'name' );
+            for ($i = 0, $len = $payments->length; $i < $len; $i++) {
+                $Payment     = $payments->item($i);
+                $paymentName = $Payment->getAttribute('name');
 
-                $list[ $name .':'. $paymentName ] = array(
+                $list[$name . ':' . $paymentName] = array(
                     'name' => $paymentName,
-                    'exec' => $Payment->getAttribute( 'exec' )
+                    'exec' => $Payment->getAttribute('exec')
                 );
             }
         }
@@ -79,12 +76,12 @@ class Manager
      */
     public function getPaymentConfig()
     {
-        if ( !file_exists( CMS_DIR .'etc/payments/list.ini' ) ) {
-            file_put_contents( CMS_DIR .'etc/payments/list.ini', '' );
+        if (!file_exists(CMS_DIR . 'etc/payments/list.ini')) {
+            file_put_contents(CMS_DIR . 'etc/payments/list.ini', '');
         }
 
         $Config = new \QUI\Config(
-            CMS_DIR .'etc/payments/list.ini'
+            CMS_DIR . 'etc/payments/list.ini'
         );
 
         return $Config;
@@ -93,19 +90,19 @@ class Manager
     /**
      * Return a payment, if the payment is active
      *
-     * @return \QUI\Payments\Payment|false
+     * @return \QUI\ERP\Payments\Payment|false
      */
     public function get($payment)
     {
         $payments = $this->getPayments();
 
-        if ( isset( $payments[ $payment ] ) ) {
+        if (isset($payments[$payment])) {
             return false;
         }
 
-        $exec = $payments[ $payment ][ 'exec' ];
+        $exec = $payments[$payment]['exec'];
 
-        if ( !is_callable( $exec ) ) {
+        if (!is_callable($exec)) {
             return false;
         }
 
@@ -115,7 +112,7 @@ class Manager
     /**
      * Return all active payments
      *
-     * @return Array
+     * @return array
      */
     public function getPayments()
     {
@@ -125,10 +122,9 @@ class Manager
         $Config = $this->getPaymentConfig();
         $config = $Config->toArray();
 
-        foreach ( $payments as $payment => $params )
-        {
-            if ( isset( $config[ $payment ] ) && $config[ $payment ] == 1 ) {
-                $result[ $payment ] = $params;
+        foreach ($payments as $payment => $params) {
+            if (isset($config[$payment]) && $config[$payment] == 1) {
+                $result[$payment] = $params;
             }
         }
 
@@ -138,7 +134,7 @@ class Manager
     /**
      * Return all payments
      *
-     * @return Array
+     * @return array
      */
     public function getAllPayments()
     {
