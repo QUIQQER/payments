@@ -27,14 +27,12 @@ class Handler
     {
         // cache?
         try {
-            $this->_payments = \QUI\Cache\Manager::get(
+            $this->_payments = QUI\Cache\Manager::get(
                 'package/quiqqer/payments/list'
             );
 
             return;
-
-        } catch (\QUI\Exception $Exception) {
-
+        } catch (QUI\Exception $Exception) {
         }
 
         $packages = \QUI::getPackageManager()->getInstalled(array(
@@ -47,7 +45,7 @@ class Handler
             $name     = $package['name'];
             $xml_file = OPT_DIR . $name . '/payments.xml';
 
-            $Dom      = \QUI\Utils\XML::getDomFromXml($xml_file);
+            $Dom      = QUI\Utils\Text\XML::getDomFromXml($xml_file);
             $payments = $Dom->getElementsByTagName('payments');
 
             for ($i = 0, $len = $payments->length; $i < $len; $i++) {
@@ -63,7 +61,7 @@ class Handler
 
         $this->_payments = $list;
 
-        \QUI\Cache\Manager::set(
+        QUI\Cache\Manager::set(
             'package/quiqqer/payments/list',
             $this->_payments
         );
@@ -80,9 +78,7 @@ class Handler
             file_put_contents(CMS_DIR . 'etc/payments/list.ini', '');
         }
 
-        $Config = new \QUI\Config(
-            CMS_DIR . 'etc/payments/list.ini'
-        );
+        $Config = new QUI\Config(CMS_DIR . 'etc/payments/list.ini');
 
         return $Config;
     }
@@ -90,7 +86,8 @@ class Handler
     /**
      * Return a payment, if the payment is active
      *
-     * @return \QUI\ERP\Payments\Payment|false
+     * @param string $payment
+     * @return \QUI\ERP\Accounting\Payments\Payment|false
      */
     public function get($payment)
     {
