@@ -174,7 +174,6 @@ abstract class Payment implements PaymentsInterface
             return '<img
                     class="plugin-payment-image-confirm"
                     src="' . URL_OPT_DIR . 'payment/moduls/' . strtolower($this->getSetting('name')) . '/bin/' . $this->getSetting('icon') . '" />';
-
         }
 
         return '';

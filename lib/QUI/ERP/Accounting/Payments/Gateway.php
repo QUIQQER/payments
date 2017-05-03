@@ -6,6 +6,7 @@
 
 namespace QUI\ERP\Accounting\Payments;
 
+use QUI;
 use QUI\ERP\Accounting\Invoice\Invoice;
 use QUI\ERP\Accounting\Invoice\TemporaryInvoice;
 use QUI\ERP\Order\Order;
@@ -21,19 +22,21 @@ class Gateway
      * Internal Order Object
      * @var TemporaryInvoice|Invoice|Order
      */
-    static $Order = null;
+    protected static $Order = null;
 
     /**
      * Accounting hash
-     * @var String
+     *
+     * @var string
      */
-    static $HASH = null;
+    protected static $HASH = null;
 
     /**
      * set the gateway global accounting hash
-     * @param unknown $HASH
+     *
+     * @param string $HASH
      */
-    static function setHash($HASH)
+    protected static function setHash($HASH)
     {
         self::$HASH = $HASH;
     }
@@ -45,9 +48,9 @@ class Gateway
      * set $params['module'] => Payment Name
      *
      * @param array $params
-     * @return String
+     * @return string
      */
-    static function getGatewayUrl($params = array())
+    public static function getGatewayUrl($params = array())
     {
         if (is_null(self::$HASH) && isset($_REQUEST['hash'])) {
             self::$HASH = $_REQUEST['hash'];
@@ -64,7 +67,7 @@ class Gateway
     /**
      * Return the url to open the order
      */
-    static function getOrderUrl()
+    public static function getOrderUrl()
     {
         if (is_null(self::$HASH) && isset($_REQUEST['hash'])) {
             self::$HASH = $_REQUEST['hash'];
@@ -78,17 +81,17 @@ class Gateway
      *
      * @return string
      */
-    static function getHost()
+    public static function getHost()
     {
         $HOST = HOST;
 
-        if (\QUI::conf('globals', 'httpshost')) {
-            $HOST = \QUI::conf('globals', 'httpshost');
+        if (QUI::conf('globals', 'httpshost')) {
+            $HOST = QUI::conf('globals', 'httpshost');
         }
 
         if (isset($_REQUEST['project']) && isset($_REQUEST['lang'])) {
             try {
-                $Project = \QUI::getProjectManager()->getProject(
+                $Project = QUI::getProjectManager()->getProject(
                     $_REQUEST['project'],
                     $_REQUEST['lang']
                 );
@@ -96,9 +99,7 @@ class Gateway
                 if ($Project->getVHost(true, true)) {
                     return $Project->getVHost(true, true);
                 }
-
-            } catch (\QUI\Exception $Exception) {
-
+            } catch (QUI\Exception $Exception) {
             }
         }
 
@@ -121,7 +122,7 @@ class Gateway
      *
      * @return TemporaryInvoice|Invoice|Order
      */
-    static function getOrder()
+    public static function getOrder()
     {
         if (!self::$Order) {
             self::$Order = Acc::getByHash(self::$HASH);
@@ -137,7 +138,7 @@ class Gateway
      * @param Payment $Payment - payment
      * @return bool - If the payment was added successfully
      */
-    static function addPayment($amount, Payment $Payment)
+    public static function addPayment($amount, Payment $Payment)
     {
         if ($amount <= 0) {
             return false;
@@ -152,7 +153,7 @@ class Gateway
 
         try {
             $Order->addPayment(
-                \QUI\Utils\String::parseFloat($amount),
+                QUI\Utils\StringHelper::parseFloat($amount),
                 date('c'),
                 $Payment->getAttribute('name')
             );
@@ -160,16 +161,14 @@ class Gateway
             self::addComment(
                 'Bezahlung ' . $amount . ' mit ' . $Payment->getAttribute('name')
             );
-
-        } catch (\QUI\Exception $Exception) {
+        } catch (QUI\Exception $Exception) {
             $Order->addComment($Exception->getMessage());
             return false;
         }
 
         try {
             $Order->createBill();
-
-        } catch (\QUI\Accounting\Exception $Exception) {
+        } catch (Exception $Exception) {
             $Order->addComment($Exception->getMessage());
         }
 
@@ -179,14 +178,14 @@ class Gateway
     /**
      * Nachricht der Bestellung / Rechnung hinzufügen
      *
-     * @param unknown $message
+     * @param string $message
      */
-    static function addComment($message)
+    public static function addComment($message)
     {
         try {
             $Order = self::getOrder();
             $Order->addComment($message);
-        } catch (\QUI\Exception $Exception) {
+        } catch (QUI\Exception $Exception) {
             self::setError($Exception->getMessage());
         }
     }
@@ -194,16 +193,15 @@ class Gateway
     /**
      * Zahlungsinformationen der Bestellung / Rechnung hinzufügen
      *
-     * @param String $key
-     * @param String|Array $val
+     * @param string $key
+     * @param string|array $val
      */
-    static function setPaymentData($key, $val)
+    public static function setPaymentData($key, $val)
     {
         try {
             $Order = self::getOrder();
             $Order->setPaymentData($key, $val);
-
-        } catch (\QUI\Exception $Exception) {
+        } catch (QUI\Exception $Exception) {
             self::setError($Exception->getMessage());
         }
     }
@@ -211,37 +209,33 @@ class Gateway
     /**
      * Zahlungsinformationen der Bestellung / Rechnung bekommen
      *
-     * @param String $key
+     * @param string $key
      */
-    static function getPaymentData($key)
+    public static function getPaymentData($key)
     {
         try {
             $Order = self::getOrder();
             return $Order->getPaymentData($key);
-
-        } catch (\QUI\Exception $Exception) {
+        } catch (QUI\Exception $Exception) {
             self::setError($Exception->getMessage());
             return false;
         }
     }
 
     /**
-     *
-     * @param unknown $hash
+     * @param string $hash
      */
-    static function storno($hash)
+    public static function storno($hash)
     {
         try {
             $Order = self::getOrder();
 
             // @todo storno
 
-
             $Order->addComment(
                 'Storno der Bestellung'
             );
-
-        } catch (\QUI\Exception $Exception) {
+        } catch (QUI\Exception $Exception) {
             self::setError('Storno der Bestellung');
             self::setError($Exception->getMessage());
         }
@@ -252,7 +246,7 @@ class Gateway
      *
      * @param string $text
      */
-    static function setError($text)
+    public static function setError($text)
     {
         QUI\System\Log::addError($text);
     }
