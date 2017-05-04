@@ -137,7 +137,6 @@ class Handler extends QUI\Utils\Singleton
             } catch (Exception $Exception) {
                 QUI\System\Log::addNotice($Exception->getMessage());
             }
-
         }
 
         return $result;
