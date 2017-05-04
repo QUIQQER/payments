@@ -35,7 +35,7 @@ class Handler
         } catch (QUI\Exception $Exception) {
         }
 
-        $packages = \QUI::getPackageManager()->getInstalled(array(
+        $packages = QUI::getPackageManager()->getInstalled(array(
             'type' => 'quiqqer-payment'
         ));
 
