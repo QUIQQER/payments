@@ -82,12 +82,12 @@ abstract class AbstractPayment implements PaymentsInterface
     /**
      * @return string
      */
-    abstract function getTitle();
+    abstract public function getTitle();
 
     /**
      * @return string
      */
-    abstract function getDescription();
+    abstract public function getDescription();
 
     /**
      * Return the payment as an array
