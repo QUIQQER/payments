@@ -7,6 +7,8 @@
 namespace QUI\ERP\Accounting\Payments;
 
 use QUI;
+use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
+use QUI\ERP\Accounting\Payments\Api\AbstractPaymentProvider;
 
 /**
  * Payment handler
@@ -39,7 +41,10 @@ class Handler extends QUI\Utils\Singleton
         } catch (QUI\Exception $Exception) {
         }
 
-        $packages = QUI::getPackageManager()->getInstalled();
+        $packages = array_map(function ($package) {
+            return $package['name'];
+        }, QUI::getPackageManager()->getInstalled());
+
         $payments = array();
 
         try {
@@ -52,37 +57,36 @@ class Handler extends QUI\Utils\Singleton
                     $Package = QUI::getPackage($package);
 
                     if ($Package->isQuiqqerPackage()) {
-                        $providers = array_merge($providers, $Package->getProvider('erp'));
+                        $providers = array_merge($providers, $Package->getProvider('payment'));
                     }
                 } catch (QUI\Exception $Exception) {
                 }
             }
         }
 
-
         // filter provider
-        $providers = new \RecursiveIteratorIterator(
-            new \RecursiveArrayIterator($providers)
-        );
-
-        foreach ($providers as $entry) {
-            if (!class_exists($entry)) {
+        foreach ($providers as $provider) {
+            if (!class_exists($provider)) {
                 continue;
             }
 
-            $Provider = new $entry();
+            $Provider = new $provider();
 
-            if (!($Provider instanceof Provider)) {
+            if (!($Provider instanceof AbstractPaymentProvider)) {
                 continue;
             }
 
             $providerPayments = $Provider->getPayments();
 
             foreach ($providerPayments as $providerPayment) {
+                if (!class_exists($providerPayment)) {
+                    continue;
+                }
+
                 $Payment = new $providerPayment();
 
                 if ($Payment instanceof AbstractPayment) {
-                    $this->payments[$Payment->getName()] = $Payment;
+                    $payments[$Payment->getName()] = $Payment;
                 }
             }
         }
@@ -96,11 +100,11 @@ class Handler extends QUI\Utils\Singleton
      * Return a payment, if the payment is active
      *
      * @param string $payment
-     * @return \QUI\ERP\Accounting\Payments\AbstractPayment
+     * @return AbstractPayment
      *
      * @throws Exception
      */
-    public function get($payment)
+    public function getPayment($payment)
     {
         if (!isset($this->payments[$payment])) {
             throw new Exception(array(
@@ -120,18 +124,20 @@ class Handler extends QUI\Utils\Singleton
     public function getPayments()
     {
         $result   = array();
-        $payments = $this->getAvailablePayments();
+        $Config   = QUI::getPackage('quiqqer/payments')->getConfig();
+        $payments = $Config->getSection('payments');
 
-        $Config = QUI::getPackage('quiqqer/payments')->getConfig();
-        $config = $Config->toArray();
-
-        /* @var $Payment AbstractPayment */
-        foreach ($payments as $payment => $Payment) {
-            $name = $Payment->getName();
-
-            if (isset($config[$name]) && $config[$name] == 1) {
-                $result[$name] = $Payment;
+        foreach ($payments as $payment => $status) {
+            if ((int)$status !== 1) {
+                continue;
             }
+
+            try {
+                $result[$payment] = $this->getPayment($payment);
+            } catch (Exception $Exception) {
+                QUI\System\Log::addNotice($Exception->getMessage());
+            }
+
         }
 
         return $result;

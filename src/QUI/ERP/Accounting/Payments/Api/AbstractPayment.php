@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file contains \QUI\ERP\Accounting\Payments\Payment
+ * This file contains \QUI\ERP\Accounting\Payments\Api\Payment
  */
 
-namespace QUI\ERP\Accounting\Payments;
+namespace QUI\ERP\Accounting\Payments\Api;
 
 use QUI;
 
@@ -97,13 +97,14 @@ abstract class AbstractPayment implements PaymentsInterface
     public function toArray()
     {
         return array(
+            'name'        => $this->getName(),
             'title'       => $this->getTitle(),
             'description' => $this->getDescription()
         );
     }
 
 
-    // OLD METHODS
+    //region OLD METHODS
 
     /**
      * Return the payments fields for the user
@@ -274,4 +275,5 @@ abstract class AbstractPayment implements PaymentsInterface
             strtolower($this->getSetting('name')) . '.bill.text'
         );
     }
+    //endregion
 }

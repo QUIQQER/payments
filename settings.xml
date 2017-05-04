@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiqqer>
+    <settings name="ERP">
+
+        <config>
+            <section name="payments">
+                <custom>paymentsJson</custom>
+            </section>
+        </config>
+
+        <window name="ERP">
+            <title>
+                <locale group="quiqqer/payments" var="window.erp.title"/>
+            </title>
+            <params>
+                <icon>fa fa-sun-o</icon>
+            </params>
+
+            <categories>
+                <category name="payments" index="2">
+                    <text>
+                        <locale group="quiqqer/payments" var="window.erp.payments.title"/>
+                    </text>
+                    <icon>fa fa-credit-card-alt</icon>
+
+                    <settings title="payments" name="payments">
+                        <title>
+                            <locale group="quiqqer/payments" var="payments.settings.title"/>
+                        </title>
+
+                        <input conf="payments.paymentsJson"
+                               label="false"
+                               data-qui="package/quiqqer/payments/bin/backend/controls/Settings"
+                               type="hidden"
+                        />
+                    </settings>
+                </category>
+            </categories>
+        </window>
+
+    </settings>
+</quiqqer>

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This File contains iPayment
+ * This file contains QUI\ERP\Accounting\Payments\Api\PaymentsInterface
  */
 
-namespace QUI\ERP\Accounting\Payments;
+namespace QUI\ERP\Accounting\Payments\Api;
 
 use QUI\ERP\User;
 
@@ -14,6 +14,16 @@ use QUI\ERP\User;
  */
 interface PaymentsInterface
 {
+    /**
+     * @return string
+     */
+    public function getTitle();
+
+    /**
+     * @return string
+     */
+    public function getDescription();
+
     // template methods
     public function getOrderSuccessTpl($Bill, $Project = false);
 

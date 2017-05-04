@@ -6,5 +6,27 @@
             <en><![CDATA[QUIQQER - Shop - Payments]]></en>
         </locale>
 
+        <locale name="window.erp.title">
+            <de><![CDATA[Shop]]></de>
+            <en><![CDATA[Shop]]></en>
+        </locale>
+        <locale name="window.erp.payments.title">
+            <de><![CDATA[Bezahlsysteme]]></de>
+            <en><![CDATA[Payments]]></en>
+        </locale>
+        <locale name="payments.settings.title">
+            <de><![CDATA[Bezahlsystem-Aktivierung]]></de>
+            <en><![CDATA[Payments activation]]></en>
+        </locale>
+
+
+        <locale name="payment.cash.title">
+            <de><![CDATA[Barzahlung]]></de>
+            <en><![CDATA[Cache payment]]></en>
+        </locale>
+        <locale name="payment.invoice.title">
+            <de><![CDATA[Zahlung per Rechnung]]></de>
+            <en><![CDATA[Payment by invoice]]></en>
+        </locale>
     </groups>
 </locales>

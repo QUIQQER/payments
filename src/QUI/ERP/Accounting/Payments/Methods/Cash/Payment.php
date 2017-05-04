@@ -13,7 +13,7 @@ use QUI;
  *
  * @package QUI\ERP\Accounting\Payments\Methods\Cash\Payment
  */
-class Payment extends QUI\ERP\Accounting\Payments\AbstractPayment
+class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
 {
     /**
      * @return array|string

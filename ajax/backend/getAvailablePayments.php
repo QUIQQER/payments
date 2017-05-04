@@ -17,7 +17,7 @@ QUI::$Ajax->registerFunction(
         $payments = Payments\Handler::getInstance()->getAvailablePayments();
 
         return array_map(function ($Payment) {
-            /* @var $Payment Payments\AbstractPayment */
+            /* @var $Payment Payments\Api\AbstractPayment */
             return $Payment->toArray();
         }, $payments);
     },

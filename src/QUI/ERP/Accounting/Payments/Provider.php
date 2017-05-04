@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Accounting\Payments
+ * This file contains QUI\ERP\Accounting\Payments\Provider
  */
 
 namespace QUI\ERP\Accounting\Payments;
@@ -13,7 +13,7 @@ use QUI;
  *
  * @package QUI\ERP\Accounting\Payments
  */
-class Provider
+class Provider extends Api\AbstractPaymentProvider
 {
     /**
      * @return array

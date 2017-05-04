@@ -5,7 +5,7 @@
  */
 
 use QUI\ERP\Accounting\Payments\Handler;
-use QUI\ERP\Accounting\Payments\AbstractPayment;
+use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
 
 /**
  * Return all active payments
