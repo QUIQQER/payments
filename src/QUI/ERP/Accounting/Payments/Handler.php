@@ -13,97 +13,103 @@ use QUI;
  *
  * @author www.pcsg.de (Henning Leutz)
  */
-class Handler
+class Handler extends QUI\Utils\Singleton
 {
-    const SUCCESS_TYPE_PAY = 1;
-    const SUCCESS_TYPE_BILL = 2;
-
-    protected $_payments = array();
+    protected $payments = array();
 
     /**
      * constructor
      */
     public function __construct()
     {
-        // cache?
-        try {
-            $this->_payments = QUI\Cache\Manager::get(
-                'package/quiqqer/payments/list'
-            );
+        $cachePayments = 'package/quiqqer/payments/payments';
+        $cacheProvider = 'package/quiqqer/payments/provider';
 
+        try {
+            $providerPayments = QUI\Cache\Manager::get($cachePayments);
+
+            foreach ($providerPayments as $providerPayment) {
+                $Payment = new $providerPayment();
+
+                if ($Payment instanceof AbstractPayment) {
+                    $this->payments[$Payment->getName()] = $Payment;
+                }
+            }
             return;
         } catch (QUI\Exception $Exception) {
         }
 
-        $packages = QUI::getPackageManager()->getInstalled(array(
-            'type' => 'quiqqer-payment'
-        ));
+        $packages = QUI::getPackageManager()->getInstalled();
+        $payments = array();
 
-        $list = array();
+        try {
+            $providers = QUI\Cache\Manager::get($cacheProvider);
+        } catch (QUI\Cache\Exception $Exception) {
+            $providers = array();
 
-        foreach ($packages as $package) {
-            $name     = $package['name'];
-            $xml_file = OPT_DIR . $name . '/payments.xml';
+            foreach ($packages as $package) {
+                try {
+                    $Package = QUI::getPackage($package);
 
-            $Dom      = QUI\Utils\Text\XML::getDomFromXml($xml_file);
-            $payments = $Dom->getElementsByTagName('payments');
-
-            for ($i = 0, $len = $payments->length; $i < $len; $i++) {
-                $Payment     = $payments->item($i);
-                $paymentName = $Payment->getAttribute('name');
-
-                $list[$name . ':' . $paymentName] = array(
-                    'name' => $paymentName,
-                    'exec' => $Payment->getAttribute('exec')
-                );
+                    if ($Package->isQuiqqerPackage()) {
+                        $providers = array_merge($providers, $Package->getProvider('erp'));
+                    }
+                } catch (QUI\Exception $Exception) {
+                }
             }
         }
 
-        $this->_payments = $list;
 
-        QUI\Cache\Manager::set(
-            'package/quiqqer/payments/list',
-            $this->_payments
+        // filter provider
+        $providers = new \RecursiveIteratorIterator(
+            new \RecursiveArrayIterator($providers)
         );
-    }
 
-    /**
-     * Return the config for the payment list
-     *
-     * @return \QUI\Config
-     */
-    public function getPaymentConfig()
-    {
-        if (!file_exists(CMS_DIR . 'etc/payments/list.ini')) {
-            file_put_contents(CMS_DIR . 'etc/payments/list.ini', '');
+        foreach ($providers as $entry) {
+            if (!class_exists($entry)) {
+                continue;
+            }
+
+            $Provider = new $entry();
+
+            if (!($Provider instanceof Provider)) {
+                continue;
+            }
+
+            $providerPayments = $Provider->getPayments();
+
+            foreach ($providerPayments as $providerPayment) {
+                $Payment = new $providerPayment();
+
+                if ($Payment instanceof AbstractPayment) {
+                    $this->payments[$Payment->getName()] = $Payment;
+                }
+            }
         }
 
-        $Config = new QUI\Config(CMS_DIR . 'etc/payments/list.ini');
+        $this->payments = $payments;
 
-        return $Config;
+        QUI\Cache\Manager::set($cacheProvider, $this->payments);
     }
 
     /**
      * Return a payment, if the payment is active
      *
      * @param string $payment
-     * @return \QUI\ERP\Accounting\Payments\Payment|false
+     * @return \QUI\ERP\Accounting\Payments\AbstractPayment
+     *
+     * @throws Exception
      */
     public function get($payment)
     {
-        $payments = $this->getPayments();
-
-        if (isset($payments[$payment])) {
-            return false;
+        if (!isset($this->payments[$payment])) {
+            throw new Exception(array(
+                'quiqqer/payments',
+                'exception.payment.not.found'
+            ));
         }
 
-        $exec = $payments[$payment]['exec'];
-
-        if (!is_callable($exec)) {
-            return false;
-        }
-
-        return new $exec();
+        return $this->payments[$payment];
     }
 
     /**
@@ -114,14 +120,17 @@ class Handler
     public function getPayments()
     {
         $result   = array();
-        $payments = $this->getAllPayments();
+        $payments = $this->getAvailablePayments();
 
-        $Config = $this->getPaymentConfig();
+        $Config = QUI::getPackage('quiqqer/payments')->getConfig();
         $config = $Config->toArray();
 
-        foreach ($payments as $payment => $params) {
-            if (isset($config[$payment]) && $config[$payment] == 1) {
-                $result[$payment] = $params;
+        /* @var $Payment AbstractPayment */
+        foreach ($payments as $payment => $Payment) {
+            $name = $Payment->getName();
+
+            if (isset($config[$name]) && $config[$name] == 1) {
+                $result[$name] = $Payment;
             }
         }
 
@@ -129,12 +138,12 @@ class Handler
     }
 
     /**
-     * Return all payments
+     * Return all available payments
      *
      * @return array
      */
-    public function getAllPayments()
+    public function getAvailablePayments()
     {
-        return $this->_payments;
+        return $this->payments;
     }
 }

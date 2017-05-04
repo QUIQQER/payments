@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locales>
+    <groups name="quiqqer/payments" datatype="php,js">
+        <locale name="package.title">
+            <de><![CDATA[QUIQQER - Shop - Payments]]></de>
+            <en><![CDATA[QUIQQER - Shop - Payments]]></en>
+        </locale>
+
+    </groups>
+</locales>

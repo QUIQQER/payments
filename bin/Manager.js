@@ -1,27 +1,25 @@
-
 /**
  * Payment Manager
  * Manager for the Payment types
  *
  * @author www.pcsg.de (Henning Leutz)
+ * @deprecated
  */
 define('package/quiqqer/payments/bin/Manager', [
 
     'require',
     'qui/classes/Control'
 
-], function(require, QUIControl)
-{
+], function (require, QUIControl) {
     "use strict";
 
     return new Class({
 
-        Extends : QUIControl,
-        Type    : 'package/quiqqer/payments/bin/Manager',
+        Extends: QUIControl,
+        Type   : 'package/quiqqer/payments/bin/Manager',
 
-        initialize : function(options)
-        {
-            this.parent( options );
+        initialize: function (options) {
+            this.parent(options);
 
             this.$payments = {};
             this.$loaded   = false;
@@ -32,26 +30,23 @@ define('package/quiqqer/payments/bin/Manager', [
          *
          * @param {Function} callback
          */
-        load : function(callback)
-        {
-            if ( this.$loaded )
-            {
+        load: function (callback) {
+            if (this.$loaded) {
                 callback();
                 return;
             }
 
             var self = this;
 
-            _Ajax.asyncPost('ajax_plugin_payments_data', function(result, Ajax)
-            {
+            _Ajax.asyncPost('ajax_plugin_payments_data', function (result, Ajax) {
                 self.$payments = result;
                 self.$loaded   = true;
 
-                if ( typeof callback !== 'undefined' ) {
-                    callback( result );
+                if (typeof callback !== 'undefined') {
+                    callback(result);
                 }
             }, {
-                plugin : 'payment'
+                plugin: 'payment'
             });
         },
 
@@ -65,25 +60,22 @@ define('package/quiqqer/payments/bin/Manager', [
          *     var Paypal = new PaypalCls();
          * });
          */
-        getPayment : function(payment, callback)
-        {
+        getPayment: function (payment, callback) {
             var self = this;
 
             payment = payment.toLowerCase();
 
             require([
 
-                'plugins/payment/moduls/'+ payment +'/bin/Payment'
+                'plugins/payment/moduls/' + payment + '/bin/Payment'
 
-            ], function( ClsPayment )
-            {
-                self.load(function()
-                {
+            ], function (ClsPayment) {
+                self.load(function () {
                     var Payment = new ClsPayment(
-                        self.$getPaymentData( payment )
+                        self.$getPaymentData(payment)
                     );
 
-                    callback( Payment );
+                    callback(Payment);
                 });
             });
         },
@@ -94,42 +86,37 @@ define('package/quiqqer/payments/bin/Manager', [
          * @param {Array} payments - Payment names
          * @param {Function} callback - callback function, triggered when all is loaded
          */
-        getPayments : function(payments, callback)
-        {
+        getPayments: function (payments, callback) {
             var needles = [],
                 self    = this;
 
-            for ( var i = 0, len = payments.length; i < len; i++ )
-            {
-                payments[ i ] = payments[ i ].toLowerCase();
+            for (var i = 0, len = payments.length; i < len; i++) {
+                payments[i] = payments[i].toLowerCase();
 
                 needles.push(
-                    'plugins/payment/moduls/'+ payments[ i ] +'/bin/Payment'
+                    'plugins/payment/moduls/' + payments[i] + '/bin/Payment'
                 );
             }
 
 
-            require(needles, function()
-            {
+            require(needles, function () {
                 var args = arguments;
 
-                self.load(function()
-                {
+                self.load(function () {
                     var i, len, Cls, params, Payment;
                     var res = [];
 
-                    for ( i = 0, len = args.length; i < len; i++ )
-                    {
-                        Cls = args[ i ];
+                    for (i = 0, len = args.length; i < len; i++) {
+                        Cls = args[i];
 
                         Payment = new Cls(
-                            self.$getPaymentData( payments[ i ] )
+                            self.$getPaymentData(payments[i])
                         );
 
-                        res.push( Payment );
+                        res.push(Payment);
                     }
 
-                    callback( res );
+                    callback(res);
                 });
             });
         },
@@ -139,14 +126,12 @@ define('package/quiqqer/payments/bin/Manager', [
          *
          * @return {Object|false}
          */
-        $getPaymentData : function(payment)
-        {
+        $getPaymentData: function (payment) {
             payment = payment.toLowerCase();
 
-            for ( var i = 0, len = this.$payments.length; i < len; i++ )
-            {
-                if ( this.$payments[ i ].name.toLowerCase() == payment ) {
-                    return this.$payments[ i ];
+            for (var i = 0, len = this.$payments.length; i < len; i++) {
+                if (this.$payments[i].name.toLowerCase() == payment) {
+                    return this.$payments[i];
                 }
             }
 

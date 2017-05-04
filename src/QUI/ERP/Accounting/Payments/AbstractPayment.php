@@ -14,8 +14,18 @@ use QUI;
  *
  * @author www.pcsg.de (Henning Leutz)
  */
-abstract class Payment implements PaymentsInterface
+abstract class AbstractPayment implements PaymentsInterface
 {
+    /**
+     * @var int
+     */
+    const SUCCESS_TYPE_PAY = 1;
+
+    /**
+     * @var int
+     */
+    const SUCCESS_TYPE_BILL = 2;
+
     /**
      * payment fields - extra fields for the payment / accounting
      *
@@ -36,6 +46,64 @@ abstract class Payment implements PaymentsInterface
      * @var QUI\Locale
      */
     protected $Locale = null;
+
+    /**
+     * Set the locale object to the payment
+     *
+     * @param QUI\Locale $Locale
+     */
+    public function setLocale(QUI\Locale $Locale)
+    {
+        $this->Locale = $Locale;
+    }
+
+    /**
+     * Return the Locale of the payment
+     *
+     * @return QUI\Locale
+     */
+    public function getLocale()
+    {
+        if ($this->Locale === null) {
+            $this->Locale = QUI::getLocale();
+        }
+
+        return $this->Locale;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return md5(get_class($this));
+    }
+
+    /**
+     * @return string
+     */
+    abstract function getTitle();
+
+    /**
+     * @return string
+     */
+    abstract function getDescription();
+
+    /**
+     * Return the payment as an array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'title'       => $this->getTitle(),
+            'description' => $this->getDescription()
+        );
+    }
+
+
+    // OLD METHODS
 
     /**
      * Return the payments fields for the user
@@ -62,29 +130,6 @@ abstract class Payment implements PaymentsInterface
         }
     }
 
-    /**
-     * Set the locale object to the payment
-     *
-     * @param QUI\Locale $Locale
-     */
-    public function setLocale(QUI\Locale $Locale)
-    {
-        $this->Locale = $Locale;
-    }
-
-    /**
-     * Return the Locale of the payment
-     *
-     * @return QUI\Locale
-     */
-    public function getLocale()
-    {
-        if (!$this->Locale) {
-            $this->Locale = QUI::getLocale();
-        }
-
-        return $this->Locale;
-    }
 
     /**
      * The check method
@@ -143,7 +188,7 @@ abstract class Payment implements PaymentsInterface
      */
     public function getSuccessType()
     {
-        return Handler::SUCCESS_TYPE_PAY;
+        return self::SUCCESS_TYPE_PAY;
     }
 
     /**
