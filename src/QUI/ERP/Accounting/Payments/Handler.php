@@ -109,7 +109,8 @@ class Handler extends QUI\Utils\Singleton
         if (!isset($this->payments[$payment])) {
             throw new Exception(array(
                 'quiqqer/payments',
-                'exception.payment.not.found'
+                'exception.payment.not.found',
+                array('payment' => $payment)
             ));
         }
 
@@ -126,6 +127,10 @@ class Handler extends QUI\Utils\Singleton
         $result   = array();
         $Config   = QUI::getPackage('quiqqer/payments')->getConfig();
         $payments = $Config->getSection('payments');
+
+        if (!is_array($payments)) {
+            return array();
+        }
 
         foreach ($payments as $payment => $status) {
             if ((int)$status !== 1) {

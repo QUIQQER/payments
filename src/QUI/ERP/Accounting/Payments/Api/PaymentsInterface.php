@@ -15,6 +15,11 @@ use QUI\ERP\User;
 interface PaymentsInterface
 {
     /**
+     * @return mixed
+     */
+    public function getName();
+
+    /**
      * @return string
      */
     public function getTitle();
