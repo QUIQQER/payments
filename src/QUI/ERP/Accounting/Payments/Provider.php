@@ -22,7 +22,8 @@ class Provider extends Api\AbstractPaymentProvider
     {
         return [
             QUI\ERP\Accounting\Payments\Methods\Cash\Payment::class,
-            QUI\ERP\Accounting\Payments\Methods\Invoice\Payment::class
+            QUI\ERP\Accounting\Payments\Methods\Invoice\Payment::class,
+            QUI\ERP\Accounting\Payments\Methods\AdvancePayment\Payment::class,
         ];
     }
 }

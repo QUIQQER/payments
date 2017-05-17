@@ -28,9 +28,14 @@
             <de><![CDATA[Zahlung per Rechnung]]></de>
             <en><![CDATA[Payment by invoice]]></en>
         </locale>
+        <locale name="payment.advanced.payment.title">
+            <de><![CDATA[Vorkasse]]></de>
+            <en><![CDATA[Advanced Payment]]></en>
+        </locale>
+
     </groups>
 
-    <groups name="quiqqer/payments" datatype="php,js">
+    <groups name="quiqqer/payments" datatype="php">
         <locale name="exception.payment.not.found">
             <de><![CDATA[Die Bezahlmethode [payment] wurde nicht gefunden.]]></de>
             <en><![CDATA[The payment method [payment] was not found.]]></en>

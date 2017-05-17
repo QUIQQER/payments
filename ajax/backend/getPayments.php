@@ -17,10 +17,16 @@ QUI::$Ajax->registerFunction(
     function () {
         $payments = Handler::getInstance()->getPayments();
 
-        return array_map(function ($Payment) {
+        $payments = array_map(function ($Payment) {
             /* @var $Payment AbstractPayment */
             return $Payment->toArray();
         }, $payments);
+
+        uasort($payments, function ($a, $b) {
+            return strcmp($a['title'], $b['title']);
+        });
+
+        return $payments;
     },
     false,
     'Permission::checkAdminUser'

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Accounting\Payments\Methods\Invoice\Payment
+ * This file contains QUI\ERP\Accounting\Payments\Methods\AdvancePayment\Payment
  */
 
-namespace QUI\ERP\Accounting\Payments\Methods\Invoice;
+namespace QUI\ERP\Accounting\Payments\Methods\AdvancePayment;
 
 use QUI;
 
@@ -22,7 +22,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     {
         return $this->getLocale()->get(
             'quiqqer/payments',
-            'payment.invoice.title'
+            'payment.advanced.payment.title'
         );
     }
 
@@ -33,7 +33,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     {
         return $this->getLocale()->get(
             'quiqqer/payments',
-            'payment.invoice.description'
+            'payment.advanced.payment.description'
         );
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Accounting\Payments\Methods\Cash
+ * This file contains QUI\ERP\Accounting\Payments\Methods\Cash\Payment
  */
 
 namespace QUI\ERP\Accounting\Payments\Methods\Cash;
