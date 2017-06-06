@@ -17,5 +17,5 @@ abstract class AbstractPaymentProvider
     /**
      * @return array
      */
-    abstract public function getPayments();
+    abstract public function getPaymentMethods();
 }

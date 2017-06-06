@@ -1,9 +1,9 @@
 /**
  * @module package/quiqqer/payments/bin/backend/classes/Handler
  *
- * @requires qui/QUI
- * @requires qui/classes/DOM
- * @requires Ajax
+ * @require qui/QUI
+ * @require qui/classes/DOM
+ * @require Ajax
  */
 define('package/quiqqer/payments/bin/backend/classes/Handler', [
 
@@ -24,20 +24,6 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
         },
 
         /**
-         * Return all available payments
-         *
-         * @return {Promise}
-         */
-        getAvailablePayments: function () {
-            return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_payments_ajax_backend_getAvailablePayments', resolve, {
-                    'package': 'quiqqer/payments',
-                    onError  : reject
-                });
-            });
-        },
-
-        /**
          * Return active payments
          *
          * @return {Promise}
@@ -47,6 +33,25 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
                 QUIAjax.get('package_quiqqer_payments_ajax_backend_getPayments', resolve, {
                     'package': 'quiqqer/payments',
                     onError  : reject
+                });
+            });
+        },
+
+        createPayment: function () {
+
+        },
+
+        editPayment: function () {
+
+        },
+
+
+        deletePayment: function (paymentId) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_payments_ajax_backend_delete', resolve, {
+                    'package': 'quiqqer/payments',
+                    onError  : reject,
+                    paymentId: paymentId
                 });
             });
         }

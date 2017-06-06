@@ -8,7 +8,7 @@ namespace QUI\ERP\Accounting\Payments;
 
 use QUI;
 use QUI\ERP\Accounting\Invoice\Invoice;
-use QUI\ERP\Accounting\Invoice\TemporaryInvoice;
+use QUI\ERP\Accounting\Invoice\InvoiceTemporary;
 use QUI\ERP\Order\Order;
 
 /**
@@ -20,7 +20,7 @@ class Gateway
 {
     /**
      * Internal Order Object
-     * @var TemporaryInvoice|Invoice|Order
+     * @var InvoiceTemporary|Invoice|Order
      */
     protected static $Order = null;
 
@@ -120,7 +120,7 @@ class Gateway
     /**
      * Return the order
      *
-     * @return TemporaryInvoice|Invoice|Order
+     * @return InvoiceTemporary|Invoice|Order
      */
     public static function getOrder()
     {

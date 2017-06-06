@@ -1,0 +1,11 @@
+<permissions>
+    <permission name="quiqqer.payments.create" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+    <permission name="quiqqer.payments.edit" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+    <permission name="quiqqer.payments.delete" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+</permissions>

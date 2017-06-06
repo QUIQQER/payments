@@ -11,26 +11,52 @@
             <en><![CDATA[Shop]]></en>
         </locale>
         <locale name="window.erp.payments.title">
-            <de><![CDATA[Bezahlsysteme]]></de>
+            <de><![CDATA[Zahlungsarten]]></de>
             <en><![CDATA[Payments]]></en>
         </locale>
         <locale name="payments.settings.title">
-            <de><![CDATA[Bezahlsystem-Aktivierung]]></de>
-            <en><![CDATA[Payments activation]]></en>
+            <de><![CDATA[Zahlungsarten]]></de>
+            <en><![CDATA[Payments]]></en>
         </locale>
 
 
         <locale name="payment.cash.title">
             <de><![CDATA[Barzahlung]]></de>
-            <en><![CDATA[Cache payment]]></en>
+            <en><![CDATA[Cash payment]]></en>
         </locale>
+        <locale name="payment.cash.workingTitle">
+            <de><![CDATA[Barzahlung]]></de>
+            <en><![CDATA[Cash payment]]></en>
+        </locale>
+        <locale name="payment.cash.description">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+
         <locale name="payment.invoice.title">
             <de><![CDATA[Zahlung per Rechnung]]></de>
             <en><![CDATA[Payment by invoice]]></en>
         </locale>
+        <locale name="payment.invoice.workingTitle">
+            <de><![CDATA[Zahlung per Rechnung]]></de>
+            <en><![CDATA[Payment by invoice]]></en>
+        </locale>
+        <locale name="payment.invoice.description">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+
         <locale name="payment.advanced.payment.title">
             <de><![CDATA[Vorkasse]]></de>
             <en><![CDATA[Advanced Payment]]></en>
+        </locale>
+        <locale name="payment.advanced.payment.workingTitle">
+            <de><![CDATA[Vorkasse]]></de>
+            <en><![CDATA[Advanced Payment]]></en>
+        </locale>
+        <locale name="payment.advanced.payment.description">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
         </locale>
 
     </groups>
@@ -39,6 +65,14 @@
         <locale name="exception.payment.not.found">
             <de><![CDATA[Die Bezahlmethode [payment] wurde nicht gefunden.]]></de>
             <en><![CDATA[The payment method [payment] was not found.]]></en>
+        </locale>
+        <locale name="exception.payment.method.not.found">
+            <de><![CDATA[Die Bezahlmethode [paymentMethod] wurde nicht gefunden.]]></de>
+            <en><![CDATA[The payment method [paymentMethod] was not found.]]></en>
+        </locale>
+        <locale name="exception.payment.method.not.abstractPayment">
+            <de><![CDATA[Die Bezahlmethode [paymentMethod] ist nicht von AbstractPayment.]]></de>
+            <en><![CDATA[The payment method [paymentMethod] is not from AbstractPayment.]]></en>
         </locale>
     </groups>
 

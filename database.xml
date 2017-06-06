@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+
+    <global>
+        <table name="payments">
+            <field type="INT(11) NOT NULL">id</field>
+            <field type="INT(1) NOT NULL DEFAULT 0">active</field>
+            <field type="VARCHAR(255) NOT NULL">payment_type</field>
+            <field type="text NULL">date_from</field>
+            <field type="text NULL">date_until</field>
+            <field type="INT(10) NULL">purchase_quantity_from</field>
+            <field type="INT(10) NULL">purchase_quantity_until</field>
+            <field type="text NULL">purchase_value_from</field>
+            <field type="text NULL">purchase_value_until</field>
+
+            <field type="INT(4) NULL">priority</field>
+            <!--<field type="INT(1) NULL">scope</field>-->
+            <!--<field type="varchar(20)">vat</field>-->
+
+            <field type="text NULL">areas</field>
+            <field type="text NULL">articles</field>
+            <field type="text NULL">categories</field>
+            <field type="text NULL">user_groups</field>
+
+            <primary>id</primary>
+            <auto_increment>id</auto_increment>
+        </table>
+    </global>
+
+</database>

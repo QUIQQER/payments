@@ -4,8 +4,8 @@
  * This file contains package_quiqqer_payments_ajax_backend_getPayments
  */
 
-use QUI\ERP\Accounting\Payments\Handler;
-use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
+use QUI\ERP\Accounting\Payments\Payments;
+use QUI\ERP\Accounting\Payments\Types\Payment;
 
 /**
  * Return all active payments
@@ -15,18 +15,22 @@ use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_payments_ajax_backend_getPayments',
     function () {
-        $payments = Handler::getInstance()->getPayments();
+        $Locale   = QUI::getLocale();
+        $payments = Payments::getInstance()->getPayments();
+        $result   = array();
 
-        $payments = array_map(function ($Payment) {
-            /* @var $Payment AbstractPayment */
-            return $Payment->toArray();
-        }, $payments);
-
-        uasort($payments, function ($a, $b) {
-            return strcmp($a['title'], $b['title']);
+        uasort($payments, function ($A, $B) use ($Locale) {
+            /* @var $A Payment */
+            /* @var $B Payment */
+            return strcmp($A->getTitle($Locale), $B->getTitle($Locale));
         });
 
-        return $payments;
+        foreach ($payments as $Payment) {
+            /* @var $Payment Payment */
+            $result[] = $Payment->toArray();
+        }
+
+        return $result;
     },
     false,
     'Permission::checkAdminUser'

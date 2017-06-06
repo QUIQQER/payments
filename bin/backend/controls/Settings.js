@@ -11,14 +11,19 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'qui/controls/windows/Confirm',
     'package/quiqqer/payments/bin/backend/Payments',
+    'controls/grid/Grid',
     'Mustache',
+    'Locale',
     'Ajax',
 
     'text!package/quiqqer/payments/bin/backend/controls/Settings.html'
 
-], function (QUI, QUIControl, Payments, Mustache, QUIAjax, template) {
+], function (QUI, QUIControl, QUIConfirm, Payments, Grid, Mustache, QUILocale, QUIAjax, template) {
     "use strict";
+
+    var lg = 'quiqqer/payments';
 
     return new Class({
 
@@ -26,13 +31,18 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
         Type   : 'package/quiqqer/payments/bin/backend/controls/Settings',
 
         Binds: [
-            'refresh'
+            'refresh',
+            '$openAddDialog',
+            '$openEditDialog',
+            '$openDeleteDialog',
+            '$refreshButtonStatus'
         ],
 
         initialize: function (options) {
             this.parent(options);
 
             this.$Input = null;
+            this.$Grid  = null;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -47,14 +57,13 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
                 return;
             }
 
-            var elements = this.$Elm.getElements('[type="checkbox"]'),
-                data     = {};
+            var self = this;
 
-            for (var i = 0, len = elements.length; i < len; i++) {
-                data[elements[i].get('name')] = elements[i].checked;
-            }
-
-            this.$Input.value = JSON.encode(data);
+            Payments.getPayments().then(function (result) {
+                self.$Grid.setData({
+                    data: result
+                });
+            });
         },
 
         /**
@@ -63,7 +72,67 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
          * @return {Element}
          */
         create: function () {
-            this.$Elm = new Element('div');
+            this.$Elm = new Element('div', {
+                styles: {
+                    minHeight: 300,
+                    width    : '100%'
+                }
+            });
+
+            var Container = new Element('div', {
+                styles: {
+                    minHeight: 300,
+                    width    : '100%'
+                }
+            }).inject(this.$Elm);
+
+            this.$Grid = new Grid(Container, {
+                buttons    : [{
+                    name     : 'add',
+                    text     : QUILocale.get('quiqqer/quiqqer', 'add'),
+                    textimage: 'fa fa-plus',
+                    events   : {
+                        onClick: this.$openAddDialog
+                    }
+                }, {
+                    name     : 'edit',
+                    text     : QUILocale.get('quiqqer/quiqqer', 'edit'),
+                    textimage: 'fa fa-edit',
+                    disabled : true,
+                    events   : {
+                        onClick: this.$openEditDialog
+                    }
+                }, {
+                    name     : 'delete',
+                    text     : QUILocale.get('quiqqer/system', 'delete'),
+                    textimage: 'fa fa-trash',
+                    disabled : true,
+                    events   : {
+                        onClick: this.$openDeleteDialog
+                    }
+                }],
+                columnModel: [{
+                    header   : QUILocale.get('quiqqer/system', 'id'),
+                    dataIndex: 'id',
+                    dataType : 'number',
+                    width    : 30
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'title'),
+                    dataIndex: 'title',
+                    dataType : 'string',
+                    width    : 200
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'workingtitle'),
+                    dataIndex: 'workingTitle',
+                    dataType : 'string',
+                    width    : 200
+                }]
+            });
+
+            this.$Grid.addEvents({
+                onRefresh: this.refresh,
+                onClick  : this.$refreshButtonStatus
+            });
 
             return this.$Elm;
         },
@@ -72,52 +141,8 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
          * @event on inject
          */
         $onInject: function () {
-            var self = this;
-
-            Promise.all([
-                Payments.getAvailablePayments(),
-                Payments.getPayments()
-            ]).then(function (result) {
-                var available = result[0],
-                    active    = result[1],
-                    payments  = [];
-
-                for (var paymentName in available) {
-                    if (available.hasOwnProperty(paymentName)) {
-                        payments.push(available[paymentName]);
-                    }
-                }
-
-                self.$Elm.set({
-                    html: Mustache.render(template, {
-                        payments: payments
-                    })
-                });
-
-                self.$Elm.getElements('[type="checkbox"]').addEvent('change', self.refresh);
-
-                var payment;
-
-                for (payment in active) {
-                    if (active.hasOwnProperty(payment)) {
-                        self.$Elm.getElements('[name="' + payment + '"]').set('checked', true);
-                    }
-                }
-
-                try {
-                    var data = JSON.decode(self.$Input.value);
-
-                    if (data) {
-                        for (payment in data) {
-                            if (data.hasOwnProperty(payment) && data[payment] === true) {
-                                self.$Elm.getElements('[name="' + payment + '"]').set('checked', true);
-                            }
-                        }
-                    }
-                } catch (e) {
-                }
-
-            });
+            this.$Grid.setHeight(300);
+            this.refresh();
         },
 
         /**
@@ -129,8 +154,81 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
             this.$onInject();
         },
 
-        $getSettings: function () {
+        /**
+         * open the add dialog
+         */
+        $openAddDialog: function () {
+            new QUIConfirm({
+                title    : 'Zahlungsart hinzufügen',
+                icon     : 'fa fa-plus',
+                autoclose: true,
+                maxHeight: 400,
+                maxWidth : 600,
+                events   : {
+                    onOpen: function () {
 
+                    },
+
+                    onSubmit: function (Win) {
+                        Win.Loader.show();
+                    }
+                }
+            }).open();
+        },
+
+        /**
+         * open the edit dialog
+         */
+        $openEditDialog: function () {
+
+        },
+
+        /**
+         * open the add dialog
+         */
+        $openDeleteDialog: function () {
+            new QUIConfirm({
+                title    : 'Zahlungsart löschen',
+                icon     : 'fa fa-trash',
+                autoclose: true,
+                maxHeight: 400,
+                maxWidth : 600,
+                events   : {
+                    onOpen: function () {
+
+                    },
+
+                    onSubmit: function (Win) {
+                        Win.Loader.show();
+                    }
+                }
+            }).open();
+        },
+
+        /**
+         * refresh the button disable enable status
+         * looks at the grid
+         */
+        $refreshButtonStatus: function () {
+            var selected = this.$Grid.getSelectedIndices(),
+                buttons  = this.$Grid.getButtons();
+
+            var Edit = buttons.filter(function (Btn) {
+                return Btn.getAttribute('name') === 'edit';
+            })[0];
+
+            var Delete = buttons.filter(function (Btn) {
+                return Btn.getAttribute('name') === 'delete';
+            })[0];
+
+            if (!selected.length) {
+                Edit.disable();
+                Delete.disable();
+                return;
+            }
+
+            Edit.enable();
+            Delete.enable();
         }
     });
 });

@@ -7,6 +7,7 @@
 namespace QUI\ERP\Accounting\Payments;
 
 use QUI;
+use QUI\ERP\Accounting\Payments\Methods;
 
 /**
  * Class Provider
@@ -18,12 +19,12 @@ class Provider extends Api\AbstractPaymentProvider
     /**
      * @return array
      */
-    public function getPayments()
+    public function getPaymentMethods()
     {
         return [
-            QUI\ERP\Accounting\Payments\Methods\Cash\Payment::class,
-            QUI\ERP\Accounting\Payments\Methods\Invoice\Payment::class,
-            QUI\ERP\Accounting\Payments\Methods\AdvancePayment\Payment::class,
+            Methods\Cash\Payment::class,
+            Methods\Invoice\Payment::class,
+            Methods\AdvancePayment\Payment::class,
         ];
     }
 }

@@ -2,12 +2,6 @@
 <quiqqer>
     <settings name="ERP">
 
-        <config>
-            <section name="payments">
-                <custom>paymentsJson</custom>
-            </section>
-        </config>
-
         <window name="ERP">
             <title>
                 <locale group="quiqqer/payments" var="window.erp.title"/>
@@ -28,8 +22,7 @@
                             <locale group="quiqqer/payments" var="payments.settings.title"/>
                         </title>
 
-                        <input conf="payments.paymentsJson"
-                               label="false"
+                        <input label="false"
                                data-qui="package/quiqqer/payments/bin/backend/controls/Settings"
                                type="hidden"
                         />

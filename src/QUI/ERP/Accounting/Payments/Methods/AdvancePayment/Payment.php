@@ -10,6 +10,7 @@ use QUI;
 
 /**
  * Class Payment
+ * - Vorkasse
  *
  * @package QUI\ERP\Accounting\Payments\Methods\Invoice\Payment
  */

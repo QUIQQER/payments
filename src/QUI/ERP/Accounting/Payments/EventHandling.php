@@ -8,6 +8,8 @@ namespace QUI\ERP\Accounting\Payments;
 
 use QUI;
 use QUI\Package\Package;
+use QUI\ERP\Accounting\Payments\Methods;
+use QUI\ERP\Accounting\Payments\Types\Factory;
 
 /**
  * Class EventHandling
@@ -33,7 +35,7 @@ class EventHandling
         }
 
         $Settings = Settings::getInstance();
-        $Payments = Handler::getInstance();
+        $Payments = Payments::getInstance();
 
         if (empty($params['payments']['paymentsJson'])) {
             $Settings->removeSection('payments');
@@ -53,5 +55,97 @@ class EventHandling
         }
 
         $Settings->save();
+    }
+
+    /**
+     * @param Package $Package
+     */
+    public static function onPackageSetup(Package $Package)
+    {
+        if ($Package->getName() != 'quiqqer/products') {
+            return;
+        }
+
+        // create the standard payment types
+        $Locale   = QUI::getLocale();
+        $Factory  = new Factory();
+        $children = $Factory->getChildren();
+
+        $existingTypes = array_map(function ($PaymentType) {
+            /* @var $PaymentType QUI\ERP\Accounting\Payments\Types\Payment */
+            return $PaymentType->getAttribute('payment_type');
+        }, $children);
+
+        $existingTypes = array_flip($existingTypes);
+
+
+        if (!isset($existingTypes[Methods\AdvancePayment\Payment::class])) {
+            $Payment = $Factory->createChild(array(
+                'payment_type' => Methods\AdvancePayment\Payment::class
+            ));
+
+            $Payment->setTitle(array(
+                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.advanced.payment.title'),
+                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.advanced.payment.title')
+            ));
+
+            $Payment->setDescription(array(
+                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.advanced.payment.description'),
+                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.advanced.payment.description')
+            ));
+
+            $Payment->setWorkingTitle(array(
+                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.advanced.payment.workingTitle'),
+                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.advanced.payment.workingTitle')
+            ));
+
+            $Payment->activate();
+        }
+
+        if (!isset($existingTypes[Methods\Cash\Payment::class])) {
+            $Payment = $Factory->createChild(array(
+                'payment_type' => Methods\Cash\Payment::class
+            ));
+
+            $Payment->setTitle(array(
+                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.cash.title'),
+                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.cash.title')
+            ));
+
+            $Payment->setDescription(array(
+                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.cash.description'),
+                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.cash.description')
+            ));
+
+            $Payment->setWorkingTitle(array(
+                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.cash.workingTitle'),
+                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.cash.workingTitle')
+            ));
+
+            $Payment->activate();
+        }
+
+        if (!isset($existingTypes[Methods\Invoice\Payment::class])) {
+            $Payment = $Factory->createChild(array(
+                'payment_type' => Methods\Invoice\Payment::class
+            ));
+
+            $Payment->setTitle(array(
+                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.invoice.title'),
+                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.invoice.title')
+            ));
+
+            $Payment->setDescription(array(
+                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.invoice.description'),
+                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.invoice.description')
+            ));
+
+            $Payment->setWorkingTitle(array(
+                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.invoice.workingTitle'),
+                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.invoice.workingTitle')
+            ));
+
+            $Payment->activate();
+        }
     }
 }
