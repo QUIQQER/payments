@@ -76,4 +76,73 @@
         </locale>
     </groups>
 
+    <groups name="quiqqer/payments" datatype="js">
+        <locale name="payment.edit.template.title">
+            <de><![CDATA[Titel]]></de>
+            <en><![CDATA[Title]]></en>
+        </locale>
+        <locale name="payment.edit.template.id">
+            <de><![CDATA[ID]]></de>
+            <en><![CDATA[ID]]></en>
+        </locale>
+        <locale name="payment.edit.template.usage">
+            <de><![CDATA[Nutzung definieren]]></de>
+            <en><![CDATA[Defining Terms]]></en>
+        </locale>
+        <locale name="payment.edit.template.usage.from">
+            <de><![CDATA[Nutzbar von]]></de>
+            <en><![CDATA[Usage from]]></en>
+        </locale>
+        <locale name="payment.edit.template.usage.to">
+            <de><![CDATA[Nutzbar bis]]></de>
+            <en><![CDATA[Usage to]]></en>
+        </locale>
+        <locale name="payment.edit.template.shopping.amount.of">
+            <de><![CDATA[Einkaufsmenge von]]></de>
+            <en><![CDATA[Shopping amount of]]></en>
+        </locale>
+        <locale name="payment.edit.template.shopping.amount.to">
+            <de><![CDATA[Einkaufsmenge bis]]></de>
+            <en><![CDATA[Shopping amount to]]></en>
+        </locale>
+        <locale name="payment.edit.template.purchase.value.of">
+            <de><![CDATA[Einkaufswert von]]></de>
+            <en><![CDATA[Purchase value of]]></en>
+        </locale>
+        <locale name="payment.edit.template.purchase.value.to">
+            <de><![CDATA[Einkaufswert bis]]></de>
+            <en><![CDATA[Purchase value to]]></en>
+        </locale>
+        <locale name="payment.edit.template.assignment">
+            <de><![CDATA[Zuweisung]]></de>
+            <en><![CDATA[Assignment]]></en>
+        </locale>
+        <locale name="payment.edit.template.areas">
+            <de><![CDATA[Zonen]]></de>
+            <en><![CDATA[Areas]]></en>
+        </locale>
+        <locale name="payment.edit.template.calculationPriority">
+            <de><![CDATA[Priorität]]></de>
+            <en><![CDATA[Priority]]></en>
+        </locale>
+
+        <locale name="payment.edit.template.assignment.product">
+            <de><![CDATA[Produkt]]></de>
+            <en><![CDATA[Product]]></en>
+        </locale>
+        <locale name="payment.edit.template.assignment.category">
+            <de><![CDATA[Kategorie]]></de>
+            <en><![CDATA[Category]]></en>
+        </locale>
+        <locale name="payment.edit.template.assignment.user">
+            <de><![CDATA[Benutzer]]></de>
+            <en><![CDATA[User]]></en>
+        </locale>
+        <locale name="payment.edit.template.assignment.combine">
+            <de><![CDATA[Kombinierbar mit]]></de>
+            <en><![CDATA[Combined with]]></en>
+        </locale>
+
+    </groups>
+
 </locales>

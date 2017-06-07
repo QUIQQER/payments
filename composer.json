@@ -22,7 +22,8 @@
     "email": "support@pcsg.de"
   },
   "require": {
-    "quiqqer/quiqqer": "*"
+    "quiqqer/quiqqer": "*",
+    "quiqqer/areas": "*"
   },
   "autoload": {
     "psr-4": {

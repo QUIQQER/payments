@@ -12,6 +12,8 @@ use QUI\Translator;
 use QUI\ERP\Accounting\Payments\Api;
 use QUI\Permissions\Permission;
 
+use QUI\ERP\Areas\Utils as AreaUtils;
+
 /**
  * Class Payment
  * A user created payment
@@ -85,6 +87,74 @@ class Payment extends QUI\CRUD\Child
         }
 
         return $Type;
+    }
+
+    /**
+     * is the user allowed to use the discount
+     *
+     * @param QUI\Interfaces\Users\User $User
+     * @return boolean
+     */
+    public function canUsedBy(QUI\Interfaces\Users\User $User)
+    {
+        if ($this->isActive() === false) {
+            return false;
+        }
+
+        // usage definitions / limits
+        $dateFrom  = $this->getAttribute('date_from');
+        $dateUntil = $this->getAttribute('date_until');
+        $now       = time();
+
+        if ($dateFrom && strtotime($dateFrom) > $now) {
+            return false;
+        }
+
+        if ($dateUntil && strtotime($dateUntil) < $now) {
+            return false;
+        }
+
+        // assignment
+        $userGroupValue = $this->getAttribute('user_groups');
+        $areasValue     = $this->getAttribute('areas');
+
+        // if groups and areas are empty, everybody is allowed
+        if (empty($userGroupValue) && empty($areasValue)) {
+            return true;
+        }
+
+        // not in area
+        if (!empty($areasValue) && !AreaUtils::isUserInAreas($User, $areasValue)) {
+            return false;
+        }
+
+        $userGroups = QUI\Utils\UserGroups::parseUsersGroupsString(
+            $this->getAttribute('user_groups')
+        );
+
+        $discountUsers  = $userGroups['users'];
+        $discountGroups = $userGroups['groups'];
+
+        // user checking
+        foreach ($discountUsers as $uid) {
+            if ($User->getId() == $uid) {
+                return true;
+            }
+        }
+
+        // group checking
+        $groupsOfUser = $User->getGroups();
+
+        /* @var $Group QUI\Groups\Group */
+        foreach ($discountGroups as $gid) {
+            foreach ($groupsOfUser as $Group) {
+                if ($Group->getId() == $gid) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

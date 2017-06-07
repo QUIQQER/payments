@@ -37,6 +37,21 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
             });
         },
 
+        /**
+         *
+         * @param paymentId
+         * @return {Promise}
+         */
+        getPayment: function (paymentId) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_payments_ajax_backend_getPayment', resolve, {
+                    'package': 'quiqqer/payments',
+                    onError  : reject,
+                    paymentId: paymentId
+                });
+            });
+        },
+
         createPayment: function () {
 
         },

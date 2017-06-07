@@ -32,8 +32,8 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
 
         Binds: [
             'refresh',
+            '$onEditClick',
             '$openAddDialog',
-            '$openEditDialog',
             '$openDeleteDialog',
             '$refreshButtonStatus'
         ],
@@ -100,7 +100,7 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
                     textimage: 'fa fa-edit',
                     disabled : true,
                     events   : {
-                        onClick: this.$openEditDialog
+                        onClick: this.$onEditClick
                     }
                 }, {
                     name     : 'delete',
@@ -130,8 +130,9 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
             });
 
             this.$Grid.addEvents({
-                onRefresh: this.refresh,
-                onClick  : this.$refreshButtonStatus
+                onRefresh : this.refresh,
+                onClick   : this.$refreshButtonStatus,
+                onDblClick: this.$onEditClick
             });
 
             return this.$Elm;
@@ -155,6 +156,33 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
         },
 
         /**
+         * open the edit dialog
+         */
+        openPayment: function (paymentId) {
+            require([
+                'package/quiqqer/payments/bin/backend/controls/Payment',
+                'utils/Panels'
+            ], function (Payment, Utils) {
+                Utils.openPanelInTasks(
+                    new Payment({
+                        paymentId: paymentId
+                    })
+                );
+            });
+        },
+
+        /**
+         * event: on edit
+         */
+        $onEditClick: function () {
+            var data = this.$Grid.getSelectedData();
+
+            if (data.length) {
+                this.openPayment(data[0].id);
+            }
+        },
+
+        /**
          * open the add dialog
          */
         $openAddDialog: function () {
@@ -174,13 +202,6 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
                     }
                 }
             }).open();
-        },
-
-        /**
-         * open the edit dialog
-         */
-        $openEditDialog: function () {
-
         },
 
         /**

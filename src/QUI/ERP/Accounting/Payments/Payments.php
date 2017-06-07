@@ -9,8 +9,6 @@ namespace QUI\ERP\Accounting\Payments;
 use QUI;
 use QUI\ERP\Accounting\Payments\Types\Factory;
 use QUI\ERP\Accounting\Payments\Types\Payment;
-use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
-use QUI\ERP\Accounting\Payments\Api\AbstractPaymentProvider;
 
 /**
  * Payments
@@ -100,7 +98,7 @@ class Payments extends QUI\Utils\Singleton
     }
 
     /**
-     * Return a payment, if the payment is active
+     * Return a payment
      *
      * @param int|string $paymentId - ID of the payment type
      * @return Payment
@@ -110,16 +108,15 @@ class Payments extends QUI\Utils\Singleton
     public function getPayment($paymentId)
     {
         /* @var $Payment Payment */
-        $Payment = Factory::getInstance()->getChild($paymentId);
-
-        if ($Payment->isActive()) {
+        try {
+            $Payment = Factory::getInstance()->getChild($paymentId);
             return $Payment;
+        } catch (QUI\Exception $exception) {
+            throw new Exception(array(
+                'quiqqer/payments',
+                'exception.payment.not.found'
+            ));
         }
-
-        throw new Exception(array(
-            'quiqqer/payments',
-            'exception.payment.not.found'
-        ));
     }
 
     /**
@@ -133,17 +130,22 @@ class Payments extends QUI\Utils\Singleton
     }
 
     /**
+     * Return all payments for the user
      *
+     * @param \QUI\Interfaces\Users\User|null $User - optional
+     * @return array
      */
-    public function getPaymentsByUser($User = null)
+    public function getUserPayments($User = null)
     {
         if ($User === null) {
             $User = QUI::getUserBySession();
         }
 
-        $result = array();
+        $payments = array_filter($this->getPayments(), function ($Payment) use ($User) {
+            /* @var $Payment Payment */
+            return $Payment->canUsedBy($User);
+        });
 
-
-        return $result;
+        return $payments;
     }
 }
