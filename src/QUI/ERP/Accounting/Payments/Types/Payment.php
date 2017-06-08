@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Accounting\Payments\Types\Factory
+ * This file contains QUI\ERP\Accounting\Payments\Types\Payment
  */
 
 namespace QUI\ERP\Accounting\Payments\Types;
@@ -299,13 +299,22 @@ class Payment extends QUI\CRUD\Child
         $languages = QUI::availableLanguages();
 
         foreach ($languages as $language) {
-            if (isset($title[$language])) {
-                $data[$language] = $title[$language];
+            if (!isset($title[$language])) {
+                continue;
             }
+
+            $data[$language]           = $title[$language];
+            $data[$language . '_edit'] = $title[$language];
         }
 
+        $exists = Translator::getVarData('quiqqer/payments', $var, 'quiqqer/payments');
+
         try {
-            Translator::addUserVar('quiqqer/payments', $var, $data);
+            if (empty($exists)) {
+                Translator::addUserVar('quiqqer/payments', $var, $data);
+            } else {
+                Translator::edit('quiqqer/payments', $var, 'quiqqer/payments', $data);
+            }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());
         }

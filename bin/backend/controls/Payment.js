@@ -4,19 +4,31 @@
  *
  * @require qui/QUI
  * @require qui/controls/desktop/Panel
+ * @require qui/controls/windows/Confirm
  * @require package/quiqqer/payments/bin/backend/Payments
+ * @require package/quiqqer/translator/bin/Translator
+ * @require package/quiqqer/translator/bin/controls/Update
+ * @require qui/utils/Form
+ * @require Mustache
+ * @require Locale
+ * @require text!package/quiqqer/payments/bin/backend/controls/Payment.html
  */
 define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
     'qui/QUI',
     'qui/controls/desktop/Panel',
+    'qui/controls/windows/Confirm',
     'package/quiqqer/payments/bin/backend/Payments',
+    'package/quiqqer/translator/bin/Translator',
+    'package/quiqqer/translator/bin/controls/Update',
+    'qui/utils/Form',
     'Mustache',
     'Locale',
 
     'text!package/quiqqer/payments/bin/backend/controls/Payment.html'
 
-], function (QUI, QUIPanel, Payments, Mustache, QUILocale, template) {
+], function (QUI, QUIPanel, QUIConfirm,
+             Payments, Translator, TranslatUpdater, FormUtils, Mustache, QUILocale, template) {
     "use strict";
 
     var lg = 'quiqqer/payments';
@@ -29,6 +41,8 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         Binds: [
             'showInformation',
             'showDescription',
+            'openDeleteDialog',
+            'save',
             '$onCreate',
             '$showContainer',
             '$hideContainer'
@@ -43,6 +57,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
             this.$Container = null;
 
+            this.$DataTitle        = null;
+            this.$DataWorkingTitle = null;
+            this.$DataDescription  = null;
+
             this.addEvents({
                 onCreate: this.$onCreate,
                 onInject: this.$onInject
@@ -54,18 +72,47 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          */
         $onCreate: function () {
             this.addButton({
+                name     : 'save',
+                title    : QUILocale.get('quiqqer/quiqqer', 'save'),
                 text     : QUILocale.get('quiqqer/quiqqer', 'save'),
                 textimage: 'fa fa-save',
                 events   : {
-                    onClick: function () {
+                    onClick: this.save
+                }
+            });
 
+            this.addButton({
+                type: 'separator'
+            });
+
+            this.addButton({
+                name     : 'status',
+                text     : QUILocale.get('quiqqer/quiqqer', 'deactivate'),
+                title    : QUILocale.get('quiqqer/quiqqer', 'deactivate'),
+                textimage: 'fa fa-remove',
+                disabled : true,
+                events   : {
+                    onClick: function () {
                     }
                 }
             });
 
+            this.addButton({
+                name  : 'delete',
+                title : QUILocale.get('quiqqer/system', 'delete'),
+                icon  : 'fa fa-trash',
+                events: {
+                    onClick: this.openDeleteDialog
+                },
+                styles: {
+                    'float': 'right'
+                }
+            });
+
+
             this.addCategory({
                 name  : 'information',
-                text  : 'Informationen',
+                text  : QUILocale.get('quiqqer/system', 'information'),
                 icon  : 'fa fa-file-o',
                 events: {
                     onClick: this.showInformation
@@ -74,7 +121,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
             this.addCategory({
                 name  : 'description',
-                text  : 'Beschreibung',
+                text  : QUILocale.get('quiqqer/system', 'description'),
                 icon  : 'fa fa-file-text-o',
                 events: {
                     onClick: this.showDescription
@@ -101,18 +148,58 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          * event : on inject
          */
         $onInject: function () {
+            var self = this;
+
+            this.Loader.show();
+
+            this.reload().then(function () {
+                self.getCategory('information').click();
+            });
+        },
+
+        /**
+         * Reload the payment data
+         */
+        reload: function () {
+            var self      = this,
+                paymentId = this.getAttribute('paymentId');
+            console.log(paymentId);
+            return Payments.getPayment(paymentId).then(function (result) {
+                console.warn(result);
+                self.setAttribute('title', result.title);
+                self.setAttribute('icon', 'fa fa-credit-card-alt');
+
+                delete result.title;
+                delete result.workingTitle;
+                delete result.description;
+
+                self.setAttribute('data', result);
+            }).then(function () {
+                self.refresh();
+            });
+        },
+
+        /**
+         * Save the current payment settings
+         *
+         * @return {Promise}
+         */
+        save: function () {
             var self      = this,
                 paymentId = this.getAttribute('paymentId');
 
             this.Loader.show();
+            this.$unloadContainer();
 
-            Payments.getPayment(paymentId).then(function (result) {
-                self.setAttribute('title', result.title);
-                self.setAttribute('icon', 'fa fa-credit-card-alt');
-                self.setAttribute('data', result);
-            }).then(function () {
-                self.refresh();
-                self.getCategory('information').click();
+            var data = this.getAttribute('data');
+
+            return new Promise(function (resolve, reject) {
+                Payments.updatePayment(paymentId, data).then(function () {
+                    return self.reload();
+                }).then(function () {
+                    resolve();
+                    self.Loader.hide();
+                }).catch(reject);
             });
         },
 
@@ -120,10 +207,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          * Show the information
          */
         showInformation: function () {
-            var self = this;
+            var self = this,
+                data = self.getAttribute('data');
 
             this.$hideContainer().then(function (Container) {
-                var data = self.getAttribute('data');
 
                 Container.set({
                     html: Mustache.render(template, {
@@ -144,16 +231,36 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
                         usageAssignmentProduct : QUILocale.get(lg, 'payment.edit.template.assignment.product'),
                         usageAssignmentCategory: QUILocale.get(lg, 'payment.edit.template.assignment.category'),
-                        usageAssignmentUser    : QUILocale.get(lg, 'payment.edit.template.assignment.user'),
-                        usageAssignmentCombine : QUILocale.get(lg, 'payment.edit.template.assignment.combine')
+                        usageAssignmentUser    : QUILocale.get(lg, 'payment.edit.template.assignment.user')
                     })
                 });
 
                 Container.getElement('.field-id').set('html', data.id);
 
-                console.warn(data);
+                FormUtils.setDataToForm(data, Container.getElement('form'));
 
+                return Promise.all([
+                    self.$getTranslationData('title'),
+                    self.$getTranslationData('workingTitle')
+                ]);
+            }).then(function (translationData) {
+                return new Promise(function (resolve, reject) {
+                    require([
+                        'controls/lang/InputMultiLang'
+                    ], function (InputMultiLang) {
+                        self.$DataTitle        = new InputMultiLang().replaces(self.$Container.getElement('.payment-title'));
+                        self.$DataWorkingTitle = new InputMultiLang().replaces(self.$Container.getElement('.payment-workingTitle'));
+
+                        self.$DataTitle.setData(translationData[0]);
+                        self.$DataWorkingTitle.setData(translationData[1]);
+
+                        resolve();
+                    }, reject);
+                });
+            }).then(function () {
                 return self.$showContainer();
+            }).catch(function (err) {
+                console.error(err);
             });
         },
 
@@ -163,15 +270,24 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         showDescription: function () {
             var self = this;
 
-            this.$hideContainer().then(function (Container) {
+            Promise.all([
+                this.$hideContainer(),
+                this.$getTranslationData('description')
+            ]).then(function (result) {
+                var Container   = result[0],
+                    description = result[1];
+
                 return new Promise(function (resolve) {
                     require(['controls/lang/ContentMultiLang'], function (ContentMultiLang) {
-                        new ContentMultiLang({
+                        self.$DataDescription = new ContentMultiLang({
                             styles: {
                                 height: '100%'
                             },
                             events: {
-                                onLoad: resolve
+                                onLoad: function () {
+                                    self.$DataDescription.setData(description);
+                                    resolve();
+                                }
                             }
                         }).inject(Container);
                     });
@@ -180,6 +296,32 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 return self.$showContainer();
             });
         },
+
+        /**
+         * Opens the delete dialog
+         */
+        openDeleteDialog: function () {
+            var self      = this,
+                paymentId = this.getAttribute('paymentId');
+
+            new QUIConfirm({
+                title    : '',
+                icon     : 'fa fa-trash',
+                autoclose: false,
+                events   : {
+                    onSubmit: function (Win) {
+                        Win.Loader.show();
+
+                        Payments.deletePayment(paymentId).then(function () {
+                            Win.close();
+                            self.destroy();
+                        });
+                    }
+                }
+            }).open();
+        },
+
+        // region UI Helper
 
         /**
          * Show the container
@@ -222,11 +364,153 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 }, {
                     duration: 250,
                     callback: function () {
+                        self.$unloadContainer();
                         self.$Container.set('html', '');
                         resolve(self.$Container);
                     }
                 });
             });
+        },
+
+        /**
+         * unload the data from the current category
+         */
+        $unloadContainer: function () {
+            var Form = this.$Container.getElement('form');
+
+            if (this.$DataDescription) {
+                this.$setData('description', this.$DataDescription.getData());
+                this.$DataDescription.destroy();
+                this.$DataDescription = null;
+            }
+
+            if (this.$DataTitle) {
+                this.$setData('title', this.$DataTitle.getData());
+                this.$DataTitle.destroy();
+                this.$DataTitle = null;
+            }
+
+            if (this.$DataWorkingTitle) {
+                this.$setData('workingTitle', this.$DataWorkingTitle.getData());
+                this.$DataWorkingTitle.destroy();
+                this.$DataWorkingTitle = null;
+            }
+
+            if (Form) {
+                var formData = FormUtils.getFormData(Form);
+
+                for (var key in formData) {
+                    if (formData.hasOwnProperty(key)) {
+                        this.$setData(key, formData[key]);
+                    }
+                }
+            }
+        },
+
+        //endregion
+
+        /**
+         * set the payment data for the panel
+         *
+         * @param {String} name
+         * @param {String} value
+         */
+        $setData: function (name, value) {
+            var data   = this.getAttribute('data');
+            data[name] = value;
+
+            this.setAttribute('data', data);
+        },
+
+        /**
+         * Return a data entry
+         *
+         * @param {String} name
+         */
+        $getData: function (name) {
+            var data = this.getAttribute('data');
+
+            if (name in data) {
+                return data[name];
+            }
+
+            return false;
+        },
+
+        /**
+         * Return the current data of a language field
+         *
+         * @param name
+         * @return {Promise}
+         */
+        $getTranslationData: function (name) {
+            var paymentId = this.getAttribute('paymentId');
+
+            var title        = 'payment.' + paymentId + '.title';
+            var description  = 'payment.' + paymentId + '.description';
+            var workingTitle = 'payment.' + paymentId + '.workingTitle';
+
+            if (typeof this.$__running === 'undefined') {
+                this.$__storageData = {};
+                this.$__running     = false;
+            }
+
+            var getData = function () {
+                return new Promise(function (resolve, reject) {
+                    if ("title" in this.$__storageData) {
+                        resolve();
+                        return;
+                    }
+
+                    if (this.$__running) {
+                        (function () {
+                            getData().then(resolve, reject);
+                        }).delay(100);
+                        return;
+                    }
+
+                    this.$__running = true;
+
+                    Promise.all([
+                        Translator.get(lg, title, lg),
+                        Translator.get(lg, description, lg),
+                        Translator.get(lg, workingTitle, lg),
+                        Translator.getAvailableLanguages()
+                    ]).then(function (promiseResult) {
+                        this.$__storageData.title        = promiseResult[0];
+                        this.$__storageData.description  = promiseResult[1];
+                        this.$__storageData.workingTitle = promiseResult[2];
+                        this.$__storageData.languages    = promiseResult[3];
+
+                        this.$__running = false;
+                        resolve();
+                    }.bind(this), reject);
+                }.bind(this));
+            }.bind(this);
+
+
+            return getData().then(function () {
+                var data = this.$__storageData;
+
+                var result = {};
+                var value  = data[name];
+
+                if (this.$getData(name)) {
+                    value = this.$getData(name);
+                }
+
+                data.languages.each(function (language) {
+                    var val = value[language];
+
+                    if (value[language + '_edit'] !== '' && value[language + '_edit']) {
+                        val = value[language + '_edit'];
+                    }
+
+                    result[language] = val;
+                });
+
+                return result;
+            }.bind(this));
         }
     });
 });

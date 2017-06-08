@@ -122,11 +122,16 @@ class Payments extends QUI\Utils\Singleton
     /**
      * Return all active payments
      *
+     * @param array $queryParams
      * @return array
      */
-    public function getPayments()
+    public function getPayments($queryParams = array())
     {
-        return Factory::getInstance()->getChildren();
+        if (!isset($queryParams['order'])) {
+            $queryParams['order'] = 'priority ASC';
+        }
+
+        return Factory::getInstance()->getChildren($queryParams);
     }
 
     /**

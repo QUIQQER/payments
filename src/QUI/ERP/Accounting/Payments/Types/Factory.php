@@ -59,7 +59,22 @@ class Factory extends QUI\CRUD\Factory
      */
     public function createChild($data = array())
     {
-        return parent::createChild($data);
+        /* @var $NewChild Payment */
+        $NewChild = parent::createChild($data);
+
+        $this->createPaymentLocale(
+            'payment.' . $NewChild->getId() . '.title',
+            '[quiqqer/payments] new.payment.paceholder'
+        );
+
+        $this->createPaymentLocale(
+            'payment.' . $NewChild->getId() . '.workingTitle',
+            '[quiqqer/payments] new.payment.paceholder'
+        );
+
+        QUI\Translator::publish('quiqqer/payments');
+
+        return $NewChild;
     }
 
     /**

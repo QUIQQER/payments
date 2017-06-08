@@ -59,9 +59,21 @@
             <en><![CDATA[]]></en>
         </locale>
 
+        <locale name="menu.erp.title">
+            <de><![CDATA[Shop]]></de>
+            <en><![CDATA[Shop]]></en>
+        </locale>
+        <locale name="menu.erp.payments.title">
+            <de><![CDATA[Zahlungsarten]]></de>
+            <en><![CDATA[Payments]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/payments" datatype="php">
+        <locale name="new.payment.paceholder">
+            <de><![CDATA[Neue Bezahlmethode]]></de>
+            <en><![CDATA[New payment type]]></en>
+        </locale>
         <locale name="exception.payment.not.found">
             <de><![CDATA[Die Bezahlmethode [payment] wurde nicht gefunden.]]></de>
             <en><![CDATA[The payment method [payment] was not found.]]></en>
@@ -143,6 +155,43 @@
             <en><![CDATA[Combined with]]></en>
         </locale>
 
+        <locale name="window.delete.title">
+            <de><![CDATA[Zahlungsart löschen]]></de>
+            <en><![CDATA[Delete payment type]]></en>
+        </locale>
+        <locale name="window.delete.text">
+            <de><![CDATA[Zahlungsart [payment] wirklich löschen?]]></de>
+            <en><![CDATA[Payment type [payment] really delete?]]></en>
+        </locale>
+        <locale name="window.delete.information" html="true">
+            <de><![CDATA[
+            Möchten Sie die Zahlungsart wirklich löschen?<br />
+            Die Zahlungsart kann nicht wieder hergestellt werden.
+            Beachten Sie das eventuelle Bestellungen nicht mehr richtig ausgeführt werden können.
+            ]]></de>
+            <en><![CDATA[
+            Are you sure you want to delete the payment type? <br />
+            The payment type can not be restored.
+            Observe that possible orders can no longer be executed correctly.
+            ]]></en>
+        </locale>
+
+        <locale name="window.create.title">
+            <de><![CDATA[Zahlungsart erstellen]]></de>
+            <en><![CDATA[Create payment type]]></en>
+        </locale>
+        <locale name="window.create.text">
+            <de><![CDATA[Eine neue Zahlungsart erstellen]]></de>
+            <en><![CDATA[Create new payment type]]></en>
+        </locale>
+        <locale name="window.create.information" html="true">
+            <de><![CDATA[
+            Die neu erstellte Zahlungsart ist inaktiv und wird nach dem erstellen sofort geöffnet.
+            ]]></de>
+            <en><![CDATA[
+            The newly created payment type is inactive and will be opened immediately after the creation.
+            ]]></en>
+        </locale>
     </groups>
 
 </locales>

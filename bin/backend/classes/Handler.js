@@ -52,15 +52,59 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
             });
         },
 
+        /**
+         * Create a new inactive payment type
+         *
+         * @return {Promise}
+         */
         createPayment: function () {
-
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_payments_ajax_backend_create', function (paymentId) {
+                    require([
+                        'package/quiqqer/translator/bin/Translator'
+                    ], function (Translator) {
+                        Translator.refreshLocale().then(function () {
+                            resolve(paymentId);
+                        });
+                    });
+                }, {
+                    'package': 'quiqqer/payments',
+                    onError  : reject
+                });
+            });
         },
 
-        editPayment: function () {
-
+        /**
+         * Update a payment
+         *
+         * @param {Number|String} paymentId - Payment ID
+         * @param {Object} data - Data of the payment
+         * @return {Promise}
+         */
+        updatePayment: function (paymentId, data) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_payments_ajax_backend_update', function () {
+                    require([
+                        'package/quiqqer/translator/bin/Translator'
+                    ], function (Translator) {
+                        Translator.refreshLocale().then(function () {
+                            resolve(paymentId);
+                        });
+                    });
+                }, {
+                    'package': 'quiqqer/payments',
+                    onError  : reject,
+                    paymentId: paymentId,
+                    data     : JSON.encode(data)
+                });
+            });
         },
 
-
+        /**
+         *
+         * @param paymentId
+         * @return {Promise}
+         */
         deletePayment: function (paymentId) {
             return new Promise(function (resolve, reject) {
                 QUIAjax.get('package_quiqqer_payments_ajax_backend_delete', resolve, {

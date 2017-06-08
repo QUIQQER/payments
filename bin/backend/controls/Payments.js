@@ -1,39 +1,46 @@
 /**
- * @module package/quiqqer/payments/bin/backend/controls/Settings
+ * @module package/quiqqer/payments/bin/backend/controls/Payments
  * @author www.pcsg.de (Henning Leutz)
  *
- * @requires qui/QUI
- * @requires qui/controls/Control
- * @requires Mustache
- * @requires text!package/quiqqer/payments/bin/backend/controls/Settings.html
+ * Payments Panel
+ *
+ * @require qui/QUI
+ * @require qui/controls/desktop/Panel
+ * @require qui/controls/windows/Confirm
+ * @require package/quiqqer/payments/bin/backend/Payments
+ * @require controls/grid/Grid
+ * @require Mustache
+ * @require Locale
+ * @require Ajax
  */
-define('package/quiqqer/payments/bin/backend/controls/Settings', [
+define('package/quiqqer/payments/bin/backend/controls/Payments', [
 
     'qui/QUI',
-    'qui/controls/Control',
+    'qui/controls/desktop/Panel',
     'qui/controls/windows/Confirm',
     'package/quiqqer/payments/bin/backend/Payments',
     'controls/grid/Grid',
     'Mustache',
     'Locale',
-    'Ajax',
+    'Ajax'
 
-    'text!package/quiqqer/payments/bin/backend/controls/Settings.html'
-
-], function (QUI, QUIControl, QUIConfirm, Payments, Grid, Mustache, QUILocale, QUIAjax, template) {
+], function (QUI, QUIPanel, QUIConfirm, Payments, Grid, Mustache, QUILocale, QUIAjax) {
     "use strict";
 
     var lg = 'quiqqer/payments';
 
     return new Class({
 
-        Extends: QUIControl,
-        Type   : 'package/quiqqer/payments/bin/backend/controls/Settings',
+        Extends: QUIPanel,
+        Type   : 'package/quiqqer/payments/bin/backend/controls/Payments',
 
         Binds: [
             'refresh',
+            '$onCreate',
+            '$onInject',
+            '$onResize',
             '$onEditClick',
-            '$openAddDialog',
+            '$openCreateDialog',
             '$openDeleteDialog',
             '$refreshButtonStatus'
         ],
@@ -41,11 +48,18 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input = null;
-            this.$Grid  = null;
+            this.$Grid = null;
+
+            this.setAttributes({
+                icon : 'fa fa-credit-card-alt',
+                title: QUILocale.get(lg, 'menu.erp.payments.title')
+            });
 
             this.addEvents({
-                onImport: this.$onImport
+                onCreate: this.$onCreate,
+                onInject: this.$onInject,
+                onResize: this.$onResize
+
             });
         },
 
@@ -60,6 +74,22 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
             var self = this;
 
             Payments.getPayments().then(function (result) {
+                var Active = new Element('span', {
+                    'class': 'fa fa-check'
+                });
+
+                var Deactive = new Element('span', {
+                    'class': 'fa fa-remove'
+                });
+
+                for (var i = 0, len = result.length; i < len; i++) {
+                    if (parseInt(result[i].active)) {
+                        result[i].status = Active.clone();
+                    } else {
+                        result[i].status = Deactive.clone();
+                    }
+                }
+
                 self.$Grid.setData({
                     data: result
                 });
@@ -67,24 +97,15 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
         },
 
         /**
-         * Return the domnode element
-         *
-         * @return {Element}
+         * event: on create
          */
-        create: function () {
-            this.$Elm = new Element('div', {
-                styles: {
-                    minHeight: 300,
-                    width    : '100%'
-                }
-            });
-
+        $onCreate: function () {
             var Container = new Element('div', {
                 styles: {
                     minHeight: 300,
                     width    : '100%'
                 }
-            }).inject(this.$Elm);
+            }).inject(this.getContent());
 
             this.$Grid = new Grid(Container, {
                 buttons    : [{
@@ -92,8 +113,10 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
                     text     : QUILocale.get('quiqqer/quiqqer', 'add'),
                     textimage: 'fa fa-plus',
                     events   : {
-                        onClick: this.$openAddDialog
+                        onClick: this.$openCreateDialog
                     }
+                }, {
+                    type: 'separator'
                 }, {
                     name     : 'edit',
                     text     : QUILocale.get('quiqqer/quiqqer', 'edit'),
@@ -112,10 +135,15 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
                     }
                 }],
                 columnModel: [{
-                    header   : QUILocale.get('quiqqer/system', 'id'),
-                    dataIndex: 'id',
+                    header   : QUILocale.get('quiqqer/system', 'priority'),
+                    dataIndex: 'priority',
                     dataType : 'number',
-                    width    : 30
+                    width    : 50
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'status'),
+                    dataIndex: 'status',
+                    dataType : 'node',
+                    width    : 60
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
@@ -126,6 +154,11 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
                     dataIndex: 'workingTitle',
                     dataType : 'string',
                     width    : 200
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'id'),
+                    dataIndex: 'id',
+                    dataType : 'number',
+                    width    : 30
                 }]
             });
 
@@ -134,25 +167,32 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
                 onClick   : this.$refreshButtonStatus,
                 onDblClick: this.$onEditClick
             });
-
-            return this.$Elm;
         },
 
         /**
-         * @event on inject
+         * event : on inject
          */
         $onInject: function () {
-            this.$Grid.setHeight(300);
             this.refresh();
         },
 
         /**
-         * @event : on import
+         * event : on resize
          */
-        $onImport: function () {
-            this.$Input = this.$Elm;
-            this.create().inject(this.$Input, 'after');
-            this.$onInject();
+        $onResize: function () {
+            if (!this.$Grid) {
+                return;
+            }
+
+            var Body = this.getContent();
+
+            if (!Body) {
+                return;
+            }
+
+            var size = Body.getSize();
+            this.$Grid.setHeight(size.y - 40);
+            this.$Grid.setWidth(size.x - 40);
         },
 
         /**
@@ -185,20 +225,27 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
         /**
          * open the add dialog
          */
-        $openAddDialog: function () {
+        $openCreateDialog: function () {
+            var self = this;
+
             new QUIConfirm({
-                title    : 'Zahlungsart hinzufügen',
-                icon     : 'fa fa-plus',
-                autoclose: true,
-                maxHeight: 400,
-                maxWidth : 600,
-                events   : {
-                    onOpen: function () {
-
-                    },
-
+                icon       : 'fa fa-plus',
+                texticon   : 'fa fa-plus',
+                title      : QUILocale.get(lg, 'window.create.title'),
+                text       : QUILocale.get(lg, 'window.create.title'),
+                information: QUILocale.get(lg, 'window.create.information'),
+                autoclose  : false,
+                maxHeight  : 400,
+                maxWidth   : 600,
+                events     : {
                     onSubmit: function (Win) {
                         Win.Loader.show();
+
+                        Payments.createPayment().then(function (newId) {
+                            Win.close();
+                            self.refresh();
+                            self.openPayment(newId);
+                        });
                     }
                 }
             }).open();
@@ -208,19 +255,41 @@ define('package/quiqqer/payments/bin/backend/controls/Settings', [
          * open the add dialog
          */
         $openDeleteDialog: function () {
+            var selected = this.$Grid.getSelectedData();
+
+            if (!selected.length) {
+                return;
+            }
+
+            var self      = this,
+                payment   = selected[0].title,
+                paymentId = selected[0].id;
+
+            if (payment === '') {
+                payment = paymentId;
+            }
+
             new QUIConfirm({
-                title    : 'Zahlungsart löschen',
-                icon     : 'fa fa-trash',
-                autoclose: true,
-                maxHeight: 400,
-                maxWidth : 600,
-                events   : {
-                    onOpen: function () {
-
-                    },
-
+                texticon   : 'fa fa-trash',
+                icon       : 'fa fa-trash',
+                title      : QUILocale.get(lg, 'window.delete.title'),
+                information: QUILocale.get(lg, 'window.delete.information', {
+                    payment: payment
+                }),
+                text       : QUILocale.get(lg, 'window.delete.text', {
+                    payment: payment
+                }),
+                autoclose  : false,
+                maxHeight  : 400,
+                maxWidth   : 600,
+                events     : {
                     onSubmit: function (Win) {
                         Win.Loader.show();
+
+                        Payments.deletePayment(paymentId).then(function () {
+                            Win.close();
+                            self.refresh();
+                        });
                     }
                 }
             }).open();
