@@ -61,8 +61,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Container = null;
+            this.setAttributes({
+                '#id': "paymentId" in options ? options.paymentId : false
+            });
 
+            this.$Container        = null;
             this.$DataTitle        = null;
             this.$DataWorkingTitle = null;
             this.$DataDescription  = null;
