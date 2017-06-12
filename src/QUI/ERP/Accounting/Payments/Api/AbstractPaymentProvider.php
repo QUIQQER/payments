@@ -15,7 +15,8 @@ use QUI;
 abstract class AbstractPaymentProvider
 {
     /**
+     * Return the payment types of the provider
      * @return array
      */
-    abstract public function getPaymentMethods();
+    abstract public function getPaymentTypes();
 }

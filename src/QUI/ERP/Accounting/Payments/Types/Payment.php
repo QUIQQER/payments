@@ -54,25 +54,32 @@ class Payment extends QUI\CRUD\Child
         $attributes['title']        = $this->getTitle($Locale);
         $attributes['workingTitle'] = $this->getWorkingTitle($Locale);
         $attributes['description']  = $this->getDescription($Locale);
+        $attributes['paymentType']  = false;
+
+        try {
+            $attributes['paymentType'] = $this->getPaymentType()->toArray();
+        } catch (QUI\ERP\Accounting\Payments\Exception $Exception) {
+            QUI\System\Log::addNotice($Exception->getMessage());
+        }
 
         return $attributes;
     }
 
     /**
-     * Return the payment method of the type
+     * Return the payment type of the type
      *
      * @return Api\AbstractPayment
      * @throws QUI\ERP\Accounting\Payments\Exception
      */
-    public function getPaymentMethod()
+    public function getPaymentType()
     {
-        $type = $this->getAttribute('payment_method');
+        $type = $this->getAttribute('payment_type');
 
         if (!class_exists($type)) {
             throw new QUI\ERP\Accounting\Payments\Exception(array(
                 'quiqqer/payments',
-                'exception.payment.method.not.found',
-                array('paymentMethod' => $type)
+                'exception.payment.type.not.found',
+                array('paymentType' => $type)
             ));
         }
 
@@ -81,8 +88,8 @@ class Payment extends QUI\CRUD\Child
         if (!($Type instanceof Api\AbstractPayment)) {
             throw new QUI\ERP\Accounting\Payments\Exception(array(
                 'quiqqer/payments',
-                'exception.payment.method.not.abstractPayment',
-                array('paymentMethod' => $type)
+                'exception.payment.type.not.abstractPayment',
+                array('paymentType' => $type)
             ));
         }
 
@@ -164,6 +171,7 @@ class Payment extends QUI\CRUD\Child
     {
         $this->setAttribute('active', 1);
         $this->update();
+        $this->refresh();
     }
 
     /**
@@ -183,6 +191,7 @@ class Payment extends QUI\CRUD\Child
     {
         $this->setAttribute('active', 0);
         $this->update();
+        $this->refresh();
     }
 
     //region GETTER

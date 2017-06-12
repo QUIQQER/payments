@@ -19,7 +19,7 @@ class Provider extends Api\AbstractPaymentProvider
     /**
      * @return array
      */
-    public function getPaymentMethods()
+    public function getPaymentTypes()
     {
         return [
             Methods\Cash\Payment::class,

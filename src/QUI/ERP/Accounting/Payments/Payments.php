@@ -9,6 +9,8 @@ namespace QUI\ERP\Accounting\Payments;
 use QUI;
 use QUI\ERP\Accounting\Payments\Types\Factory;
 use QUI\ERP\Accounting\Payments\Types\Payment;
+use QUI\ERP\Accounting\Payments\Api\AbstractPaymentProvider;
+use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
 
 /**
  * Payments
@@ -20,81 +22,107 @@ class Payments extends QUI\Utils\Singleton
     protected $payments = array();
 
     /**
-     * constructor
+     * Return all available payment provider
+     *
+     * @return array
      */
-    public function __construct()
+    public function getPaymentProviders()
     {
+        $cacheProvider = 'package/quiqqer/payments/provider';
 
-//        $cachePayments = 'package/quiqqer/payments/payments';
-//        $cacheProvider = 'package/quiqqer/payments/provider';
-//
-//        try {
-//            $providerPayments = QUI\Cache\Manager::get($cachePayments);
-//
-//            foreach ($providerPayments as $providerPayment) {
-//                $Payment = new $providerPayment();
-//
-//                if ($Payment instanceof AbstractPayment) {
-//                    $this->payments[$Payment->getName()] = $Payment;
-//                }
-//            }
-//            return;
-//        } catch (QUI\Exception $Exception) {
-//        }
-//
-//        $packages = array_map(function ($package) {
-//            return $package['name'];
-//        }, QUI::getPackageManager()->getInstalled());
-//
-//        $payments = array();
-//
-//        try {
-//            $providers = QUI\Cache\Manager::get($cacheProvider);
-//        } catch (QUI\Cache\Exception $Exception) {
-//            $providers = array();
-//
-//            foreach ($packages as $package) {
-//                try {
-//                    $Package = QUI::getPackage($package);
-//
-//                    if ($Package->isQuiqqerPackage()) {
-//                        $providers = array_merge($providers, $Package->getProvider('payment'));
-//                    }
-//                } catch (QUI\Exception $Exception) {
-//                }
-//            }
-//        }
-//
-//        // filter provider
-//        foreach ($providers as $provider) {
-//            if (!class_exists($provider)) {
-//                continue;
-//            }
-//
-//            $Provider = new $provider();
-//
-//            if (!($Provider instanceof AbstractPaymentProvider)) {
-//                continue;
-//            }
-//
-//            $providerPayments = $Provider->getPaymentMethods();
-//
-//            foreach ($providerPayments as $providerPayment) {
-//                if (!class_exists($providerPayment)) {
-//                    continue;
-//                }
-//
-//                $Payment = new $providerPayment();
-//
-//                if ($Payment instanceof AbstractPayment) {
-//                    $payments[$Payment->getName()] = $Payment;
-//                }
-//            }
-//        }
-//
-//        $this->payments = $payments;
-//
-//        QUI\Cache\Manager::set($cacheProvider, $this->payments);
+        try {
+            $providers = QUI\Cache\Manager::get($cacheProvider);
+        } catch (QUI\Cache\Exception $Exception) {
+            $packages = array_map(function ($package) {
+                return $package['name'];
+            }, QUI::getPackageManager()->getInstalled());
+
+            $providers = array();
+
+            foreach ($packages as $package) {
+                try {
+                    $Package = QUI::getPackage($package);
+
+                    if ($Package->isQuiqqerPackage()) {
+                        $providers = array_merge($providers, $Package->getProvider('payment'));
+                    }
+                } catch (QUI\Exception $Exception) {
+                }
+            }
+
+            QUI\Cache\Manager::set($cacheProvider, $providers);
+        }
+
+        // filter provider
+        $result = array();
+
+        foreach ($providers as $provider) {
+            if (!class_exists($provider)) {
+                continue;
+            }
+
+            $Provider = new $provider();
+
+            if (!($Provider instanceof AbstractPaymentProvider)) {
+                continue;
+            }
+
+            $result[] = $Provider;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return all available payment methods
+     *
+     * @return array
+     */
+    public function getPaymentTypes()
+    {
+        $payments  = array();
+        $providers = $this->getPaymentProviders();
+
+        foreach ($providers as $Provider) {
+            $providerPayments = $Provider->getPaymentTypes();
+
+            foreach ($providerPayments as $providerPayment) {
+                if (!class_exists($providerPayment)) {
+                    continue;
+                }
+
+                $Payment = new $providerPayment();
+
+                if ($Payment instanceof AbstractPayment) {
+                    $payments[$Payment->getName()] = $Payment;
+                }
+            }
+        }
+
+        return $payments;
+    }
+
+    /**
+     * @param $paymentHash
+     * @return AbstractPayment
+     * @throws Exception
+     */
+    public function getPaymentType($paymentHash)
+    {
+        $types = $this->getPaymentTypes();
+
+        /* @var $Payment AbstractPayment */
+        foreach ($types as $Payment) {
+            if ($Payment->getName() === $paymentHash) {
+                return $Payment;
+            }
+        }
+
+        throw new Exception(array(
+            'quiqqer/payments',
+            'exception.payment.type.not.found',
+            array('paymentType' => $paymentHash)
+        ));
     }
 
     /**

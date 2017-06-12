@@ -5,6 +5,7 @@
  */
 
 use \QUI\ERP\Accounting\Payments\Types\Factory;
+use \QUI\ERP\Accounting\Payments\Payments;
 
 /**
  * Create a new payment method
@@ -13,12 +14,16 @@ use \QUI\ERP\Accounting\Payments\Types\Factory;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_payments_ajax_backend_create',
-    function () {
-        $Payments = new Factory();
-        $Payment  = $Payments->createChild();
+    function ($paymentType) {
+        $Type = Payments::getInstance()->getPaymentType($paymentType);
+
+        $Factory = new Factory();
+        $Payment = $Factory->createChild(array(
+            'payment_type' => get_class($Type)
+        ));
 
         return $Payment->getId();
     },
-    false,
+    array('paymentType'),
     'Permission::checkAdminUser'
 );

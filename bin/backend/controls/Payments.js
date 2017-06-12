@@ -18,13 +18,14 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
     'qui/QUI',
     'qui/controls/desktop/Panel',
     'qui/controls/windows/Confirm',
+    'qui/controls/buttons/Button',
     'package/quiqqer/payments/bin/backend/Payments',
     'controls/grid/Grid',
     'Mustache',
     'Locale',
     'Ajax'
 
-], function (QUI, QUIPanel, QUIConfirm, Payments, Grid, Mustache, QUILocale, QUIAjax) {
+], function (QUI, QUIPanel, QUIConfirm, QUIButton, Payments, Grid, Mustache, QUILocale, QUIAjax) {
     "use strict";
 
     var lg = 'quiqqer/payments';
@@ -39,7 +40,9 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
             '$onCreate',
             '$onInject',
             '$onResize',
+            '$onDestroy',
             '$onEditClick',
+            '$onPaymentChange',
             '$openCreateDialog',
             '$openDeleteDialog',
             '$refreshButtonStatus'
@@ -56,10 +59,18 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
             });
 
             this.addEvents({
-                onCreate: this.$onCreate,
-                onInject: this.$onInject,
-                onResize: this.$onResize
+                onCreate : this.$onCreate,
+                onInject : this.$onInject,
+                onResize : this.$onResize,
+                onDestroy: this.$onDestroy
+            });
 
+            Payments.addEvents({
+                onPaymentDeactivate: this.$onPaymentChange,
+                onPaymentActivate  : this.$onPaymentChange,
+                onPaymentDelete    : this.$onPaymentChange,
+                onPaymentCreate    : this.$onPaymentChange,
+                onPaymentUpdate    : this.$onPaymentChange
             });
         },
 
@@ -71,28 +82,79 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                 return;
             }
 
+            this.Loader.show();
+
             var self = this;
 
-            Payments.getPayments().then(function (result) {
-                var Active = new Element('span', {
-                    'class': 'fa fa-check'
-                });
+            this.$Grid.getButtons().filter(function (Btn) {
+                return Btn.getAttribute('name') === 'edit';
+            })[0].disable();
 
-                var Deactive = new Element('span', {
-                    'class': 'fa fa-remove'
-                });
+            this.$Grid.getButtons().filter(function (Btn) {
+                return Btn.getAttribute('name') === 'delete';
+            })[0].disable();
+
+
+            Payments.getPayments().then(function (result) {
+                var toggle = function (Btn) {
+                    var data      = Btn.getAttribute('data'),
+                        paymentId = data.id,
+                        status    = parseInt(data.active);
+
+
+                    Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
+
+                    if (status) {
+                        Payments.deactivatePayment(paymentId).then(function () {
+                            self.refresh();
+                        });
+                        return;
+                    }
+
+                    Payments.activatePayment(paymentId).then(function () {
+                        self.refresh();
+                    });
+                };
 
                 for (var i = 0, len = result.length; i < len; i++) {
                     if (parseInt(result[i].active)) {
-                        result[i].status = Active.clone();
+                        result[i].status = {
+                            icon  : 'fa fa-check',
+                            styles: {
+                                lineHeight: 20,
+                                padding   : 0,
+                                width     : 20
+                            },
+                            events: {
+                                onClick: toggle
+                            }
+                        };
                     } else {
-                        result[i].status = Deactive.clone();
+                        result[i].status = {
+                            icon  : 'fa fa-remove',
+                            styles: {
+                                lineHeight: 20,
+                                padding   : 0,
+                                width     : 20
+                            },
+                            events: {
+                                onClick: toggle
+                            }
+                        };
+                    }
+
+                    result[i].paymentType_display = '';
+
+                    if ("paymentType" in result[i] && result[i].paymentType) {
+                        result[i].paymentType_display = result[i].paymentType.title;
                     }
                 }
 
                 self.$Grid.setData({
                     data: result
                 });
+
+                self.Loader.hide();
             });
         },
 
@@ -142,7 +204,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'status'),
                     dataIndex: 'status',
-                    dataType : 'node',
+                    dataType : 'button',
                     width    : 60
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'title'),
@@ -159,6 +221,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     dataIndex: 'id',
                     dataType : 'number',
                     width    : 30
+                }, {
+                    header   : QUILocale.get(lg, 'payments.type'),
+                    dataIndex: 'paymentType_display',
+                    dataType : 'string',
+                    width    : 200
                 }]
             });
 
@@ -174,6 +241,19 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
          */
         $onInject: function () {
             this.refresh();
+        },
+
+        /**
+         * event: on destroy
+         */
+        $onDestroy: function () {
+            Payments.removeEvents({
+                onPaymentDeactivate: this.$onPaymentChange,
+                onPaymentActivate  : this.$onPaymentChange,
+                onPaymentDelete    : this.$onPaymentChange,
+                onPaymentCreate    : this.$onPaymentChange,
+                onPaymentUpdate    : this.$onPaymentChange
+            });
         },
 
         /**
@@ -193,6 +273,14 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
             var size = Body.getSize();
             this.$Grid.setHeight(size.y - 40);
             this.$Grid.setWidth(size.x - 40);
+        },
+
+        /**
+         * event : on payment change
+         * if a payment changed
+         */
+        $onPaymentChange: function () {
+            this.refresh();
         },
 
         /**
@@ -238,10 +326,52 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                 maxHeight  : 400,
                 maxWidth   : 600,
                 events     : {
+                    onOpen  : function (Win) {
+                        var Content = Win.getContent(),
+                            Body    = Content.getElement('.textbody');
+
+                        Win.Loader.show();
+
+                        var Container = new Element('div', {
+                            html  : QUILocale.get(lg, 'window.create.paymentType'),
+                            styles: {
+                                clear      : 'both',
+                                'float'    : 'left',
+                                marginTop  : 20,
+                                paddingLeft: 80,
+                                width      : '100%'
+                            }
+                        }).inject(Body, 'after');
+
+                        var Select = new Element('select', {
+                            styles: {
+                                marginTop: 10,
+                                maxWidth : '100%',
+                                width    : 300
+                            }
+                        }).inject(Container);
+
+                        Payments.getPaymentTypes().then(function (result) {
+                            for (var i in result) {
+                                if (!result.hasOwnProperty(i)) {
+                                    continue;
+                                }
+
+                                new Element('option', {
+                                    value: result[i].name,
+                                    html : result[i].title
+                                }).inject(Select);
+                            }
+
+                            Win.Loader.hide();
+                        });
+                    },
                     onSubmit: function (Win) {
                         Win.Loader.show();
 
-                        Payments.createPayment().then(function (newId) {
+                        var Select = Win.getContent().getElement('select');
+
+                        Payments.createPayment(Select.value).then(function (newId) {
                             Win.close();
                             self.refresh();
                             self.openPayment(newId);
@@ -282,6 +412,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                 autoclose  : false,
                 maxHeight  : 400,
                 maxWidth   : 600,
+                ok_button  : {
+                    text     : QUILocale.get('quiqqer/system', 'delete'),
+                    textimage: 'fa fa-trash'
+                },
                 events     : {
                     onSubmit: function (Win) {
                         Win.Loader.show();

@@ -19,6 +19,11 @@
             <en><![CDATA[Payments]]></en>
         </locale>
 
+        <locale name="payments.type">
+            <de><![CDATA[Zahlungsmethode]]></de>
+            <en><![CDATA[Payment type]]></en>
+        </locale>
+
 
         <locale name="payment.cash.title">
             <de><![CDATA[Barzahlung]]></de>
@@ -76,15 +81,27 @@
         </locale>
         <locale name="exception.payment.not.found">
             <de><![CDATA[Die Bezahlmethode [payment] wurde nicht gefunden.]]></de>
-            <en><![CDATA[The payment method [payment] was not found.]]></en>
+            <en><![CDATA[The payment type [payment] was not found.]]></en>
         </locale>
-        <locale name="exception.payment.method.not.found">
-            <de><![CDATA[Die Bezahlmethode [paymentMethod] wurde nicht gefunden.]]></de>
-            <en><![CDATA[The payment method [paymentMethod] was not found.]]></en>
+        <locale name="exception.payment.type.not.found">
+            <de><![CDATA[Die Bezahlmethode [paymentType] wurde nicht gefunden.]]></de>
+            <en><![CDATA[The payment type [paymentType] was not found.]]></en>
         </locale>
-        <locale name="exception.payment.method.not.abstractPayment">
-            <de><![CDATA[Die Bezahlmethode [paymentMethod] ist nicht von AbstractPayment.]]></de>
-            <en><![CDATA[The payment method [paymentMethod] is not from AbstractPayment.]]></en>
+        <locale name="exception.payment.type.not.abstractPayment">
+            <de><![CDATA[Die Bezahlmethode [paymentType] ist nicht von AbstractPayment.]]></de>
+            <en><![CDATA[The payment type [paymentType] is not from AbstractPayment.]]></en>
+        </locale>
+        <locale name="message.payment.saved.successfully">
+            <de><![CDATA[Die Zahlungsart [payment] wurde erfolgreich gespeichert.]]></de>
+            <en><![CDATA[The payment type [payment] has been saved successfully.]]></en>
+        </locale>
+        <locale name="message.payment.activate.successfully">
+            <de><![CDATA[Die Zahlungsart [payment] wurde erfolgreich aktiviert.]]></de>
+            <en><![CDATA[The payment type [payment] has been activated successfully.]]></en>
+        </locale>
+        <locale name="message.payment.deactivate.successfully">
+            <de><![CDATA[Die Zahlungsart [payment] wurde erfolgreich deaktiviert.]]></de>
+            <en><![CDATA[The payment type [payment] has been deactivated successfully.]]></en>
         </locale>
     </groups>
 
@@ -165,12 +182,12 @@
         </locale>
         <locale name="window.delete.information" html="true">
             <de><![CDATA[
-            Möchten Sie die Zahlungsart wirklich löschen?<br />
+            Möchten Sie die Zahlungsart wirklich löschen?<br /><br />
             Die Zahlungsart kann nicht wieder hergestellt werden.
             Beachten Sie das eventuelle Bestellungen nicht mehr richtig ausgeführt werden können.
             ]]></de>
             <en><![CDATA[
-            Are you sure you want to delete the payment type? <br />
+            Are you sure you want to delete the payment type? <br /><br />
             The payment type can not be restored.
             Observe that possible orders can no longer be executed correctly.
             ]]></en>
@@ -191,6 +208,11 @@
             <en><![CDATA[
             The newly created payment type is inactive and will be opened immediately after the creation.
             ]]></en>
+        </locale>
+
+        <locale name="window.create.paymentType">
+            <de><![CDATA[Welche Zahlungsmethode soll Ihre Zahlungsart verwenden?]]></de>
+            <en><![CDATA[What payment type should your Payment type use?]]></en>
         </locale>
     </groups>
 

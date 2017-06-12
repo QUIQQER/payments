@@ -101,6 +101,7 @@ class Factory extends QUI\CRUD\Factory
         return array(
             'id',
             'payment_type',
+            'active',
 
             'date_from',
             'date_until',
@@ -118,6 +119,18 @@ class Factory extends QUI\CRUD\Factory
     }
 
     /**
+     * @param int $id
+     * @return Payment
+     */
+    public function getChild($id)
+    {
+        /* @var Payment $Payment */
+        $Payment = parent::getChild($id);
+
+        return $Payment;
+    }
+
+    /**
      * Creates a locale
      *
      * @param $var
@@ -130,8 +143,6 @@ class Factory extends QUI\CRUD\Factory
         if (QUI::getLocale()->isLocaleString($title)) {
             $parts = QUI::getLocale()->getPartsOfLocaleString($title);
             $title = QUI::getLocale()->get($parts[0], $parts[1]);
-
-            QUI\System\Log::writeRecursive($parts);
         }
 
         try {

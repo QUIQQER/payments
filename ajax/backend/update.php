@@ -34,6 +34,16 @@ QUI::$Ajax->registerFunction(
 
         $Payment->setAttributes($data);
         $Payment->update();
+
+        QUI::getMessagesHandler()->addSuccess(
+            QUI::getLocale()->get(
+                'quiqqer/payments',
+                'message.payment.saved.successfully',
+                array(
+                    'payment' => $Payment->getTitle()
+                )
+            )
+        );
     },
     array('paymentId', 'data'),
     'Permission::checkAdminUser'

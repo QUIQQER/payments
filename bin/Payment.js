@@ -8,7 +8,7 @@
  * @event onOpen [ self, {DOMNode} ]
  * @event onClose [ self ]
  *
- * @deprecated
+ * @deprecated  OLD, aus NR ... muss umgeschrieben werden!!!
  */
 
 define('package/quiqqer/payments/bin/Payment', [

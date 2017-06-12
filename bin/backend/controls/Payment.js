@@ -2,6 +2,8 @@
  * @module package/quiqqer/payments/bin/backend/controls/Payment
  * @author www.pcsg.de (Henning Leutz)
  *
+ * Payment Panel - Eine Zahlungsart im Backend
+ *
  * @require qui/QUI
  * @require qui/controls/desktop/Panel
  * @require qui/controls/windows/Confirm
@@ -42,10 +44,14 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
             'showInformation',
             'showDescription',
             'openDeleteDialog',
+            'toggleStatus',
             'save',
             '$onCreate',
+            '$onRefresh',
             '$showContainer',
-            '$hideContainer'
+            '$hideContainer',
+            '$onPaymentDelete',
+            '$onPaymentChange'
         ],
 
         options: {
@@ -62,8 +68,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
             this.$DataDescription  = null;
 
             this.addEvents({
-                onCreate: this.$onCreate,
-                onInject: this.$onInject
+                onCreate : this.$onCreate,
+                onInject : this.$onInject,
+                onRefresh: this.$onRefresh,
+                onDestroy: this.$onDestroy
             });
         },
 
@@ -92,8 +100,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 textimage: 'fa fa-remove',
                 disabled : true,
                 events   : {
-                    onClick: function () {
-                    }
+                    onClick: this.toggleStatus
                 }
             });
 
@@ -152,9 +159,82 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
             this.Loader.show();
 
+            Payments.addEvents({
+                onPaymentDeactivate: this.$onPaymentChange,
+                onPaymentActivate  : this.$onPaymentChange,
+                onPaymentDelete    : this.$onPaymentDelete,
+                onPaymentUpdate    : this.$onPaymentChange
+            });
+
             this.reload().then(function () {
                 self.getCategory('information').click();
             });
+        },
+
+        /**
+         * event: on refresh
+         */
+        $onRefresh: function () {
+            var data = this.getAttribute('data');
+
+            if (!data || !("active" in data)) {
+                return;
+            }
+
+            var status = parseInt(data.active),
+                Status = this.getButtons('status');
+
+            if (status) {
+                Status.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'deactivate'));
+                Status.setAttribute('title', QUILocale.get('quiqqer/quiqqer', 'deactivate'));
+                Status.setAttribute('textimage', 'fa fa-remove');
+            } else {
+                Status.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'activate'));
+                Status.setAttribute('title', QUILocale.get('quiqqer/quiqqer', 'activate'));
+                Status.setAttribute('textimage', 'fa fa-check');
+            }
+
+            Status.enable();
+        },
+
+        /**
+         * event: on destroy
+         */
+        $onDestroy: function () {
+            Payments.removeEvents({
+                onPaymentDeactivate: this.$onPaymentChange,
+                onPaymentActivate  : this.$onPaymentChange,
+                onPaymentDelete    : this.$onPaymentDelete,
+                onPaymentUpdate    : this.$onPaymentChange
+            });
+        },
+
+        /**
+         * event: on payment change
+         *
+         * @param {Object} Payments
+         * @param {Number} paymentId
+         * @param {Object} data
+         */
+        $onPaymentChange: function (Payments, paymentId, data) {
+            if (paymentId !== this.getAttribute('paymentId')) {
+                return;
+            }
+
+            this.setAttribute('data', data);
+            this.refresh();
+        },
+
+        /**
+         * event: on payment change
+         *
+         * @param {Object} Payments
+         * @param {Number} paymentId
+         */
+        $onPaymentDelete: function (Payments, paymentId) {
+            if (paymentId === this.getAttribute('paymentId')) {
+                this.destroy();
+            }
         },
 
         /**
@@ -163,9 +243,8 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         reload: function () {
             var self      = this,
                 paymentId = this.getAttribute('paymentId');
-            console.log(paymentId);
+
             return Payments.getPayment(paymentId).then(function (result) {
-                console.warn(result);
                 self.setAttribute('title', result.title);
                 self.setAttribute('icon', 'fa fa-credit-card-alt');
 
@@ -201,6 +280,53 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                     self.Loader.hide();
                 }).catch(reject);
             });
+        },
+
+        /**
+         * Activate the payment
+         */
+        activate: function () {
+            var self      = this,
+                paymentId = this.getAttribute('paymentId');
+
+            self.Loader.show();
+
+            Payments.activatePayment(paymentId).then(function (data) {
+                self.setAttribute('data', data);
+                self.refresh();
+                self.Loader.hide();
+            });
+        },
+
+        /**
+         * Deactivate the payment
+         */
+        deactivate: function () {
+            var self      = this,
+                paymentId = this.getAttribute('paymentId');
+
+            Payments.deactivatePayment(paymentId).then(function (data) {
+                self.setAttribute('data', data);
+                self.refresh();
+                self.Loader.hide();
+            });
+        },
+
+        /**
+         * Toggle the active status of the payment
+         */
+        toggleStatus: function () {
+            var data = this.getAttribute('data');
+
+            if (!("active" in data)) {
+                return;
+            }
+
+            if (parseInt(data.active)) {
+                return this.deactivate();
+            }
+
+            return this.activate();
         },
 
         /**
@@ -305,10 +431,23 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 paymentId = this.getAttribute('paymentId');
 
             new QUIConfirm({
-                title    : '',
-                icon     : 'fa fa-trash',
-                autoclose: false,
-                events   : {
+                texticon   : 'fa fa-trash',
+                icon       : 'fa fa-trash',
+                title      : QUILocale.get(lg, 'window.delete.title'),
+                information: QUILocale.get(lg, 'window.delete.information', {
+                    payment: this.getAttribute('title')
+                }),
+                text       : QUILocale.get(lg, 'window.delete.text', {
+                    payment: this.getAttribute('title')
+                }),
+                autoclose  : false,
+                maxHeight  : 400,
+                maxWidth   : 600,
+                ok_button  : {
+                    text     : QUILocale.get('quiqqer/system', 'delete'),
+                    textimage: 'fa fa-trash'
+                },
+                events     : {
                     onSubmit: function (Win) {
                         Win.Loader.show();
 
