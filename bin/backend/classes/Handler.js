@@ -27,6 +27,8 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
 
         initialize: function (options) {
             this.parent(options);
+
+            this.$payments = null;
         },
 
         /**
@@ -35,8 +37,17 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
          * @return {Promise}
          */
         getPayments: function () {
+            if (this.$payments) {
+                return window.Promise.resolve(this.$payments);
+            }
+
+            var self = this;
+
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_payments_ajax_backend_getPayments', resolve, {
+                QUIAjax.get('package_quiqqer_payments_ajax_backend_getPayments', function (result) {
+                    self.$payments = result;
+                    resolve(self.$payments);
+                }, {
                     'package': 'quiqqer/payments',
                     onError  : reject
                 });
@@ -84,6 +95,8 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
 
             return new Promise(function (resolve, reject) {
                 QUIAjax.get('package_quiqqer_payments_ajax_backend_create', function (paymentId) {
+                    self.$payments = null;
+
                     require([
                         'package/quiqqer/translator/bin/Translator'
                     ], function (Translator) {
@@ -112,6 +125,8 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
 
             return new Promise(function (resolve, reject) {
                 QUIAjax.get('package_quiqqer_payments_ajax_backend_update', function (result) {
+                    self.$payments = null;
+
                     require([
                         'package/quiqqer/translator/bin/Translator'
                     ], function (Translator) {
@@ -124,7 +139,7 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
                     'package': 'quiqqer/payments',
                     onError  : reject,
                     paymentId: paymentId,
-                    data     : JSON.encode(data)
+                    data     : window.JSON.encode(data)
                 });
             });
         },
@@ -138,6 +153,8 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
+                self.$payments = null;
+
                 QUIAjax.get('package_quiqqer_payments_ajax_backend_delete', function () {
                     self.fireEvent('paymentDelete', [self, paymentId]);
                     resolve();

@@ -15,6 +15,7 @@ use QUI\ERP\Order\Order;
  * Gateway for the payments
  *
  * @author www.pcsg.de (Henning Leutz)
+ * @deprecated
  */
 class Gateway
 {

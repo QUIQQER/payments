@@ -13,6 +13,7 @@ use QUI;
  * This is the parent payment class for all payment methods
  *
  * @author www.pcsg.de (Henning Leutz)
+ * @todo überarbeiten, da alte api mit integriert ist
  */
 abstract class AbstractPayment implements PaymentsInterface
 {
@@ -88,6 +89,17 @@ abstract class AbstractPayment implements PaymentsInterface
      * @return string
      */
     abstract public function getDescription();
+
+    /**
+     * Return the payment icon (the URL path)
+     * Can be overwritten
+     *
+     * @return string
+     */
+    public function getIcon()
+    {
+        return URL_OPT_DIR . 'quiqqer/payments/bin/payments/default.png';
+    }
 
     /**
      * Return the payment as an array
@@ -239,6 +251,7 @@ abstract class AbstractPayment implements PaymentsInterface
     /**
      * Tpl für den User im Adminbereich
      *
+     * @param QUI\ERP\User $User
      * @return string
      */
     public function getAdminDataTpl(QUI\ERP\User $User)

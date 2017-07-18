@@ -19,6 +19,9 @@ use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
  */
 class Payments extends QUI\Utils\Singleton
 {
+    /**
+     * @var array
+     */
     protected $payments = array();
 
     /**
@@ -139,7 +142,7 @@ class Payments extends QUI\Utils\Singleton
         try {
             $Payment = Factory::getInstance()->getChild($paymentId);
             return $Payment;
-        } catch (QUI\Exception $exception) {
+        } catch (QUI\Exception $Exception) {
             throw new Exception(array(
                 'quiqqer/payments',
                 'exception.payment.not.found'
