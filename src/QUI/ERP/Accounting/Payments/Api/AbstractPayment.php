@@ -115,6 +115,17 @@ abstract class AbstractPayment implements PaymentsInterface
         );
     }
 
+    /**
+     * Is the payment a gateway payment?
+     *
+     * @return bool
+     */
+    public function isGateway()
+    {
+        return false;
+    }
+
+
 
     //region OLD METHODS
 
