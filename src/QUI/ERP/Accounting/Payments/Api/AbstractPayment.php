@@ -7,6 +7,7 @@
 namespace QUI\ERP\Accounting\Payments\Api;
 
 use QUI;
+use QUI\ERP\Order\AbstractOrder;
 
 /**
  * Payment abstract class
@@ -125,6 +126,16 @@ abstract class AbstractPayment implements PaymentsInterface
         return false;
     }
 
+    /**
+     * If the Payment method is a payment gateway, it can return a gateway display
+     *
+     * @param AbstractOrder $Order
+     * @return string
+     */
+    public function getGatewayDisplay(AbstractOrder $Order)
+    {
+        return '';
+    }
 
 
     //region OLD METHODS

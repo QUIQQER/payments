@@ -6,6 +6,7 @@
 
 namespace QUI\ERP\Accounting\Payments;
 
+use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
 use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Order\AbstractOrderProcessProvider;
 use QUI\ERP\Order\OrderProcess;
@@ -18,6 +19,11 @@ use QUI\ERP\Order\Utils\OrderProcessSteps;
  */
 class OrderProcessProvider extends AbstractOrderProcessProvider
 {
+    /**
+     * @var null|AbstractPayment
+     */
+    protected $Payment = null;
+
     /**
      * @param OrderProcessSteps $OrderProcessSteps
      * @param OrderProcess $Order
@@ -35,16 +41,31 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
 
     /**
      * @param AbstractOrder $Order
-     * @return int
+     * @return string
      */
     public function onOrderStart(AbstractOrder $Order)
     {
-        $Payment = $Order->getPayment()->getPaymentType();
+        $this->Payment = $Order->getPayment()->getPaymentType();
 
-        if ($Payment->isGateway()) {
-            return self::PROCESSING_STATUS_PROCESSING;
+        if ($this->Payment->isGateway()) {
+            $this->currentStatus = self::PROCESSING_STATUS_PROCESSING;
+            return $this->currentStatus;
         }
 
-        return self::PROCESSING_STATUS_FINISH;
+        $this->currentStatus = self::PROCESSING_STATUS_FINISH;
+        return $this->currentStatus;
+    }
+
+    /**
+     * @param AbstractOrder $Order
+     * @return string
+     */
+    public function getDisplay(AbstractOrder $Order)
+    {
+        if ($this->Payment === null) {
+            return '';
+        }
+
+        return $this->Payment->getGatewayDisplay($Order);
     }
 }

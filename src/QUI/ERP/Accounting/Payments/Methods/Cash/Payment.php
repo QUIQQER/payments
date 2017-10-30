@@ -7,6 +7,7 @@
 namespace QUI\ERP\Accounting\Payments\Methods\Cash;
 
 use QUI;
+use QUI\ERP\Order\AbstractOrder;
 
 /**
  * Class Payment
@@ -36,4 +37,21 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
             'payment.cash.description'
         );
     }
+
+    /**
+     * @return bool
+     */
+    public function isGateway()
+    {
+        return false;
+    }
+//
+//    /**
+//     * @param AbstractOrder $Order
+//     * @return string
+//     */
+//    public function getGatewayDisplay(AbstractOrder $Order)
+//    {
+//        return '<div>hier kann ganz viel kommen</div>';
+//    }
 }

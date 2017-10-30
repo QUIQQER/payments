@@ -29,6 +29,7 @@ interface PaymentsInterface
      */
     public function getDescription();
 
+
     // template methods
     public function getOrderSuccessTpl($Bill, $Project = false);
 
