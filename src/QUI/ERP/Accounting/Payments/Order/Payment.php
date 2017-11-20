@@ -24,15 +24,16 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     {
         parent::__construct($attributes);
 
-        $this->addCSSFile(dirname(__FILE__) . '/Payment.css');
+        $this->addCSSFile(dirname(__FILE__).'/Payment.css');
     }
 
     /**
+     * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getName()
+    public function getName($Locale = null)
     {
-        return 'payment';
+        return 'Payment';
     }
 
     /**
@@ -66,7 +67,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
             'payments'        => $payments
         ));
 
-        return $Engine->fetch(dirname(__FILE__) . '/Payment.html');
+        return $Engine->fetch(dirname(__FILE__).'/Payment.html');
     }
 
     /**

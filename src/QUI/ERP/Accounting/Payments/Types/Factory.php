@@ -59,16 +59,33 @@ class Factory extends QUI\CRUD\Factory
      */
     public function createChild($data = array())
     {
+        if (!isset($data['active']) || !is_integer($data['active'])) {
+            $data['active'] = 0;
+        }
+
+        if (!isset($data['purchase_quantity_from']) || !is_integer($data['purchase_quantity_from'])) {
+            $data['purchase_quantity_from'] = 0;
+        }
+
+        if (!isset($data['purchase_quantity_until']) || !is_integer($data['purchase_quantity_until'])) {
+            $data['purchase_quantity_until'] = 0;
+        }
+
+        if (!isset($data['priority']) || !is_integer($data['priority'])) {
+            $data['priority'] = 0;
+        }
+
+
         /* @var $NewChild Payment */
         $NewChild = parent::createChild($data);
 
         $this->createPaymentLocale(
-            'payment.' . $NewChild->getId() . '.title',
+            'payment.'.$NewChild->getId().'.title',
             '[quiqqer/payments] new.payment.paceholder'
         );
 
         $this->createPaymentLocale(
-            'payment.' . $NewChild->getId() . '.workingTitle',
+            'payment.'.$NewChild->getId().'.workingTitle',
             '[quiqqer/payments] new.payment.paceholder'
         );
 

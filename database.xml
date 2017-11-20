@@ -8,8 +8,8 @@
             <field type="VARCHAR(255) NOT NULL">payment_type</field>
             <field type="text NULL">date_from</field>
             <field type="text NULL">date_until</field>
-            <field type="INT(10) NULL">purchase_quantity_from</field>
-            <field type="INT(10) NULL">purchase_quantity_until</field>
+            <field type="INT(10) NULL DEFAULT 0">purchase_quantity_from</field>
+            <field type="INT(10) NULL DEFAULT 0">purchase_quantity_until</field>
             <field type="text NULL">purchase_value_from</field>
             <field type="text NULL">purchase_value_until</field>
 
