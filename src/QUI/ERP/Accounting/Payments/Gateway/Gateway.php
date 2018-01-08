@@ -75,6 +75,24 @@ class Gateway extends QUI\Utils\Singleton
     }
 
     /**
+     * Execute the request from the payment provider
+     */
+    public function executeGatewayPayment()
+    {
+        $Order   = $this->getOrder();
+        $Payment = $Order->getPayment()->getPaymentType();
+
+        try {
+            $Payment->executeGatewayPayment($this);
+        } catch (QUI\Exception $Exception) {
+            $Order->addComment(json_encode(array(
+                'message' => $Exception->getMessage(),
+                'code'    => $Exception->getCode()
+            )));
+        }
+    }
+
+    /**
      * URL Methods
      */
 
@@ -130,6 +148,16 @@ class Gateway extends QUI\Utils\Singleton
         return $this->getGatewayUrl(array(
             'canceled'  => 1,
             'orderHash' => $this->getOrder()->getHash()
+        ));
+    }
+
+    /**
+     * This url is for the payment provider to proceed some payments for the order
+     */
+    public function getPaymentProviderUrl()
+    {
+        return $this->getGatewayUrl(array(
+            'GatewayPayment' => 1
         ));
     }
 

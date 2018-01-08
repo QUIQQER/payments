@@ -99,7 +99,7 @@ abstract class AbstractPayment implements PaymentsInterface
      */
     public function getIcon()
     {
-        return URL_OPT_DIR . 'quiqqer/payments/bin/payments/default.png';
+        return URL_OPT_DIR.'quiqqer/payments/bin/payments/default.png';
     }
 
     /**
@@ -137,6 +137,15 @@ abstract class AbstractPayment implements PaymentsInterface
         return '';
     }
 
+    /**
+     * Execute the request from the payment provider
+     *
+     * @param QUI\ERP\Accounting\Payments\Gateway\Gateway $Gateway
+     * @throws QUI\ERP\Accounting\Payments\Exception
+     */
+    public function executeGatewayPayment(QUI\ERP\Accounting\Payments\Gateway\Gateway $Gateway)
+    {
+    }
 
     //region OLD METHODS
 
@@ -253,7 +262,7 @@ abstract class AbstractPayment implements PaymentsInterface
         if ($this->getSetting('icon')) {
             return '<img
                     class="plugin-payment-image-confirm"
-                    src="' . URL_OPT_DIR . 'payment/moduls/' . strtolower($this->getSetting('name')) . '/bin/' . $this->getSetting('icon') . '" />';
+                    src="'.URL_OPT_DIR.'payment/moduls/'.strtolower($this->getSetting('name')).'/bin/'.$this->getSetting('icon').'" />';
         }
 
         return '';
@@ -294,7 +303,7 @@ abstract class AbstractPayment implements PaymentsInterface
     {
         return $this->getLocale()->get(
             'plugin/payment',
-            strtolower($this->getSetting('name')) . '.order.mailtext'
+            strtolower($this->getSetting('name')).'.order.mailtext'
         );
     }
 
@@ -307,7 +316,7 @@ abstract class AbstractPayment implements PaymentsInterface
     {
         return $this->getLocale()->get(
             'plugin/payment',
-            strtolower($this->getSetting('name')) . '.bill.text'
+            strtolower($this->getSetting('name')).'.bill.text'
         );
     }
     //endregion

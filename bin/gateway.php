@@ -13,6 +13,11 @@ $Gateway->readRequest();
 $orderUrl = $Gateway->getOrderUrl();
 $Order    = $Gateway->getOrder();
 
+// Bezahlung vom Gateway (payment execution from the gateway)
+if (isset($_REQUEST['GatewayPayment'])) {
+    $Gateway->executeGatewayPayment();
+    exit;
+}
 
 // Umleitung zur Bestellung
 $Redirect = new RedirectResponse($orderUrl);
