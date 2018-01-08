@@ -108,6 +108,14 @@ class Payment extends QUI\CRUD\Child
             return false;
         }
 
+        try {
+            $this->getPaymentType();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return false;
+        }
+
         // usage definitions / limits
         $dateFrom  = $this->getAttribute('date_from');
         $dateUntil = $this->getAttribute('date_until');
@@ -210,7 +218,7 @@ class Payment extends QUI\CRUD\Child
 
         return $Locale->get(
             'quiqqer/payments',
-            'payment.' . $this->getId() . '.title'
+            'payment.'.$this->getId().'.title'
         );
     }
 
@@ -228,7 +236,7 @@ class Payment extends QUI\CRUD\Child
 
         return $Locale->get(
             'quiqqer/payments',
-            'payment.' . $this->getId() . '.description'
+            'payment.'.$this->getId().'.description'
         );
     }
 
@@ -246,7 +254,7 @@ class Payment extends QUI\CRUD\Child
 
         return $Locale->get(
             'quiqqer/payments',
-            'payment.' . $this->getId() . '.workingTitle'
+            'payment.'.$this->getId().'.workingTitle'
         );
     }
     //endregion
@@ -261,7 +269,7 @@ class Payment extends QUI\CRUD\Child
     public function setTitle(array $titles)
     {
         $this->setPaymentLocale(
-            'payment.' . $this->getId() . '.title',
+            'payment.'.$this->getId().'.title',
             $titles
         );
     }
@@ -274,7 +282,7 @@ class Payment extends QUI\CRUD\Child
     public function setDescription(array $descriptions)
     {
         $this->setPaymentLocale(
-            'payment.' . $this->getId() . '.description',
+            'payment.'.$this->getId().'.description',
             $descriptions
         );
     }
@@ -287,7 +295,7 @@ class Payment extends QUI\CRUD\Child
     public function setWorkingTitle(array $titles)
     {
         $this->setPaymentLocale(
-            'payment.' . $this->getId() . '.workingTitle',
+            'payment.'.$this->getId().'.workingTitle',
             $titles
         );
     }
@@ -312,8 +320,8 @@ class Payment extends QUI\CRUD\Child
                 continue;
             }
 
-            $data[$language]           = $title[$language];
-            $data[$language . '_edit'] = $title[$language];
+            $data[$language]         = $title[$language];
+            $data[$language.'_edit'] = $title[$language];
         }
 
         $exists = Translator::getVarData('quiqqer/payments', $var, 'quiqqer/payments');
