@@ -32,16 +32,7 @@ class Gateway extends QUI\Utils\Singleton
         $Handler = QUI\ERP\Order\Handler::getInstance();
 
         /* @var $Order QUI\ERP\Order\Order */
-        try {
-            $this->Order = $Handler->get($_REQUEST['orderHash']);
-        } catch (QUI\ERP\Order\Exception $Exception) {
-            try {
-                $this->Order = $Handler->getOrderInProcess($_REQUEST['orderHash']);
-            } catch (QUI\ERP\Order\Exception $Exception) {
-                echo $Exception->getMessage();
-                exit;
-            }
-        }
+        $this->Order = $Handler->getOrderByHash($_REQUEST['orderHash']);
     }
 
     /**
@@ -85,6 +76,8 @@ class Gateway extends QUI\Utils\Singleton
         try {
             $Payment->executeGatewayPayment($this);
         } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
             $Order->addComment(json_encode(array(
                 'message' => $Exception->getMessage(),
                 'code'    => $Exception->getCode()
@@ -147,6 +140,17 @@ class Gateway extends QUI\Utils\Singleton
     {
         return $this->getGatewayUrl(array(
             'canceled'  => 1,
+            'orderHash' => $this->getOrder()->getHash()
+        ));
+    }
+
+    /**
+     * @return string
+     */
+    public function getErrorUrl()
+    {
+        return $this->getGatewayUrl(array(
+            'error'     => 1,
             'orderHash' => $this->getOrder()->getHash()
         ));
     }

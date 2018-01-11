@@ -15,6 +15,7 @@ use QUI\ERP\Order\AbstractOrder;
  *
  * @author www.pcsg.de (Henning Leutz)
  * @todo überarbeiten, da alte api mit integriert ist
+ * @todo AbstractPaymentMethod
  */
 abstract class AbstractPayment implements PaymentsInterface
 {
