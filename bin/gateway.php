@@ -7,11 +7,11 @@ require_once dirname(dirname(dirname(dirname(__FILE__)))).'/header.php';
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Response;
 
-QUI\System\Log::writeRecursive('Gateway incoming');
+QUI\ERP\Debug::getInstance()->log('Gateway incoming');
 
 try {
-    QUI\System\Log::writeRecursive('Reed Request');
-    QUI\System\Log::writeRecursive($_GET);
+    QUI\ERP\Debug::getInstance()->log('Reed Request');
+    QUI\ERP\Debug::getInstance()->log($_GET);
 
     $Gateway = new QUI\ERP\Accounting\Payments\Gateway\Gateway();
     $Gateway->readRequest();
@@ -21,7 +21,7 @@ try {
 
 // Bezahlung vom Gateway (payment execution from the gateway)
     if (isset($_REQUEST['GatewayPayment'])) {
-        QUI\System\Log::writeRecursive('Execute Gateway Payment');
+        QUI\ERP\Debug::getInstance()->log('Execute Gateway Payment');
         $Gateway->executeGatewayPayment();
         exit;
     }
@@ -35,6 +35,7 @@ try {
     exit;
 } catch (\Exception $Exception) {
     QUI\System\Log::writeException($Exception);
+
     $Response = QUI::getGlobalResponse();
     $Response->setStatusCode(Response::HTTP_BAD_REQUEST);
 
