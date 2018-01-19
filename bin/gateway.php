@@ -13,6 +13,13 @@ try {
     QUI\ERP\Debug::getInstance()->log('Reed Request');
     QUI\ERP\Debug::getInstance()->log($_GET);
 
+    // @todo überdenken, vllt auf den order benutzer setzen
+    define('SYSTEM_INTERN', true);
+
+    QUI\Permissions\Permission::setUser(
+        QUI::getUsers()->getSystemUser()
+    );
+
     $Gateway = new QUI\ERP\Accounting\Payments\Gateway\Gateway();
     $Gateway->readRequest();
 
@@ -22,6 +29,7 @@ try {
 // Bezahlung vom Gateway (payment execution from the gateway)
     if (isset($_REQUEST['GatewayPayment'])) {
         QUI\ERP\Debug::getInstance()->log('Execute Gateway Payment');
+        QUI\ERP\Debug::getInstance()->log($Order->getHash());
         $Gateway->executeGatewayPayment();
         exit;
     }

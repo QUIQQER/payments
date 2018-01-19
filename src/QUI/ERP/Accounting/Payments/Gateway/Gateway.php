@@ -22,6 +22,8 @@ class Gateway extends QUI\Utils\Singleton
 
     /**
      * Read the request and look in which step we are
+     *
+     * @throws QUI\ERP\Order\Exception
      */
     public function readRequest()
     {
@@ -67,6 +69,8 @@ class Gateway extends QUI\Utils\Singleton
 
     /**
      * Execute the request from the payment provider
+     *
+     * @throws QUI\ERP\Accounting\Payments\Exception
      */
     public function executeGatewayPayment()
     {
@@ -196,7 +200,7 @@ class Gateway extends QUI\Utils\Singleton
             return 'https://'.$_SERVER['HTTP_HOST'];
         }
 
-        $Project = \QUI::getRewrite()->getProject();
+        $Project = QUI::getRewrite()->getProject();
 
         // prüfen ob das aktuelle projekt https hat
         if ($Project && $Project->getVHost(true, true)) {
