@@ -45,13 +45,9 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     {
         return false;
     }
-//
-//    /**
-//     * @param AbstractOrder $Order
-//     * @return string
-//     */
-//    public function getGatewayDisplay(AbstractOrder $Order)
-//    {
-//        return '<div>hier kann ganz viel kommen</div>';
-//    }
+
+    public function isSuccessful($hash)
+    {
+        return true;
+    }
 }

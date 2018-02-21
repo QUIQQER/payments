@@ -103,6 +103,11 @@
             <de><![CDATA[Die Zahlungsart [payment] wurde erfolgreich deaktiviert.]]></de>
             <en><![CDATA[The payment type [payment] has been deactivated successfully.]]></en>
         </locale>
+
+        <locale name="comment.add.payment">
+            <de><![CDATA[Bezahlung per [payment] in Höhe von [amount] [currency] erhalten.]]></de>
+            <en><![CDATA[Payment by [payment] of [amount][currency] received.]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/payments" datatype="js">

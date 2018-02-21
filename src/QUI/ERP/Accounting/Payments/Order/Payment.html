@@ -5,7 +5,9 @@
 
     <div class="quiqqer-order-step-payments-list">
         {foreach $payments as $Payment}
-        <div class="quiqqer-order-step-payments-list-entry">
+        <div class="quiqqer-order-step-payments-list-entry"
+             data-qui="package/quiqqer/payments/bin/frontend/controls/order/Payment"
+        >
             <div class="quiqqer-order-step-payments-list-entry-select">
                 <input id="payment-{$Payment->getId()}"
                        type="radio"

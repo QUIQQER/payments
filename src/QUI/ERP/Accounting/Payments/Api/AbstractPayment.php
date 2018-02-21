@@ -93,6 +93,15 @@ abstract class AbstractPayment implements PaymentsInterface
     abstract public function getDescription();
 
     /**
+     * Is the payment successful?
+     * This method returns the payment success type
+     *
+     * @param string $hash - Vorgangsnummer - hash number - procedure number
+     * @return bool
+     */
+    abstract public function isSuccessful($hash);
+
+    /**
      * Return the payment icon (the URL path)
      * Can be overwritten
      *
@@ -128,6 +137,23 @@ abstract class AbstractPayment implements PaymentsInterface
     }
 
     /**
+     * @return bool
+     */
+    public function refundSupport()
+    {
+        return false;
+    }
+
+    /**
+     * Execute a refund
+     *
+     * @param QUI\ERP\Accounting\Payments\Transactions\Transaction $Transaction
+     */
+    public function refund(QUI\ERP\Accounting\Payments\Transactions\Transaction $Transaction)
+    {
+    }
+
+    /**
      * If the Payment method is a payment gateway, it can return a gateway display
      *
      * @param AbstractOrder $Order
@@ -148,6 +174,10 @@ abstract class AbstractPayment implements PaymentsInterface
     {
     }
 
+
+
+
+
     //region OLD METHODS
 
     /**
@@ -156,6 +186,7 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @param QUI\ERP\User|null $User
      * @return array
+     * @deprecated
      */
     public function getPaymentUserData($User = null)
     {
@@ -167,6 +198,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * In accounting -> paymentfields
      *
      * @param array $params
+     * @deprecated
      */
     public function setPaymentUserData(array $params)
     {
@@ -181,6 +213,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * Checks if all required fields are available and the payment can be executed
      *
      * @param QUI\ERP\User $User
+     * @deprecated
      */
     public function checkUserData(QUI\ERP\User $User)
     {
@@ -192,6 +225,7 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @return array
      * @todo get own settings
+     * @deprecated
      */
     public function getSettings()
     {
@@ -209,6 +243,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * @param string $name
      *
      * @return string|int|float|array|null
+     * @deprecated
      */
     public function getSetting($name)
     {
@@ -230,6 +265,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * When is the payment successful
      *
      * @return int - Handler::SUCCESS_TYPE_*
+     * @deprecated
      */
     public function getSuccessType()
     {
@@ -245,6 +281,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * eq: The Basket display this Template on a successful payment
      *
      * @return String
+     * @deprecated
      */
     public function getOrderSuccessTpl($Bill, $Project = false)
     {
@@ -257,6 +294,7 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @param QUI\ERP\User $User
      * @return String
+     * @deprecated
      */
     public function getPaymentUserDataTpl(QUI\ERP\User $User)
     {
@@ -274,6 +312,7 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @param QUI\ERP\User $User
      * @return String
+     * @deprecated
      */
     public function getEditUserDataTpl(QUI\ERP\User $User)
     {
@@ -285,6 +324,7 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @param QUI\ERP\User $User
      * @return string
+     * @deprecated
      */
     public function getAdminDataTpl(QUI\ERP\User $User)
     {
@@ -299,6 +339,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * Zusätzlicher bestätigungsmail Text
      *
      * @return String
+     * @deprecated
      */
     public function getOrderMailText()
     {
@@ -312,6 +353,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * Rechungstext erweiterung
      *
      * @return String
+     * @deprecated
      */
     public function getBillText()
     {

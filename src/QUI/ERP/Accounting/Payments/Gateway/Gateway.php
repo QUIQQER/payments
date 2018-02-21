@@ -7,6 +7,7 @@
 namespace QUI\ERP\Accounting\Payments\Gateway;
 
 use QUI;
+use QUI\ERP\Accounting\Payments\Transactions\Factory as Transactions;
 
 /**
  * Class Gateway
@@ -88,6 +89,64 @@ class Gateway extends QUI\Utils\Singleton
             )));
         }
     }
+
+    /**
+     * Payment API
+     */
+
+    /**
+     * @param float $amount
+     * @param QUI\ERP\Currency\Currency $Currency
+     * @param QUI\ERP\Order\AbstractOrder $Order
+     * @param QUI\ERP\Accounting\Payments\Api\AbstractPayment $Payment
+     * @param array $paymentData
+     *
+     * @throws QUI\ERP\Accounting\Payments\Transactions\Exception
+     */
+    public function purchase(
+        float $amount,
+        QUI\ERP\Currency\Currency $Currency,
+        QUI\ERP\Order\AbstractOrder $Order,
+        QUI\ERP\Accounting\Payments\Api\AbstractPayment $Payment,
+        $paymentData = array()
+    ) {
+        $paymentComment = QUI::getLocale()->get('quiqqer/payments', 'comment.add.payment', array(
+            'payment'  => $Payment->getTitle(),
+            'amount'   => $amount,
+            'currency' => $Currency->getCode()
+        ));
+
+        $Order->addComment($paymentComment);
+
+        Transactions::createPaymentTransaction(
+            $amount,
+            $Currency,
+            $Order->getHash(),
+            $Payment->getName(),
+            $paymentData
+        );
+
+        // refresh, so that the transactions and invoice are also recognized
+        $Order->refresh();
+
+        if ($Order->isPosted()) {
+            try {
+                /* @var $Order QUI\ERP\Order\Order */
+                $Order->getInvoice()->addComment($paymentComment);
+            } catch (QUI\ERP\Accounting\Invoice\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    public function paymentError()
+    {
+
+    }
+
 
     /**
      * URL Methods
@@ -200,7 +259,14 @@ class Gateway extends QUI\Utils\Singleton
             return 'https://'.$_SERVER['HTTP_HOST'];
         }
 
-        $Project = QUI::getRewrite()->getProject();
+        try {
+            $Project = QUI::getRewrite()->getProject();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return '';
+        }
+
 
         // prüfen ob das aktuelle projekt https hat
         if ($Project && $Project->getVHost(true, true)) {

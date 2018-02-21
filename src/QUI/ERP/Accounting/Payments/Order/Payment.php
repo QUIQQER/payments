@@ -46,6 +46,8 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
     /**
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function getBody()
     {
@@ -88,6 +90,10 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
     /**
      * Save the payment to the order
+     *
+     * @throws QUI\ERP\Order\Exception
+     * @throws QUI\Permissions\Exception
+     * @throws QUI\Exception
      */
     public function save()
     {

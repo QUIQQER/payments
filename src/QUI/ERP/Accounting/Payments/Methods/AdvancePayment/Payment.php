@@ -37,4 +37,12 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
             'payment.advanced.payment.description'
         );
     }
+
+    /**
+     * @return bool
+     */
+    public function isSuccessful($hash)
+    {
+        return false;
+    }
 }

@@ -12,6 +12,7 @@
     align-content: stretch;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     clear: both;
+    cursor: pointer;
     display: flex;
     display: -webkit-flex;
     flex-direction: row;
@@ -56,6 +57,7 @@
 }
 
 .quiqqer-order-step-payments-list-entry-text label {
+    cursor: pointer;
     font-size: 16px;
     font-weight: bold;
 }

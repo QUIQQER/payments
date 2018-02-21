@@ -27,6 +27,9 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
     /**
      * @param OrderProcessSteps $OrderProcessSteps
      * @param OrderProcess $Order
+     *
+     * @throws \QUI\Exception
+     * @throws \QUI\ERP\Order\Exception
      */
     public function initSteps(OrderProcessSteps $OrderProcessSteps, OrderProcess $Order)
     {
@@ -34,14 +37,17 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
             new Order\Payment(array(
                 'orderId'  => $Order->getOrder()->getId(),
                 'Order'    => $Order->getOrder(),
-                'priority' => 3
+                'priority' => 30
             ))
         );
     }
 
     /**
      * @param AbstractOrder $Order
+     *
      * @return string
+     *
+     * @throws \QUI\ERP\Accounting\Payments\Exception
      */
     public function onOrderStart(AbstractOrder $Order)
     {
@@ -49,10 +55,12 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
 
         if ($this->Payment->isGateway()) {
             $this->currentStatus = self::PROCESSING_STATUS_PROCESSING;
+
             return $this->currentStatus;
         }
 
         $this->currentStatus = self::PROCESSING_STATUS_FINISH;
+
         return $this->currentStatus;
     }
 

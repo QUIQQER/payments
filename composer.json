@@ -23,7 +23,8 @@
   },
   "require": {
     "quiqqer/quiqqer": "*",
-    "quiqqer/areas": "*"
+    "quiqqer/areas": "*",
+    "quiqqer/payment-transactions": "*"
   },
   "autoload": {
     "psr-4": {

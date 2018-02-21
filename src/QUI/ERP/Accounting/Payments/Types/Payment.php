@@ -66,6 +66,20 @@ class Payment extends QUI\CRUD\Child
     }
 
     /**
+     * Is the payment successful?
+     * This method returns the payment success type
+     *
+     * @param string $hash - Vorgangsnummer - hash number - procedure number
+     * @return bool
+     *
+     * @throws QUI\ERP\Accounting\Payments\Exception
+     */
+    public function isSuccessful($hash)
+    {
+        return $this->getPaymentType()->isSuccessful($hash);
+    }
+
+    /**
      * Return the payment type of the type
      *
      * @return Api\AbstractPayment
