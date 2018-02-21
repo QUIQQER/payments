@@ -25,6 +25,7 @@ class Gateway extends QUI\Utils\Singleton
      * Read the request and look in which step we are
      *
      * @throws QUI\ERP\Order\Exception
+     * @throws QUI\Exception
      */
     public function readRequest()
     {
@@ -42,6 +43,8 @@ class Gateway extends QUI\Utils\Singleton
      * Set the order id to the gateway
      *
      * @param integer $orderId
+     *
+     * @throws QUI\Exception
      */
     public function setOrderId($orderId)
     {
@@ -144,9 +147,7 @@ class Gateway extends QUI\Utils\Singleton
      */
     public function paymentError()
     {
-
     }
-
 
     /**
      * URL Methods
