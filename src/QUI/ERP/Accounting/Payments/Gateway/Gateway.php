@@ -257,7 +257,7 @@ class Gateway extends QUI\Utils\Singleton
         }
 
         if (isset($_SERVER['HTTP_HOST'])) {
-            return 'https://'.$_SERVER['HTTP_HOST'];
+            return 'http://'.$_SERVER['HTTP_HOST'];
         }
 
         try {

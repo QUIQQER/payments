@@ -26,17 +26,25 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
 
     /**
      * @param OrderProcessSteps $OrderProcessSteps
-     * @param OrderProcess $Order
+     * @param OrderProcess $Process
      *
      * @throws \QUI\Exception
      * @throws \QUI\ERP\Order\Exception
      */
-    public function initSteps(OrderProcessSteps $OrderProcessSteps, OrderProcess $Order)
+    public function initSteps(OrderProcessSteps $OrderProcessSteps, OrderProcess $Process)
     {
+        $orderId = null;
+        $Order   = null;
+
+        if ($Process->getOrder()) {
+            $Order   = $Process->getOrder();
+            $orderId = $Order->getId();
+        }
+
         $OrderProcessSteps->append(
             new Order\Payment(array(
-                'orderId'  => $Order->getOrder()->getId(),
-                'Order'    => $Order->getOrder(),
+                'orderId'  => $orderId,
+                'Order'    => $Order,
                 'priority' => 30
             ))
         );

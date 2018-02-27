@@ -52,8 +52,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     public function getBody()
     {
         $Engine = QUI::getTemplateManager()->getEngine();
-        $Orders = QUI\ERP\Order\Handler::getInstance();
-        $Order  = $Orders->getOrderInProcess($this->getAttribute('orderId'));
+        $Order  = $this->getOrder();
 
         $Customer = $Order->getCustomer();
         $User     = QUI::getUserBySession();

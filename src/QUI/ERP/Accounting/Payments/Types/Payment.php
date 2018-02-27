@@ -188,6 +188,8 @@ class Payment extends QUI\CRUD\Child
 
     /**
      * Activate the payment type
+     *
+     * @throws QUI\ExceptionStack|QUI\Exception
      */
     public function activate()
     {
@@ -208,6 +210,8 @@ class Payment extends QUI\CRUD\Child
 
     /**
      * Deactivate the payment type
+     *
+     * @throws QUI\ExceptionStack|QUI\Exception
      */
     public function deactivate()
     {
@@ -350,7 +354,11 @@ class Payment extends QUI\CRUD\Child
             QUI\System\Log::addNotice($Exception->getMessage());
         }
 
-        Translator::publish('quiqqer/payments');
+        try {
+            Translator::publish('quiqqer/payments');
+        } catch (QUi\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
     }
     //endregion
 }
