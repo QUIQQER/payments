@@ -237,9 +237,13 @@ class Gateway extends QUI\Utils\Singleton
      */
     public function getOrderUrl()
     {
-        $url = rtrim($this->getHost().URL_DIR, '/');
+        try {
+            $Project = QUI::getRewrite()->getProject();
+        } catch (QUI\Exception $Exception) {
+            $Project = QUI::getProjectManager()->getStandard();
+        }
 
-        return $url.'/Bestellungen?order='.$this->getOrder()->getHash();
+        return QUI\ERP\Order\Utils\Utils::getOrderUrl($Project, $this->getOrder());
     }
 
     /**
