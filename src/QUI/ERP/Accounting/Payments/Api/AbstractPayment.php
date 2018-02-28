@@ -157,9 +157,10 @@ abstract class AbstractPayment implements PaymentsInterface
      * If the Payment method is a payment gateway, it can return a gateway display
      *
      * @param AbstractOrder $Order
+     * @param QUI\ERP\Order\Controls\AbstractOrderingStep|null $Step
      * @return string
      */
-    public function getGatewayDisplay(AbstractOrder $Order)
+    public function getGatewayDisplay(AbstractOrder $Order, $Step = null)
     {
         return '';
     }

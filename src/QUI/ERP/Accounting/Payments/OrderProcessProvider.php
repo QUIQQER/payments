@@ -9,6 +9,7 @@ namespace QUI\ERP\Accounting\Payments;
 use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
 use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Order\AbstractOrderProcessProvider;
+use QUI\ERP\Order\Controls\AbstractOrderingStep;
 use QUI\ERP\Order\OrderProcess;
 use QUI\ERP\Order\Utils\OrderProcessSteps;
 
@@ -74,14 +75,15 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
 
     /**
      * @param AbstractOrder $Order
+     * @param AbstractOrderingStep|null $Step
      * @return string
      */
-    public function getDisplay(AbstractOrder $Order)
+    public function getDisplay(AbstractOrder $Order, $Step = null)
     {
         if ($this->Payment === null) {
             return '';
         }
 
-        return $this->Payment->getGatewayDisplay($Order);
+        return $this->Payment->getGatewayDisplay($Order, $Step);
     }
 }
