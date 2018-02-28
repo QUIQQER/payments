@@ -64,6 +64,51 @@ class Gateway extends QUI\Utils\Singleton
     }
 
     /**
+     * Set the order to the gateway
+     *
+     * @param mixed $order - could be order id, order hash, Order or OrderInProcess
+     */
+    public function setOrder($order)
+    {
+        if ($order instanceof QUI\ERP\Order\OrderInProcess) {
+            $this->Order = $order;
+
+            return;
+        }
+
+        if ($order instanceof QUI\ERP\Order\Order) {
+            $this->Order = $order;
+
+            return;
+        }
+
+
+        $Handler = QUI\ERP\Order\Handler::getInstance();
+
+        try {
+            $this->Order = $Handler->getOrderByHash($order);
+
+            return;
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
+        try {
+            $this->Order = $Handler->get($order);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return;
+        }
+
+        try {
+            $this->Order = $Handler->getOrderInProcess($order);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+    }
+
+    /**
      * @return QUI\ERP\Order\Order|QUI\ERP\Order\OrderInProcess
      */
     public function getOrder()
@@ -165,13 +210,13 @@ class Gateway extends QUI\Utils\Singleton
         $host = $this->getHost();
         $dir  = URL_OPT_DIR.'quiqqer/payments/bin/gateway.php';
 
-        if (empty($params)) {
-            $url = $dir;
-        } else {
-            $url = $dir.'?'.http_build_query($params);
+        if (!is_array($params)) {
+            $params = [];
         }
 
-        return $host.$url;
+        $params['orderHash'] = $this->getOrder()->getHash();
+
+        return $host.$dir.'?'.http_build_query($params);
     }
 
     /**
