@@ -214,7 +214,9 @@ class Gateway extends QUI\Utils\Singleton
             $params = [];
         }
 
-        $params['orderHash'] = $this->getOrder()->getHash();
+        if ($this->getOrder()) {
+            $params['orderHash'] = $this->getOrder()->getHash();
+        }
 
         return $host.$dir.'?'.http_build_query($params);
     }
