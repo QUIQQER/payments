@@ -1,1 +1,9 @@
-# Bezahlmethoden
+Bezahlmethoden
+======
+
+
+
+Developer Events
+------
+
+- onPaymentsGatewayReadRequest [Gateway]

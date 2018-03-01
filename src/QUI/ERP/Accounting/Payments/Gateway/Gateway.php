@@ -29,6 +29,12 @@ class Gateway extends QUI\Utils\Singleton
      */
     public function readRequest()
     {
+        QUI::getEvents()->fireEvent('paymentsGatewayReadRequest', [$this]);
+
+        if ($this->Order !== null) {
+            return;
+        }
+
         if (!isset($_REQUEST['orderHash'])) {
             return;
         }
