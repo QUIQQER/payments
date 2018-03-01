@@ -22,6 +22,15 @@ class Gateway extends QUI\Utils\Singleton
     protected $Order = null;
 
     /**
+     * payment gateway status flag
+     * 0 = normal gateway
+     * 1 = payment request
+     *
+     * @var int
+     */
+    protected $gatewayPayment = false;
+
+    /**
      * Read the request and look in which step we are
      *
      * @throws QUI\ERP\Order\Exception
@@ -142,6 +151,32 @@ class Gateway extends QUI\Utils\Singleton
                 'code'    => $Exception->getCode()
             )));
         }
+    }
+
+    /**
+     * Set the gateway to a gateway payment
+     * if this flag is active, the gateway thinks that it is executed by a payment
+     */
+    public function enableGatewayPayment()
+    {
+        $this->gatewayPayment = true;
+    }
+
+    /**
+     * Set the gateway to a normal gateway request
+     * if this flag is deactive, the gateway thinks that it is executed by a normal request
+     */
+    public function disableGatewayPayment()
+    {
+        $this->gatewayPayment = false;
+    }
+
+    /**
+     * @return int
+     */
+    public function isGatewayPayment()
+    {
+        return $this->gatewayPayment;
     }
 
     /**

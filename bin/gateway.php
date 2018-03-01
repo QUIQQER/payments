@@ -27,7 +27,7 @@ try {
     $Order    = $Gateway->getOrder();
 
 // Bezahlung vom Gateway (payment execution from the gateway)
-    if (isset($_REQUEST['GatewayPayment'])) {
+    if (isset($_REQUEST['GatewayPayment']) || $Gateway->isGatewayPayment()) {
         QUI\ERP\Debug::getInstance()->log('Execute Gateway Payment');
         QUI\ERP\Debug::getInstance()->log($Order->getHash());
         $Gateway->executeGatewayPayment();
