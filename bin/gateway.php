@@ -36,9 +36,12 @@ try {
 
     if (empty($orderUrl)) {
         QUI\System\Log::writeDebugException(new QUI\Exception(
-            'No Order found in gateway request. See above for $_REQUEST data.',
+            'No Order found in gateway request.',
             404,
-            $_REQUEST
+            array(
+                'headers'   => getallheaders(),
+                '$_REQUEST' => $_REQUEST
+            )
         ));
 
         exit;
