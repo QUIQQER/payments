@@ -2,7 +2,7 @@
 
 define('QUIQQER_SYSTEM', true);
 
-require_once dirname(dirname(dirname(dirname(__FILE__)))).'/header.php';
+require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/header.php';
 
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Response;
@@ -31,6 +31,16 @@ try {
         QUI\ERP\Debug::getInstance()->log('Execute Gateway Payment');
         QUI\ERP\Debug::getInstance()->log($Order->getHash());
         $Gateway->executeGatewayPayment();
+        exit;
+    }
+
+    if (empty($orderUrl)) {
+        QUI\System\Log::writeDebugException(new QUI\Exception(
+            'No Order found in gateway request. See above for $_REQUEST data.',
+            404,
+            $_REQUEST
+        ));
+
         exit;
     }
 
