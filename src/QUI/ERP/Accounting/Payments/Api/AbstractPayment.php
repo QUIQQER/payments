@@ -34,14 +34,14 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @var array
      */
-    protected $paymentFields = array();
+    protected $paymentFields = [];
 
     /**
      * default settings
      *
      * @var array
      */
-    protected $defaults = array();
+    protected $defaults = [];
 
     /**
      * Locale object for the payment
@@ -119,11 +119,11 @@ abstract class AbstractPayment implements PaymentsInterface
      */
     public function toArray()
     {
-        return array(
+        return [
             'name'        => $this->getName(),
             'title'       => $this->getTitle(),
             'description' => $this->getDescription()
-        );
+        ];
     }
 
     /**
@@ -134,6 +134,17 @@ abstract class AbstractPayment implements PaymentsInterface
     public function isGateway()
     {
         return false;
+    }
+
+    /**
+     * Is the payment be visible in the frontend?
+     * Every payment method can determine this by itself (API for developers)
+     *
+     * @return bool
+     */
+    public function isVisible()
+    {
+        return true;
     }
 
     /**
@@ -235,7 +246,7 @@ abstract class AbstractPayment implements PaymentsInterface
 //        );
 //
 //        return !empty($settings) ? $settings : array();
-        return array();
+        return [];
     }
 
     /**

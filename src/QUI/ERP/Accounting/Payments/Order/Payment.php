@@ -20,7 +20,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
      *
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
         parent::__construct($attributes);
 
@@ -55,18 +55,23 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $Order  = $this->getOrder();
 
         $Customer = $Order->getCustomer();
-        $User     = QUI::getUserBySession();
-
-        $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
-        $payments = $Payments->getUserPayments($User);
         $Payment  = $Order->getPayment();
 
-        $Engine->assign(array(
+        $User     = QUI::getUserBySession();
+        $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
+        $payments = $Payments->getUserPayments($User);
+
+        $payments = array_filter($payments, function ($Payment) {
+            /* @var $Payment QUI\ERP\Accounting\Payments\Api\AbstractPayment */
+            return $Payment->isVisible();
+        });
+
+        $Engine->assign([
             'User'            => $User,
             'Customer'        => $Customer,
             'SelectedPayment' => $Payment,
             'payments'        => $payments
-        ));
+        ]);
 
         return $Engine->fetch(dirname(__FILE__).'/Payment.html');
     }
@@ -80,10 +85,10 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $Payment = $Order->getPayment();
 
         if ($Payment === null) {
-            throw new QUI\ERP\Order\Exception(array(
+            throw new QUI\ERP\Order\Exception([
                 'quiqqer/order',
                 'exception.missing.payment'
-            ));
+            ]);
         }
 
         try {
