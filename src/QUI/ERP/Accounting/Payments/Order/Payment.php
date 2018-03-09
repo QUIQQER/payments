@@ -62,8 +62,8 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $payments = $Payments->getUserPayments($User);
 
         $payments = array_filter($payments, function ($Payment) {
-            /* @var $Payment QUI\ERP\Accounting\Payments\Api\AbstractPayment */
-            return $Payment->isVisible();
+            /* @var $Payment QUI\ERP\Accounting\Payments\Types\Payment */
+            return $Payment->getPaymentType()->isVisible();
         });
 
         $Engine->assign([
