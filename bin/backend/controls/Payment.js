@@ -3,17 +3,6 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Payment Panel - Eine Zahlungsart im Backend
- *
- * @require qui/QUI
- * @require qui/controls/desktop/Panel
- * @require qui/controls/windows/Confirm
- * @require package/quiqqer/payments/bin/backend/Payments
- * @require package/quiqqer/translator/bin/Translator
- * @require package/quiqqer/translator/bin/controls/Update
- * @require qui/utils/Form
- * @require Mustache
- * @require Locale
- * @require text!package/quiqqer/payments/bin/backend/controls/Payment.html
  */
 define('package/quiqqer/payments/bin/backend/controls/Payment', [
 

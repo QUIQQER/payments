@@ -108,6 +108,19 @@
             <de><![CDATA[Bezahlung per [payment] in Höhe von [amount] [currency] erhalten.]]></de>
             <en><![CDATA[Payment by [payment] of [amount][currency] received.]]></en>
         </locale>
+
+        <locale name="exception.create.payment.class.not.found">
+            <de><![CDATA[
+            Die Zahlungsart konnte nicht angelegt werden. Es ist ein Fehler bei der Zahlungsmethode aufgetreteten.
+            ]]></de>
+            <en><![CDATA[
+            The payment method could not be created. There is an error in the payment method occurred.
+            ]]></en>
+        </locale>
+        <locale name="exception.create.unique.payment.already.exists">
+            <de><![CDATA[Dieses Bezahlmethode können Sie nur einmal anlegen.]]></de>
+            <en><![CDATA[You can only create this payment method once.]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/payments" datatype="js">

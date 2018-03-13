@@ -154,7 +154,7 @@ abstract class AbstractPayment implements PaymentsInterface
      */
     public function isUnique()
     {
-        return true;
+        return false;
     }
 
     /**

@@ -1,9 +1,6 @@
 /**
  * @module package/quiqqer/payments/bin/backend/classes/Handler
- *
- * @require qui/QUI
- * @require qui/classes/DOM
- * @require Ajax
+ * @author www.pcsg.de (Henning Leutz)
  *
  * @event onPaymentDeactivate [self, paymentId, data]
  * @event onPaymentActivate [self, paymentId, data]

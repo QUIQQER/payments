@@ -3,15 +3,6 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Payments Panel
- *
- * @require qui/QUI
- * @require qui/controls/desktop/Panel
- * @require qui/controls/windows/Confirm
- * @require package/quiqqer/payments/bin/backend/Payments
- * @require controls/grid/Grid
- * @require Mustache
- * @require Locale
- * @require Ajax
  */
 define('package/quiqqer/payments/bin/backend/controls/Payments', [
 
@@ -364,6 +355,8 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                             }
 
                             Win.Loader.hide();
+                        }).catch(function () {
+                            Win.Loader.hide();
                         });
                     },
                     onSubmit: function (Win) {
@@ -375,6 +368,8 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                             Win.close();
                             self.refresh();
                             self.openPayment(newId);
+                        }).catch(function () {
+                            Win.Loader.hide();
                         });
                     }
                 }

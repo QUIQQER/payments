@@ -31,33 +31,18 @@ class Factory extends QUI\CRUD\Factory
 
         // create new translation var for the area
         $this->Events->addEvent('onCreateEnd', function ($New) use ($self) {
-//            QUI\Translator::publish('quiqqer/payments');
-//
-//            /* @var $New QUI\ERP\Areas\Area */
-//            $self->createPaymentLocale(
-//                'payment.' . $New->getId() . '.title',
-//                $New->getAttribute('title')
-//            );
-//
-//            $self->createPaymentLocale(
-//                'payment.' . $New->getId() . '.description',
-//                $New->getAttribute('description')
-//            );
-//
-//            $self->createPaymentLocale(
-//                'payment.' . $New->getId() . '.workingTitle',
-//                $New->getAttribute('workingTitle')
-//            );
-
             QUI\Translator::publish('quiqqer/payments');
         });
     }
 
     /**
      * @param array $data
+     *
      * @return Payment
+     *
+     * @throws QUI\ERP\Accounting\Payments\Exception
      */
-    public function createChild($data = array())
+    public function createChild($data = [])
     {
         if (!isset($data['active']) || !is_integer($data['active'])) {
             $data['active'] = 0;
@@ -75,6 +60,33 @@ class Factory extends QUI\CRUD\Factory
             $data['priority'] = 0;
         }
 
+        if (!isset($data['payment_type']) || !class_exists($data['payment_type'])) {
+            throw new QUI\ERP\Accounting\Payments\Exception([
+                'quiqqer/payments',
+                'exception.create.payment.class.not.found'
+            ]);
+        }
+
+        $payment       = $data['payment_type'];
+        $PaymentMethod = new $payment();
+
+        /* @var $PaymentMethod QUI\ERP\Accounting\Payments\Api\AbstractPayment */
+        if ($PaymentMethod->isUnique()) {
+            // if the payment is unique, we must check, if a payment method already exists
+            $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
+            $children = $Payments->getPayments([
+                'where' => [
+                    'payment_type' => $payment
+                ]
+            ]);
+
+            if (count($children)) {
+                throw new QUI\ERP\Accounting\Payments\Exception([
+                    'quiqqer/payments',
+                    'exception.create.unique.payment.already.exists'
+                ]);
+            }
+        }
 
         /* @var $NewChild Payment */
         $NewChild = parent::createChild($data);
@@ -89,7 +101,11 @@ class Factory extends QUI\CRUD\Factory
             '[quiqqer/payments] new.payment.paceholder'
         );
 
-        QUI\Translator::publish('quiqqer/payments');
+        try {
+            QUI\Translator::publish('quiqqer/payments');
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
 
         return $NewChild;
     }
@@ -115,7 +131,7 @@ class Factory extends QUI\CRUD\Factory
      */
     public function getChildAttributes()
     {
-        return array(
+        return [
             'id',
             'payment_type',
             'active',
@@ -132,12 +148,15 @@ class Factory extends QUI\CRUD\Factory
             'articles',
             'categories',
             'user_groups'
-        );
+        ];
     }
 
     /**
      * @param int $id
+     *
      * @return Payment
+     *
+     * @throws QUI\Exception
      */
     public function getChild($id)
     {
@@ -163,11 +182,11 @@ class Factory extends QUI\CRUD\Factory
         }
 
         try {
-            QUI\Translator::addUserVar('quiqqer/payments', $var, array(
+            QUI\Translator::addUserVar('quiqqer/payments', $var, [
                 $current   => $title,
                 'datatype' => 'php,js',
                 'package'  => 'quiqqer/payments'
-            ));
+            ]);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());
         }
