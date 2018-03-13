@@ -148,6 +148,16 @@ abstract class AbstractPayment implements PaymentsInterface
     }
 
     /**
+     * This flag indicates whether the payment module can be created more than once
+     *
+     * @return bool
+     */
+    public function isUnique()
+    {
+        return true;
+    }
+
+    /**
      * @return bool
      */
     public function refundSupport()
@@ -191,98 +201,6 @@ abstract class AbstractPayment implements PaymentsInterface
 
 
     //region OLD METHODS
-
-    /**
-     * Return the payments fields for the user
-     * Like extra data
-     *
-     * @param QUI\ERP\User|null $User
-     * @return array
-     * @deprecated
-     */
-    public function getPaymentUserData($User = null)
-    {
-        return $this->paymentFields;
-    }
-
-    /**
-     * Set the payment fields
-     * In accounting -> paymentfields
-     *
-     * @param array $params
-     * @deprecated
-     */
-    public function setPaymentUserData(array $params)
-    {
-        foreach ($params as $key => $value) {
-            $this->paymentFields[$key] = $value;
-        }
-    }
-
-
-    /**
-     * The check method
-     * Checks if all required fields are available and the payment can be executed
-     *
-     * @param QUI\ERP\User $User
-     * @deprecated
-     */
-    public function checkUserData(QUI\ERP\User $User)
-    {
-        // nothing
-    }
-
-    /**
-     * Return a setting
-     *
-     * @return array
-     * @todo get own settings
-     * @deprecated
-     */
-    public function getSettings()
-    {
-//        $settings = Plugin_payment::getConf()->get(
-//            strtolower($this->getAttribute('name'))
-//        );
-//
-//        return !empty($settings) ? $settings : array();
-        return [];
-    }
-
-    /**
-     * Return a setting from the payment
-     *
-     * @param string $name
-     *
-     * @return string|int|float|array|null
-     * @deprecated
-     */
-    public function getSetting($name)
-    {
-        $settings = $this->getSettings();
-
-        if (isset($settings[$name])) {
-            return $settings[$name];
-        }
-
-        if (isset($this->defaults[$name])) {
-            return $this->defaults[$name];
-        }
-
-        return null;
-    }
-
-    /**
-     * Return the Success Type of the Payment
-     * When is the payment successful
-     *
-     * @return int - Handler::SUCCESS_TYPE_*
-     * @deprecated
-     */
-    public function getSuccessType()
-    {
-        return self::SUCCESS_TYPE_PAY;
-    }
 
     /**
      * Template Methods
