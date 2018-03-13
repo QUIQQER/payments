@@ -14,8 +14,6 @@ use QUI\ERP\Order\AbstractOrder;
  * This is the parent payment class for all payment methods
  *
  * @author www.pcsg.de (Henning Leutz)
- * @todo überarbeiten, da alte api mit integriert ist
- * @todo AbstractPaymentMethod
  */
 abstract class AbstractPayment implements PaymentsInterface
 {
