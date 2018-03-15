@@ -348,7 +348,7 @@ class Gateway extends QUI\Utils\Singleton
             $HOST = QUI::conf('globals', 'httpshost');
         }
 
-        if (strpos($_REQUEST['project'], '{') !== false) {
+        if (isset($_REQUEST['project']) && strpos($_REQUEST['project'], '{') !== false) {
             try {
                 $Project = QUI::getProjectManager()->decode($_REQUEST['project']);
 

@@ -90,21 +90,21 @@ class Payment extends QUI\CRUD\Child
         $type = $this->getAttribute('payment_type');
 
         if (!class_exists($type)) {
-            throw new QUI\ERP\Accounting\Payments\Exception(array(
+            throw new QUI\ERP\Accounting\Payments\Exception([
                 'quiqqer/payments',
                 'exception.payment.type.not.found',
-                array('paymentType' => $type)
-            ));
+                ['paymentType' => $type]
+            ]);
         }
 
         $Type = new $type();
 
         if (!($Type instanceof Api\AbstractPayment)) {
-            throw new QUI\ERP\Accounting\Payments\Exception(array(
+            throw new QUI\ERP\Accounting\Payments\Exception([
                 'quiqqer/payments',
                 'exception.payment.type.not.abstractPayment',
-                array('paymentType' => $type)
-            ));
+                ['paymentType' => $type]
+            ]);
         }
 
         return $Type;
@@ -275,6 +275,18 @@ class Payment extends QUI\CRUD\Child
             'payment.'.$this->getId().'.workingTitle'
         );
     }
+
+    /**
+     * Return the icon for the Payment
+     *
+     * @return string
+     * @throws QUI\ERP\Accounting\Payments\Exception
+     */
+    public function getIcon()
+    {
+        return $this->getPaymentType()->getIcon();
+    }
+
     //endregion
 
     //region SETTER
@@ -326,10 +338,10 @@ class Payment extends QUI\CRUD\Child
      */
     protected function setPaymentLocale($var, $title)
     {
-        $data = array(
+        $data = [
             'datatype' => 'php,js',
             'package'  => 'quiqqer/payments'
-        );
+        ];
 
         $languages = QUI::availableLanguages();
 

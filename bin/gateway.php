@@ -2,6 +2,9 @@
 
 define('QUIQQER_SYSTEM', true);
 
+// @todo überdenken, vllt auf den order benutzer setzen
+define('SYSTEM_INTERN', true);
+
 require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/header.php';
 
 use \Symfony\Component\HttpFoundation\RedirectResponse;
@@ -12,9 +15,6 @@ QUI\ERP\Debug::getInstance()->log('Gateway incoming');
 try {
     QUI\ERP\Debug::getInstance()->log('Reed Request');
     QUI\ERP\Debug::getInstance()->log($_GET);
-
-    // @todo überdenken, vllt auf den order benutzer setzen
-    define('SYSTEM_INTERN', true);
 
     QUI\Permissions\Permission::setUser(
         QUI::getUsers()->getSystemUser()

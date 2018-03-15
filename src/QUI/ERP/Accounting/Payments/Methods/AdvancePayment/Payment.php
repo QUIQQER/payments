@@ -39,10 +39,22 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     }
 
     /**
+     * @param $hash
      * @return bool
      */
     public function isSuccessful($hash)
     {
         return false;
+    }
+
+    /**
+     * Return the payment icon (the URL path)
+     * Can be overwritten
+     *
+     * @return string
+     */
+    public function getIcon()
+    {
+        return URL_OPT_DIR.'quiqqer/payments/bin/payments/Vorkasse.png';
     }
 }
