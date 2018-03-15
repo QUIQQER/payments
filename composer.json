@@ -3,7 +3,10 @@
   "type": "quiqqer-plugin",
   "description": "Provided the payment management for QUIQQER. Can manage payment method",
   "version": "dev-dev",
-  "license": "",
+  "license": [
+    "GPL-3.0+",
+    "PCSG QEL-1.0"
+  ],
   "authors": [
     {
       "name": "Henning Leutz",
