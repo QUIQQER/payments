@@ -194,8 +194,20 @@ abstract class AbstractPayment implements PaymentsInterface
     {
     }
 
+    //region text messages
+
+    /**
+     * Return the extra text for the invoice
+     *
+     * @return mixed
+     */
+    public function getInvoiceText()
+    {
+        return '';
+    }
 
 
+    //endregion
 
 
     //region OLD METHODS
@@ -212,49 +224,6 @@ abstract class AbstractPayment implements PaymentsInterface
      * @deprecated
      */
     public function getOrderSuccessTpl($Bill, $Project = false)
-    {
-        return '';
-    }
-
-    /**
-     * Display the needed data
-     * eq: The Basket display this template at the order
-     *
-     * @param QUI\ERP\User $User
-     * @return String
-     * @deprecated
-     */
-    public function getPaymentUserDataTpl(QUI\ERP\User $User)
-    {
-        if ($this->getSetting('icon')) {
-            return '<img
-                    class="plugin-payment-image-confirm"
-                    src="'.URL_OPT_DIR.'payment/moduls/'.strtolower($this->getSetting('name')).'/bin/'.$this->getSetting('icon').'" />';
-        }
-
-        return '';
-    }
-
-    /**
-     * Display the needed data for editing
-     *
-     * @param QUI\ERP\User $User
-     * @return String
-     * @deprecated
-     */
-    public function getEditUserDataTpl(QUI\ERP\User $User)
-    {
-        return '';
-    }
-
-    /**
-     * Tpl für den User im Adminbereich
-     *
-     * @param QUI\ERP\User $User
-     * @return string
-     * @deprecated
-     */
-    public function getAdminDataTpl(QUI\ERP\User $User)
     {
         return '';
     }
