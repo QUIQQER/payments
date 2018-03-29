@@ -205,18 +205,26 @@ class Gateway extends QUI\Utils\Singleton
             'currency' => $Currency->getCode()
         ]);
 
+        $hash = $Order->getHash();
+
         $Order->addComment($paymentComment);
 
         Transactions::createPaymentTransaction(
             $amount,
             $Currency,
-            $Order->getHash(),
+            $hash,
             $Payment->getName(),
             $paymentData
         );
 
         // refresh, so that the transactions and invoice are also recognized
-        $Order->refresh();
+        try {
+            $Order = QUI\ERP\Order\Handler::getInstance()->getOrderByHash($hash);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return;
+        }
 
         if ($Order->isPosted()) {
             try {
