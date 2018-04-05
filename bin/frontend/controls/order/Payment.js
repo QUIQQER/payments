@@ -43,7 +43,13 @@ define('package/quiqqer/payments/bin/frontend/controls/order/Payment', [
         $onClick: function (event) {
             event.stop();
 
+            this.getElm()
+                .getParent('.quiqqer-order-step-payments-list')
+                .getElements('.quiqqer-order-step-payments-list-entry')
+                .removeClass('selected');
+
             this.$Input.checked = true;
+            this.getElm().addClass('selected');
         }
     });
 });
