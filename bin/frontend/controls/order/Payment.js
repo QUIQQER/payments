@@ -35,6 +35,10 @@ define('package/quiqqer/payments/bin/frontend/controls/order/Payment', [
             this.getElm().addEvent('click', this.$onClick);
 
             this.$Input = this.getElm().getElement('input');
+
+            if (this.$Input.checked) {
+                this.getElm().addClass('selected');
+            }
         },
 
         /**
