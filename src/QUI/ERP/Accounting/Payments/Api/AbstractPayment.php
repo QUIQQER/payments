@@ -178,6 +178,8 @@ abstract class AbstractPayment implements PaymentsInterface
      * @param AbstractOrder $Order
      * @param QUI\ERP\Order\Controls\AbstractOrderingStep|null $Step
      * @return string
+     *
+     * @throws QUI\ERP\Order\ProcessingException
      */
     public function getGatewayDisplay(AbstractOrder $Order, $Step = null)
     {
@@ -188,6 +190,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * Execute the request from the payment provider
      *
      * @param QUI\ERP\Accounting\Payments\Gateway\Gateway $Gateway
+     *
      * @throws QUI\ERP\Accounting\Payments\Exception
      */
     public function executeGatewayPayment(QUI\ERP\Accounting\Payments\Gateway\Gateway $Gateway)

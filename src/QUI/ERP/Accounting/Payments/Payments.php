@@ -22,7 +22,7 @@ class Payments extends QUI\Utils\Singleton
     /**
      * @var array
      */
-    protected $payments = array();
+    protected $payments = [];
 
     /**
      * Return all available payment provider
@@ -40,7 +40,7 @@ class Payments extends QUI\Utils\Singleton
                 return $package['name'];
             }, QUI::getPackageManager()->getInstalled());
 
-            $providers = array();
+            $providers = [];
 
             foreach ($packages as $package) {
                 try {
@@ -53,11 +53,15 @@ class Payments extends QUI\Utils\Singleton
                 }
             }
 
-            QUI\Cache\Manager::set($cacheProvider, $providers);
+            try {
+                QUI\Cache\Manager::set($cacheProvider, $providers);
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
         }
 
         // filter provider
-        $result = array();
+        $result = [];
 
         foreach ($providers as $provider) {
             if (!class_exists($provider)) {
@@ -83,7 +87,7 @@ class Payments extends QUI\Utils\Singleton
      */
     public function getPaymentTypes()
     {
-        $payments  = array();
+        $payments  = [];
         $providers = $this->getPaymentProviders();
 
         foreach ($providers as $Provider) {
@@ -121,11 +125,11 @@ class Payments extends QUI\Utils\Singleton
             }
         }
 
-        throw new Exception(array(
+        throw new Exception([
             'quiqqer/payments',
             'exception.payment.type.not.found',
-            array('paymentType' => $paymentHash)
-        ));
+            ['paymentType' => $paymentHash]
+        ]);
     }
 
     /**
@@ -141,12 +145,13 @@ class Payments extends QUI\Utils\Singleton
         /* @var $Payment Payment */
         try {
             $Payment = Factory::getInstance()->getChild($paymentId);
+
             return $Payment;
         } catch (QUI\Exception $Exception) {
-            throw new Exception(array(
+            throw new Exception([
                 'quiqqer/payments',
                 'exception.payment.not.found'
-            ));
+            ]);
         }
     }
 
@@ -156,7 +161,7 @@ class Payments extends QUI\Utils\Singleton
      * @param array $queryParams
      * @return array
      */
-    public function getPayments($queryParams = array())
+    public function getPayments($queryParams = [])
     {
         if (!isset($queryParams['order'])) {
             $queryParams['order'] = 'priority ASC';
