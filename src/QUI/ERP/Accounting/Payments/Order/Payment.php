@@ -112,18 +112,31 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
      */
     public function save()
     {
-        if (!isset($_REQUEST['payment'])) {
+        $payment = false;
+
+        if (isset($_REQUEST['payment'])) {
+            $payment = $_REQUEST['payment'];
+        }
+
+        if (empty($payment) && $this->getAttribute('payment')) {
+            $payment = $this->getAttribute('payment');
+        }
+
+        if (empty($payment)) {
             return;
         }
+
 
         $User  = QUI::getUserBySession();
         $Order = $this->getOrder();
 
         try {
             $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
-            $Payment  = $Payments->getPayment($_REQUEST['payment']);
+            $Payment  = $Payments->getPayment($payment);
             $Payment->canUsedBy($User);
-        } catch (QUI\ERP\Accounting\Payments\Exception $Payments) {
+        } catch (QUI\ERP\Accounting\Payments\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
             return;
         }
 
