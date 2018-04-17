@@ -28,6 +28,7 @@ class Settings extends Singleton
      * Return the config object
      *
      * @return QUI\Config
+     * @throws QUI\Exception
      */
     protected function getConfig()
     {
@@ -53,7 +54,13 @@ class Settings extends Singleton
      */
     public function get($section, $key)
     {
-        return $this->getConfig()->get($section, $key);
+        try {
+            return $this->getConfig()->get($section, $key);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return false;
+        }
     }
 
     /**
@@ -67,11 +74,17 @@ class Settings extends Singleton
     {
         // @todo permissions
 
-        $this->getConfig()->setValue($section, $key, $value);
+        try {
+            $this->getConfig()->setValue($section, $key, $value);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
     }
 
     /**
      * Save the payment config
+     *
+     * @throws QUI\Exception
      */
     public function save()
     {
@@ -87,6 +100,10 @@ class Settings extends Singleton
      */
     public function removeSection($section)
     {
-        $this->getConfig()->del($section);
+        try {
+            $this->getConfig()->del($section);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
     }
 }

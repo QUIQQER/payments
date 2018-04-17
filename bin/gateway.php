@@ -5,7 +5,7 @@ define('QUIQQER_SYSTEM', true);
 // @todo überdenken, vllt auf den order benutzer setzen
 define('SYSTEM_INTERN', true);
 
-require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/header.php';
+require_once dirname(dirname(dirname(dirname(__FILE__)))).'/header.php';
 
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Response;
@@ -38,10 +38,10 @@ try {
         QUI\System\Log::writeDebugException(new QUI\Exception(
             'No Order found in gateway request.',
             404,
-            array(
+            [
                 'headers'   => getallheaders(),
                 '$_REQUEST' => $_REQUEST
-            )
+            ]
         ));
 
         exit;

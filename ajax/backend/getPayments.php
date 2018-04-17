@@ -16,7 +16,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_payments_ajax_backend_getPayments',
     function () {
         $payments = Payments::getInstance()->getPayments();
-        $result   = array();
+        $result   = [];
 
         foreach ($payments as $Payment) {
             /* @var $Payment Payment */

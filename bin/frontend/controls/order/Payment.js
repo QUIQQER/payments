@@ -1,5 +1,5 @@
 /**
- * @module
+ * @module package/quiqqer/payments/bin/frontend/controls/order/Payment
  */
 define('package/quiqqer/payments/bin/frontend/controls/order/Payment', [
 

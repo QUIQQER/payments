@@ -17,6 +17,6 @@ QUI::$Ajax->registerFunction(
         $Payments = new Factory();
         $Payments->getChild($paymentId)->delete();
     },
-    array('paymentId'),
+    ['paymentId'],
     'Permission::checkAdminUser'
 );

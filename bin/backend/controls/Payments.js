@@ -13,10 +13,9 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
     'package/quiqqer/payments/bin/backend/Payments',
     'controls/grid/Grid',
     'Mustache',
-    'Locale',
-    'Ajax'
+    'Locale'
 
-], function (QUI, QUIPanel, QUIConfirm, QUIButton, Payments, Grid, Mustache, QUILocale, QUIAjax) {
+], function (QUI, QUIPanel, QUIConfirm, QUIButton, Payments, Grid, Mustache, QUILocale) {
     "use strict";
 
     var lg = 'quiqqer/payments';
@@ -96,15 +95,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
 
                     if (status) {
-                        Payments.deactivatePayment(paymentId).then(function () {
-                            self.refresh();
-                        });
+                        Payments.deactivatePayment(paymentId);
                         return;
                     }
 
-                    Payments.activatePayment(paymentId).then(function () {
-                        self.refresh();
-                    });
+                    Payments.activatePayment(paymentId);
                 };
 
                 for (var i = 0, len = result.length; i < len; i++) {

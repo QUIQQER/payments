@@ -17,6 +17,6 @@ QUI::$Ajax->registerFunction(
     function ($paymentId) {
         return Payments::getInstance()->getPayment($paymentId)->toArray();
     },
-    array('paymentId'),
+    ['paymentId'],
     'Permission::checkAdminUser'
 );

@@ -23,12 +23,12 @@ QUI::$Ajax->registerFunction(
             QUI::getLocale()->get(
                 'quiqqer/payments',
                 'message.payment.activate.successfully',
-                array('payment' => $Payment->getTitle())
+                ['payment' => $Payment->getTitle()]
             )
         );
 
         return $Payment->toArray();
     },
-    array('paymentId'),
+    ['paymentId'],
     'Permission::checkAdminUser'
 );

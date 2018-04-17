@@ -173,6 +173,8 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
+                self.$payments = null;
+
                 QUIAjax.get('package_quiqqer_payments_ajax_backend_activate', function (result) {
                     self.fireEvent('paymentActivate', [self, paymentId, result]);
                     resolve(result);
@@ -194,6 +196,8 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
+                self.$payments = null;
+                
                 QUIAjax.get('package_quiqqer_payments_ajax_backend_deactivate', function (result) {
                     self.fireEvent('paymentDeactivate', [self, paymentId, result]);
                     resolve(result);

@@ -30,7 +30,7 @@ class Factory extends QUI\CRUD\Factory
         });
 
         // create new translation var for the area
-        $this->Events->addEvent('onCreateEnd', function ($New) use ($self) {
+        $this->Events->addEvent('onCreateEnd', function () use ($self) {
             QUI\Translator::publish('quiqqer/payments');
         });
     }
@@ -41,6 +41,7 @@ class Factory extends QUI\CRUD\Factory
      * @return Payment
      *
      * @throws QUI\ERP\Accounting\Payments\Exception
+     * @throws QUI\Exception
      */
     public function createChild($data = [])
     {

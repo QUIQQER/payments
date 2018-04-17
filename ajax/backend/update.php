@@ -39,12 +39,12 @@ QUI::$Ajax->registerFunction(
             QUI::getLocale()->get(
                 'quiqqer/payments',
                 'message.payment.saved.successfully',
-                array(
+                [
                     'payment' => $Payment->getTitle()
-                )
+                ]
             )
         );
     },
-    array('paymentId', 'data'),
+    ['paymentId', 'data'],
     'Permission::checkAdminUser'
 );

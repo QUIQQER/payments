@@ -18,12 +18,12 @@ QUI::$Ajax->registerFunction(
         $Type = Payments::getInstance()->getPaymentType($paymentType);
 
         $Factory = new Factory();
-        $Payment = $Factory->createChild(array(
+        $Payment = $Factory->createChild([
             'payment_type' => get_class($Type)
-        ));
+        ]);
 
         return $Payment->getId();
     },
-    array('paymentType'),
+    ['paymentType'],
     'Permission::checkAdminUser'
 );
