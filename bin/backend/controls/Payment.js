@@ -260,7 +260,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 paymentId = this.getAttribute('paymentId');
 
             this.Loader.show();
-            this.$unloadContainer();
+            this.$unloadContainerData();
 
             var data = this.getAttribute('data');
 
@@ -507,24 +507,41 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          * unload the data from the current category
          */
         $unloadContainer: function () {
-            var Form = this.$Container.getElement('form');
-
+            this.$unloadContainerData();
+            
             if (this.$DataDescription) {
-                this.$setData('description', this.$DataDescription.getData());
                 this.$DataDescription.destroy();
                 this.$DataDescription = null;
             }
 
             if (this.$DataTitle) {
-                this.$setData('title', this.$DataTitle.getData());
                 this.$DataTitle.destroy();
                 this.$DataTitle = null;
             }
 
             if (this.$DataWorkingTitle) {
-                this.$setData('workingTitle', this.$DataWorkingTitle.getData());
                 this.$DataWorkingTitle.destroy();
                 this.$DataWorkingTitle = null;
+            }
+        },
+
+        /**
+         * Unload the current container data and set the data to the payment object
+         * The data is not saved
+         */
+        $unloadContainerData: function () {
+            var Form = this.$Container.getElement('form');
+
+            if (this.$DataDescription) {
+                this.$setData('description', this.$DataDescription.getData());
+            }
+
+            if (this.$DataTitle) {
+                this.$setData('title', this.$DataTitle.getData());
+            }
+
+            if (this.$DataWorkingTitle) {
+                this.$setData('workingTitle', this.$DataWorkingTitle.getData());
             }
 
             if (Form) {

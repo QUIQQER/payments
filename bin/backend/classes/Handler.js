@@ -197,7 +197,7 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
 
             return new Promise(function (resolve, reject) {
                 self.$payments = null;
-                
+
                 QUIAjax.get('package_quiqqer_payments_ajax_backend_deactivate', function (result) {
                     self.fireEvent('paymentDeactivate', [self, paymentId, result]);
                     resolve(result);
