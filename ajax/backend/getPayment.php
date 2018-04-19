@@ -5,7 +5,6 @@
  */
 
 use QUI\ERP\Accounting\Payments\Payments;
-use QUI\ERP\Accounting\Payments\Types\Payment;
 
 /**
  * Return all active payments

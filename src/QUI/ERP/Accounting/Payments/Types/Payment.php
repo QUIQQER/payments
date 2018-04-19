@@ -44,17 +44,44 @@ class Payment extends QUI\CRUD\Child
     /**
      * Return the payment as an array
      *
-     * @param null $Locale
      * @return array
      */
-    public function toArray($Locale = null)
+    public function toArray()
     {
-        $attributes = $this->getAttributes();
+        $lg = 'quiqqer/payments';
+        $id = $this->getId();
 
-        $attributes['title']        = $this->getTitle($Locale);
-        $attributes['workingTitle'] = $this->getWorkingTitle($Locale);
-        $attributes['description']  = $this->getDescription($Locale);
-        $attributes['paymentType']  = false;
+        $attributes = $this->getAttributes();
+        $Locale     = QUI::getLocale();
+
+        try {
+            $availableLanguages = QUI\Translator::getAvailableLanguages();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            $availableLanguages = [];
+        }
+
+        foreach ($availableLanguages as $language) {
+            $attributes['title'][$language] = $Locale->getByLang(
+                $language,
+                $lg,
+                'payment.'.$id.'.title'
+            );
+
+            $attributes['description'][$language] = $Locale->getByLang(
+                $language,
+                $lg,
+                'payment.'.$id.'.description'
+            );
+
+            $attributes['workingTitle'][$language] = $Locale->getByLang(
+                $language,
+                $lg,
+                'payment.'.$id.'.workingTitle'
+            );
+        }
+
+        $attributes['paymentType'] = false;
 
         try {
             $attributes['paymentType'] = $this->getPaymentType()->toArray();

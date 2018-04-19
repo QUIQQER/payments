@@ -4,13 +4,14 @@
  * This file contains package_quiqqer_payments_ajax_backend_update
  */
 
-use \QUI\ERP\Accounting\Payments\Types\Factory;
+use QUI\ERP\Accounting\Payments\Types\Factory;
+use QUI\ERP\Accounting\Payments\Payments;
 
 /**
  * Update a payment
  *
  * @param integer $paymentId - Payment ID
- * @param integer $paymentId - Payment ID
+ * @param array $data - Payment Data
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_payments_ajax_backend_update',
@@ -44,6 +45,8 @@ QUI::$Ajax->registerFunction(
                 ]
             )
         );
+
+        return $Payment->toArray();
     },
     ['paymentId', 'data'],
     'Permission::checkAdminUser'

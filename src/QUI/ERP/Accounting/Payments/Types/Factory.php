@@ -102,6 +102,11 @@ class Factory extends QUI\CRUD\Factory
             '[quiqqer/payments] new.payment.paceholder'
         );
 
+        $this->createPaymentLocale(
+            'payment.'.$NewChild->getId().'.description',
+            '&nbsp;'
+        );
+
         try {
             QUI\Translator::publish('quiqqer/payments');
         } catch (QUI\Exception $Exception) {

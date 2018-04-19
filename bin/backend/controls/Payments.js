@@ -18,7 +18,8 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
 ], function (QUI, QUIPanel, QUIConfirm, QUIButton, Payments, Grid, Mustache, QUILocale) {
     "use strict";
 
-    var lg = 'quiqqer/payments';
+    var lg      = 'quiqqer/payments';
+    var current = QUILocale.getCurrent();
 
     return new Class({
 
@@ -130,6 +131,9 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     }
 
                     result[i].paymentType_display = '';
+
+                    result[i].title        = result[i].title[current];
+                    result[i].workingTitle = result[i].workingTitle[current];
 
                     if ("paymentType" in result[i] && result[i].paymentType) {
                         result[i].paymentType_display = result[i].paymentType.title;

@@ -237,7 +237,9 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 paymentId = this.getAttribute('paymentId');
 
             return Payments.getPayment(paymentId).then(function (result) {
-                self.setAttribute('title', result.title);
+                var current = QUILocale.getCurrent();
+
+                self.setAttribute('title', result.title[current]);
                 self.setAttribute('icon', 'fa fa-credit-card-alt');
 
                 delete result.title;
@@ -245,8 +247,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 delete result.description;
 
                 self.setAttribute('data', result);
-            }).then(function () {
                 self.refresh();
+            }).catch(function (err) {
+                console.error(err);
+                self.destroy();
             });
         },
 
@@ -261,6 +265,9 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
             this.Loader.show();
             this.$unloadContainerData();
+
+            this.$__storageData = {};
+            this.$__running     = false;
 
             var data = this.getAttribute('data');
 
@@ -329,7 +336,6 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 data = self.getAttribute('data');
 
             this.$hideContainer().then(function (Container) {
-
                 Container.set({
                     html: Mustache.render(template, {
                         header              : QUILocale.get(lg, 'payment.edit.template.title'),
