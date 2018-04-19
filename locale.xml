@@ -132,6 +132,10 @@
             <de><![CDATA[ID]]></de>
             <en><![CDATA[ID]]></en>
         </locale>
+        <locale name="payment.edit.template.type">
+            <de><![CDATA[Zahlungsmethode]]></de>
+            <en><![CDATA[Payment method]]></en>
+        </locale>
         <locale name="payment.edit.template.usage">
             <de><![CDATA[Nutzung definieren]]></de>
             <en><![CDATA[Defining Terms]]></en>

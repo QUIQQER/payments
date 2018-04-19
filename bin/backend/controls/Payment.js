@@ -334,6 +334,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                     html: Mustache.render(template, {
                         header              : QUILocale.get(lg, 'payment.edit.template.title'),
                         id                  : QUILocale.get(lg, 'payment.edit.template.id'),
+                        type                : QUILocale.get(lg, 'payment.edit.template.type'),
                         title               : QUILocale.get(lg, 'payment.edit.template.title'),
                         workingTitle        : QUILocale.get('quiqqer/system', 'workingtitle'),
                         usageHeader         : QUILocale.get(lg, 'payment.edit.template.usage'),
@@ -354,6 +355,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 });
 
                 Container.getElement('.field-id').set('html', data.id);
+
+                if (typeof data.paymentType !== 'undefined' &&
+                    typeof data.paymentType.title !== 'undefined') {
+                    Container.getElement('.field-type').set('html', data.paymentType.title);
+                }
 
                 FormUtils.setDataToForm(data, Container.getElement('form'));
 
@@ -508,7 +514,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          */
         $unloadContainer: function () {
             this.$unloadContainerData();
-            
+
             if (this.$DataDescription) {
                 this.$DataDescription.destroy();
                 this.$DataDescription = null;
