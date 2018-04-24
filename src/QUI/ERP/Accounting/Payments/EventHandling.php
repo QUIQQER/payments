@@ -39,7 +39,12 @@ class EventHandling
 
         if (empty($params['payments']['paymentsJson'])) {
             $Settings->removeSection('payments');
-            $Settings->save();
+
+            try {
+                $Settings->save();
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
 
             return;
         }
@@ -55,14 +60,18 @@ class EventHandling
             }
         }
 
-        $Settings->save();
+        try {
+            $Settings->save();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
     }
 
     /**
      * @param Package $Package
      * @throws QUI\Exception
      */
-    public static function onPackageSetup(Package $Package)
+    public static function onPackageInstall(Package $Package)
     {
         if ($Package->getName() != 'quiqqer/products') {
             return;
