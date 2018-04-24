@@ -65,3 +65,44 @@
 .quiqqer-order-step-payments-list-entry-text-description {
     font-size: 14px;
 }
+
+@media (max-width: 768px) {
+    .quiqqer-order-step-payments-list-entry {
+        clear: both;
+        display: block !important;
+        float: left;
+        margin-bottom: 20px;
+        padding-top: 10px;
+    }
+
+    .quiqqer-order-step-payments-list-entry:last-child {
+        border: none;
+    }
+
+    .quiqqer-order-step-payments-list-entry.selected {
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    .quiqqer-order-step-payments-list-entry-select {
+        display: none !important;
+    }
+
+    .quiqqer-order-step-payments-list-entry-icon,
+    .quiqqer-order-step-payments-list-entry-text,
+    .quiqqer-order-step-payments-list-entry-text-description {
+        width: 100% !important;
+    }
+
+    .quiqqer-order-step-payments-list-entry-icon {
+        padding: 0 10px !important;
+        text-align: left;
+    }
+
+    .quiqqer-order-step-payments-list-entry-text {
+        padding: 10px;
+    }
+
+    .quiqqer-order-step-payments-list-entry-text-description p {
+        margin-bottom: 0;
+    }
+}
