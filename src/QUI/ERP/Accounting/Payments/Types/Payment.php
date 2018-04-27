@@ -180,6 +180,8 @@ class Payment extends QUI\CRUD\Child
         }
 
         // not in area
+        $areasValue = explode($areasValue, ',');
+
         if (!empty($areasValue) && !AreaUtils::isUserInAreas($User, $areasValue)) {
             return false;
         }
