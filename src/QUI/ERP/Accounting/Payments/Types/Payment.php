@@ -180,7 +180,7 @@ class Payment extends QUI\CRUD\Child
         }
 
         // not in area
-        $areasValue = explode($areasValue, ',');
+        $areasValue = explode(',', $areasValue);
 
         if (!empty($areasValue) && !AreaUtils::isUserInAreas($User, $areasValue)) {
             return false;
@@ -192,6 +192,10 @@ class Payment extends QUI\CRUD\Child
 
         $discountUsers  = $userGroups['users'];
         $discountGroups = $userGroups['groups'];
+
+        if (empty($discountUsers) && empty($discountGroups)) {
+            return true;
+        }
 
         // user checking
         foreach ($discountUsers as $uid) {
