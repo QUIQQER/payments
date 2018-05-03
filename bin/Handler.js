@@ -5,7 +5,7 @@
  */
 define('package/quiqqer/payments/bin/Handler', [
 
-    'package/quiqqer/payments/bin/frontend/controls/Handler'
+    'package/quiqqer/payments/bin/frontend/classes/Handler'
 
 ], function (HandlerClass) {
     "use strict";

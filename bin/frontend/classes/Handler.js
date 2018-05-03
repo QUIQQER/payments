@@ -3,7 +3,7 @@
  *
  * @author www.pcsg.de (Patrick Müller)
  */
-define('package/quiqqer/payments/bin/frontend/controls/Handler', [
+define('package/quiqqer/payments/bin/frontend/classes/Handler', [
 
     'Ajax'
 
