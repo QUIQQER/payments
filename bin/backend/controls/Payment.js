@@ -55,9 +55,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
             });
 
             this.$Container        = null;
+            this.$IconField        = null;
             this.$DataTitle        = null;
             this.$DataWorkingTitle = null;
             this.$DataDescription  = null;
+
 
             this.addEvents({
                 onCreate : this.$onCreate,
@@ -353,6 +355,8 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                         usageAssignment     : QUILocale.get(lg, 'payment.edit.template.assignment'),
                         usageAssignmentAreas: QUILocale.get(lg, 'payment.edit.template.areas'),
                         calculationPriority : QUILocale.get(lg, 'payment.edit.template.calculationPriority'),
+                        customIcon          : QUILocale.get(lg, 'payment.edit.template.customIcon'),
+                        customIconDesc      : QUILocale.get(lg, 'payment.edit.template.customIcon.description'),
 
                         usageAssignmentProduct : QUILocale.get(lg, 'payment.edit.template.assignment.product'),
                         usageAssignmentCategory: QUILocale.get(lg, 'payment.edit.template.assignment.category'),
@@ -375,9 +379,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 ]);
             }).then(function (translationData) {
                 return new Promise(function (resolve, reject) {
-                    require([
-                        'controls/lang/InputMultiLang'
-                    ], function (InputMultiLang) {
+                    require(['controls/lang/InputMultiLang'], function (InputMultiLang) {
                         self.$DataTitle        = new InputMultiLang().replaces(self.$Container.getElement('.payment-title'));
                         self.$DataWorkingTitle = new InputMultiLang().replaces(self.$Container.getElement('.payment-workingTitle'));
 
@@ -389,6 +391,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 });
             }).then(function () {
                 return self.$showContainer();
+            }).then(function () {
+                self.$IconField = QUI.Controls.getById(
+                    self.$Container.getElement('[name="icon"]').get('data-quiid')
+                );
             }).catch(function (err) {
                 console.error(err);
             });
@@ -535,6 +541,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 this.$DataWorkingTitle.destroy();
                 this.$DataWorkingTitle = null;
             }
+
+            if (this.$IconField) {
+                this.$IconField.destroy();
+                this.$IconField = null;
+            }
         },
 
         /**
@@ -554,6 +565,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
             if (this.$DataWorkingTitle) {
                 this.$setData('workingTitle', this.$DataWorkingTitle.getData());
+            }
+            console.log(this.$IconField);
+            if (this.$IconField) {
+                this.$setData('icon', this.$IconField.getValue());
             }
 
             if (Form) {

@@ -33,6 +33,10 @@ QUI::$Ajax->registerFunction(
             $Payment->setDescription($data['description']);
         }
 
+        if (isset($data['icon'])) {
+            $Payment->setIcon($data['icon']);
+        }
+
         $Payment->setAttributes($data);
         $Payment->update();
 

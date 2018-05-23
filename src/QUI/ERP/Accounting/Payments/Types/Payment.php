@@ -81,12 +81,22 @@ class Payment extends QUI\CRUD\Child
             );
         }
 
+        // payment type
         $attributes['paymentType'] = false;
 
         try {
             $attributes['paymentType'] = $this->getPaymentType()->toArray();
         } catch (QUI\ERP\Accounting\Payments\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());
+        }
+
+        // icon
+        $attributes['icon'] = '';
+
+        try {
+            $attributes['icon'] = $this->getIcon();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
         }
 
         return $attributes;
@@ -310,13 +320,27 @@ class Payment extends QUI\CRUD\Child
     }
 
     /**
-     * Return the icon for the Payment
+     *  Return the icon for the Payment
      *
-     * @return string
+     * @return string - image url
      * @throws QUI\ERP\Accounting\Payments\Exception
      */
     public function getIcon()
     {
+        if (!QUI\Projects\Media\Utils::isMediaUrl($this->getAttribute('icon'))) {
+            return $this->getPaymentType()->getIcon();
+        }
+
+        try {
+            $Image = QUI\Projects\Media\Utils::getImageByUrl(
+                $this->getAttribute('icon')
+            );
+
+            return $Image->getSizeCacheUrl();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
         return $this->getPaymentType()->getIcon();
     }
 
@@ -361,6 +385,16 @@ class Payment extends QUI\CRUD\Child
             'payment.'.$this->getId().'.workingTitle',
             $titles
         );
+    }
+
+    /**
+     * @param string $icon - image.php?
+     */
+    public function setIcon($icon)
+    {
+        if (QUI\Projects\Media\Utils::isMediaUrl($icon)) {
+            $this->setAttribute('icon', $icon);
+        }
     }
 
     /**

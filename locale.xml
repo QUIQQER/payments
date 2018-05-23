@@ -193,6 +193,14 @@
             <de><![CDATA[Kombinierbar mit]]></de>
             <en><![CDATA[Combined with]]></en>
         </locale>
+        <locale name="payment.edit.template.customIcon">
+            <de><![CDATA[Benutzerdefiniertes Bild]]></de>
+            <en><![CDATA[Custom Icon]]></en>
+        </locale>
+        <locale name="payment.edit.template.customIcon.description" html="true">
+            <de><![CDATA[Legen Sie ein eigenes Bild für die Bezahlweise fest.]]></de>
+            <en><![CDATA[Define your own image for the payment method.]]></en>
+        </locale>
 
         <locale name="window.delete.title">
             <de><![CDATA[Zahlungsart löschen]]></de>
