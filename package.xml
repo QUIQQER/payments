@@ -9,10 +9,24 @@
             <locale group="quiqqer/payments" var="package.title"/>
         </description>
 
+        <image src="URL_OPT_DIR/quiqqer/payments/bin/images/Logo.jpg"/>
+
         <provider>
             <payment src="\QUI\ERP\Accounting\Payments\Provider"/>
             <orderProcess src="\QUI\ERP\Accounting\Payments\OrderProcessProvider"/>
         </provider>
 
+        <support>
+            <email><![CDATA[support@pcsg.de]]></email>
+            <forum><![CDATA[https://community.quiqqer.com]]></forum>
+            <source><![CDATA[https://dev.quiqqer.com/quiqqer/payments]]></source>
+            <issues><![CDATA[https://dev.quiqqer.com/quiqqer/payments/issues]]></issues>
+            <wiki><![CDATA[https://dev.quiqqer.com/quiqqer/payments/wikis/home]]></wiki>
+        </support>
+
+        <copyright>
+            <name><![CDATA[PCSG - Computer & Internet Service OHG]]></name>
+            <license><![CDATA[]]></license>
+        </copyright>
     </package>
 </quiqqer>
