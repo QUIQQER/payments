@@ -202,18 +202,18 @@ abstract class AbstractPayment implements PaymentsInterface
     /**
      * Return the extra text for the invoice
      *
+     * @param QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
      * @return mixed
      */
-    public function getInvoiceText()
+    public function getInvoiceInformationText($Invoice)
     {
         return '';
     }
 
-
     //endregion
 
 
-    //region OLD METHODS
+    //region OLD METHODS - DEPRECATED
 
     /**
      * Template Methods

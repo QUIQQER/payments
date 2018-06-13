@@ -7,6 +7,10 @@
 namespace QUI\ERP\Accounting\Payments\Methods\Invoice;
 
 use QUI;
+use QUI\ERP\Accounting\Invoice\Invoice;
+use QUI\ERP\Accounting\Invoice\InvoiceTemporary;
+use QUI\ERP\Accounting\Invoice\InvoiceView;
+use QUI\ERP\Accounting\Invoice\Utils\Invoice as InvoiceUtils;
 
 /**
  * Class Payment
@@ -55,5 +59,41 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     public function getIcon()
     {
         return URL_OPT_DIR.'quiqqer/payments/bin/payments/Rechnung.jpg';
+    }
+
+    /**
+     * Return an extra invoice text
+     *
+     * @param Invoice|InvoiceTemporary|InvoiceView $Invoice
+     * @return mixed|string
+     */
+    public function getInvoiceInformationText($Invoice)
+    {
+        if ($Invoice->isPaid()) {
+            return QUI::getLocale()->get(
+                'quiqqer/payments',
+                'text.invoice.information.for.invoicePayment.paid'
+            );
+        }
+
+        $timeForPayment = InvoiceUtils::getInvoiceTimeForPaymentDate($Invoice);
+
+        // today
+        if (date('Y-m-d', $timeForPayment) === date('Y-m-d')) {
+            return QUI::getLocale()->get(
+                'quiqqer/payments',
+                'text.invoice.information.for.invoicePayment.pay.now'
+            );
+        }
+
+        // format time for payment
+        $Locale    = $Invoice->getCustomer()->getLocale();
+        $Formatter = $Locale->getDateFormatter();
+
+        return QUI::getLocale()->get(
+            'quiqqer/payments',
+            'text.invoice.information.for.invoicePayment.pay.date',
+            ['date' => $Formatter->format($timeForPayment)]
+        );
     }
 }

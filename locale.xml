@@ -121,6 +121,19 @@
             <de><![CDATA[Dieses Bezahlmethode können Sie nur einmal anlegen.]]></de>
             <en><![CDATA[You can only create this payment method once.]]></en>
         </locale>
+
+        <locale name="text.invoice.information.for.invoicePayment.paid" html="true">
+            <de><![CDATA[&nbsp;]]></de>
+            <en><![CDATA[&nbsp;]]></en>
+        </locale>
+        <locale name="text.invoice.information.for.invoicePayment.pay.now" html="true">
+            <de><![CDATA[Bitte überweisen Sie den Rechnungsbetrag auf das unten angegebene Konto.]]></de>
+            <en><![CDATA[Please transfer the invoice amount to the account indicated below.]]></en>
+        </locale>
+        <locale name="text.invoice.information.for.invoicePayment.pay.date" html="true">
+            <de><![CDATA[Bitte überweisen Sie den Rechnungsbetrag bis zum [date] auf das unten angegebene Konto.]]></de>
+            <en><![CDATA[Please transfer the invoice amount to the account below by [date].]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/payments" datatype="js">
