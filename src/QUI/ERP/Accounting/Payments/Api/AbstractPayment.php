@@ -81,6 +81,16 @@ abstract class AbstractPayment implements PaymentsInterface
     }
 
     /**
+     * Return the class of the instance
+     *
+     * @return string
+     */
+    public function getClass()
+    {
+        return get_class($this);
+    }
+
+    /**
      * @return string
      */
     abstract public function getTitle();
