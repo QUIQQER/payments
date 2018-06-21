@@ -91,16 +91,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
             ]);
         }
 
-        try {
-            if ($Payment->isSuccessful($Order->getHash())) {
-                $Order->setSuccessfulStatus();
-            }
-        } catch (QUI\Exception $Exception) {
-            throw new QUI\ERP\Order\Exception(
-                $Exception->getMessage(),
-                $Exception->getCode()
-            );
-        }
+        // @todo validate customer payment data
     }
 
     /**
