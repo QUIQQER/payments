@@ -3,7 +3,8 @@
 Payment Method API for QUIQQER
 ======
 
-The QUIQQER Payments module expands QUIQQER with a standardized interface for payment methods. 
+QUIQQER Payments extends QUIQQER and the QUIQQER ERP system with a uniform payment method API.
+In addition, it comes with cash, invoice and prepayment as payment methods. 
 
 Package name:
 
@@ -18,6 +19,10 @@ Features
     - Transaction Handling
 - Payment Method Management
     -  Allow certain payment methods only for certain groups of people
+- Included Payment methods
+    - Cash
+    - Invoice
+    - Prepayment (Advance Payment)
 
 
 Installation
