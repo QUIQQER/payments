@@ -6,6 +6,17 @@
             <en><![CDATA[QUIQQER - Shop - Payments]]></en>
         </locale>
 
+        <locale name="package.description">
+            <de><![CDATA[
+            QUIQQER Payments erweitert QUIQQER und das QUIQQER ERP System um eine einheitliche Bezahlmethoden API.
+            Zusätzlich bringt es schon Barzahlung, Zahlung per Rechnung und Vorkasse als Zahlungsmethode mit.
+            ]]></de>
+            <en><![CDATA[
+            QUIQQER Payments extends QUIQQER and the QUIQQER ERP system with a uniform payment method API.
+            In addition, it comes with cash, invoice and prepayment as payment methods.
+            ]]></en>
+        </locale>
+
         <locale name="window.erp.title">
             <de><![CDATA[Shop]]></de>
             <en><![CDATA[Shop]]></en>
