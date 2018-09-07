@@ -178,7 +178,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * Execute a refund
      *
      * @param QUI\ERP\Accounting\Payments\Transactions\Transaction $Transaction
-     * @param $amount
+     * @param int|float $amount
      * @param string $message
      * @param false|string $hash - if a new hash will be used
      */
