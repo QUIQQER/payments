@@ -8,6 +8,7 @@ namespace QUI\ERP\Accounting\Payments\Api;
 
 use QUI;
 use QUI\ERP\Order\AbstractOrder;
+use QUI\ERP\Accounting\Payments\Transactions\Transaction;
 
 /**
  * Payment abstract class
@@ -177,9 +178,18 @@ abstract class AbstractPayment implements PaymentsInterface
      * Execute a refund
      *
      * @param QUI\ERP\Accounting\Payments\Transactions\Transaction $Transaction
+     * @param $amount
+     * @param string $message
      */
-    public function refund(QUI\ERP\Accounting\Payments\Transactions\Transaction $Transaction)
-    {
+    public function refund(
+        Transaction $Transaction,
+        $amount,
+        $message = ''
+    ) {
+        return;
+
+        // you will find an example for a refund at
+        // https://dev.quiqqer.com/quiqqer/payments-gateway/blob/master/src/QUI/ERP/Payments/Example/Payment.php
     }
 
     /**

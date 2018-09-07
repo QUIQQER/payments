@@ -56,6 +56,14 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     }
 
     /**
+     * @return bool
+     */
+    public function refundSupport()
+    {
+        return true;
+    }
+
+    /**
      * Return the payment icon (the URL path)
      * Can be overwritten
      *
