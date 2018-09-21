@@ -190,6 +190,8 @@ class Gateway extends QUI\Utils\Singleton
      * @param QUI\ERP\Accounting\Payments\Api\AbstractPayment $Payment
      * @param array $paymentData
      *
+     * @return QUI\ERP\Accounting\Payments\Transactions\Transaction
+     *
      * @throws QUI\ERP\Accounting\Payments\Transactions\Exception
      */
     public function purchase(
@@ -209,7 +211,7 @@ class Gateway extends QUI\Utils\Singleton
 
         $Order->addComment($paymentComment);
 
-        Transactions::createPaymentTransaction(
+        $Transaction = Transactions::createPaymentTransaction(
             $amount,
             $Currency,
             $hash,
@@ -223,7 +225,7 @@ class Gateway extends QUI\Utils\Singleton
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
-            return;
+            return $Transaction;
         }
 
         if ($Order->isPosted()) {
@@ -236,6 +238,8 @@ class Gateway extends QUI\Utils\Singleton
                 QUI\System\Log::writeException($Exception);
             }
         }
+
+        return $Transaction;
     }
 
     /**
