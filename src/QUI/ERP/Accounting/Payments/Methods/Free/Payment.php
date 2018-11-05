@@ -34,6 +34,17 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     /**
      * @return array|string
      */
+    public function getWorkingTitle()
+    {
+        return $this->getLocale()->get(
+            'quiqqer/payments',
+            'payment.free.workingTitle'
+        );
+    }
+
+    /**
+     * @return array|string
+     */
     public function getDescription()
     {
         return $this->getLocale()->get(

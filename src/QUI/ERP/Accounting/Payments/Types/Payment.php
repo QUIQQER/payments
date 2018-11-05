@@ -20,7 +20,7 @@ use QUI\ERP\Areas\Utils as AreaUtils;
  *
  * @package QUI\ERP\Accounting\Payments\Types
  */
-class Payment extends QUI\CRUD\Child
+class Payment extends QUI\CRUD\Child implements PaymentInterface
 {
     /**
      * Payment constructor.

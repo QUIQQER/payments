@@ -15,7 +15,7 @@ use QUI;
  *
  * @package QUI\ERP\Accounting\Payments\Methods\Free\PaymentType
  */
-class PaymentType extends QUI\QDOM
+class PaymentType extends QUI\QDOM implements QUI\ERP\Accounting\Payments\Types\PaymentInterface
 {
     /**
      * @return array
@@ -35,9 +35,10 @@ class PaymentType extends QUI\QDOM
     }
 
     /**
+     * @param string $hash
      * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful($hash)
     {
         return true;
     }
@@ -51,19 +52,48 @@ class PaymentType extends QUI\QDOM
     }
 
     /**
+     * @param $Locale
      * @return array|string
      */
-    public function getTitle()
+    public function getTitle($Locale = null)
     {
-        return $this->getPaymentType()->getTitle();
+        $PaymentType = $this->getPaymentType();
+
+        if ($Locale !== null) {
+            $PaymentType->setLocale($Locale);
+        }
+
+        return $PaymentType->getTitle();
     }
 
     /**
+     * @param $Locale
      * @return array|string
      */
-    public function getDescription()
+    public function getWorkingTitle($Locale = null)
     {
-        return $this->getPaymentType()->getDescription();
+        $PaymentType = $this->getPaymentType();
+
+        if ($Locale !== null) {
+            $PaymentType->setLocale($Locale);
+        }
+
+        return $PaymentType->getWorkingTitle();
+    }
+
+    /**
+     * @param $Locale
+     * @return array|string
+     */
+    public function getDescription($Locale = null)
+    {
+        $PaymentType = $this->getPaymentType();
+
+        if ($Locale !== null) {
+            $PaymentType->setLocale($Locale);
+        }
+
+        return $PaymentType->getDescription();
     }
 
     /**
