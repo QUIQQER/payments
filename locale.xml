@@ -83,6 +83,19 @@
             <de><![CDATA[Zahlungsarten]]></de>
             <en><![CDATA[Payments]]></en>
         </locale>
+
+        <locale name="payment.free.title">
+            <de><![CDATA[Kostenlos]]></de>
+            <en><![CDATA[Free of charge]]></en>
+        </locale>
+        <locale name="payment.free.workingTitle">
+            <de><![CDATA[Kostenlos]]></de>
+            <en><![CDATA[Free of charge]]></en>
+        </locale>
+        <locale name="payment.free.description" html="true">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/payments" datatype="php">

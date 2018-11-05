@@ -136,17 +136,19 @@ class Payments extends QUI\Utils\Singleton
      * Return a payment
      *
      * @param int|string $paymentId - ID of the payment type
-     * @return Payment
+     * @return Payment|Methods\Free\PaymentType
      *
      * @throws Exception
      */
     public function getPayment($paymentId)
     {
+        if ((int)$paymentId == Methods\Free\Payment::ID) {
+            return new Methods\Free\PaymentType();
+        }
+
         /* @var $Payment Payment */
         try {
-            $Payment = Factory::getInstance()->getChild($paymentId);
-
-            return $Payment;
+            return Factory::getInstance()->getChild($paymentId);
         } catch (QUI\Exception $Exception) {
             throw new Exception([
                 'quiqqer/payments',

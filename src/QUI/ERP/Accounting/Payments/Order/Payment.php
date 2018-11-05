@@ -56,15 +56,22 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $Customer = $Order->getCustomer();
         $Payment  = $Order->getPayment();
-
         $User     = QUI::getUserBySession();
-        $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
-        $payments = $Payments->getUserPayments($User);
 
-        $payments = array_filter($payments, function ($Payment) {
-            /* @var $Payment QUI\ERP\Accounting\Payments\Types\Payment */
-            return $Payment->getPaymentType()->isVisible();
-        });
+        $calculations = $Order->getArticles()->getCalculations();
+        $payments     = [];
+
+        if ($calculations['sum'] === 0) {
+            $payments[] = new QUI\ERP\Accounting\Payments\Methods\Free\PaymentType();
+        } else {
+            $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
+            $payments = $Payments->getUserPayments($User);
+
+            $payments = array_filter($payments, function ($Payment) {
+                /* @var $Payment QUI\ERP\Accounting\Payments\Types\Payment */
+                return $Payment->getPaymentType()->isVisible();
+            });
+        }
 
         $Engine->assign([
             'User'            => $User,
