@@ -67,7 +67,17 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      */
     public function isSuccessful($hash)
     {
-        return true;
+        try {
+            $Order       = QUI\ERP\Order\Handler::getInstance()->getOrderByHash($hash);
+            $Calculation = $Order->getPriceCalculation();
+
+            if ($Calculation->getSum() === 0) {
+                return true;
+            }
+        } catch (\Exception $Exception) {
+        }
+
+        return false;
     }
 
     /**
