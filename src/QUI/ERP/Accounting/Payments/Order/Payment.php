@@ -52,16 +52,21 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     public function getBody()
     {
         $Engine = QUI::getTemplateManager()->getEngine();
-        $Order  = $this->getOrder();
+        $User   = QUI::getUserBySession();
+
+        $Order = $this->getOrder();
+        $Order->recalculate();
 
         $Customer = $Order->getCustomer();
         $Payment  = $Order->getPayment();
-        $User     = QUI::getUserBySession();
+        $Articles = $Order->getArticles();
 
-        $calculations = $Order->getArticles()->getCalculations();
+        $calculations = $Articles->getCalculations();
         $payments     = [];
 
-        if ($calculations['sum'] === 0) {
+        // leave this line even if it's curios
+        // floatval sum === 0 doesn't work -> floatval => float, 0 = int
+        if ($calculations['sum'] >= 0 && $calculations['sum'] <= 0) {
             $payments[] = new QUI\ERP\Accounting\Payments\Methods\Free\PaymentType();
         } else {
             $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
