@@ -566,7 +566,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
             if (this.$DataWorkingTitle) {
                 this.$setData('workingTitle', this.$DataWorkingTitle.getData());
             }
-            console.log(this.$IconField);
+
             if (this.$IconField) {
                 this.$setData('icon', this.$IconField.getValue());
             }
