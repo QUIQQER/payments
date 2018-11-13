@@ -191,4 +191,27 @@ class Payments extends QUI\Utils\Singleton
 
         return $payments;
     }
+
+    /**
+     * @return bool|string
+     */
+    public function getHost()
+    {
+        try {
+            $Project = QUI::getRewrite()->getProject();
+        } catch (QUI\Exception $Exception) {
+            try {
+                $Project = QUI::getProjectManager()->getStandard();
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+
+                return '';
+            }
+        }
+
+        $host = $Project->getVHost(true, true);
+        $host = trim($host, '/');
+
+        return $host;
+    }
 }

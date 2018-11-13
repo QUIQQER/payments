@@ -7,6 +7,7 @@
 namespace QUI\ERP\Accounting\Payments\Methods\AdvancePayment;
 
 use QUI;
+use QUI\ERP\Accounting\Payments\Payments;
 
 /**
  * Class Payment
@@ -55,6 +56,8 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      */
     public function getIcon()
     {
-        return URL_OPT_DIR.'quiqqer/payments/bin/payments/Vorkasse.png';
+        return Payments::getInstance()->getHost().
+               URL_OPT_DIR.
+               'quiqqer/payments/bin/payments/Vorkasse.png';
     }
 }

@@ -7,7 +7,7 @@
 namespace QUI\ERP\Accounting\Payments\Methods\Cash;
 
 use QUI;
-use QUI\ERP\Order\AbstractOrder;
+use QUI\ERP\Accounting\Payments\Payments;
 
 /**
  * Class Payment
@@ -71,6 +71,8 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      */
     public function getIcon()
     {
-        return URL_OPT_DIR.'quiqqer/payments/bin/payments/Bar.jpg';
+        return Payments::getInstance()->getHost().
+               URL_OPT_DIR.
+               'quiqqer/payments/bin/payments/Bar.jpg';
     }
 }
