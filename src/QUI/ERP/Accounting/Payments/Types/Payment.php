@@ -9,10 +9,11 @@ namespace QUI\ERP\Accounting\Payments\Types;
 use QUI;
 use QUI\CRUD\Factory;
 use QUI\Translator;
-use QUI\ERP\Accounting\Payments\Api;
 use QUI\Permissions\Permission;
 
 use QUI\ERP\Areas\Utils as AreaUtils;
+use QUI\ERP\Accounting\Payments\Api;
+use QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed;
 
 /**
  * Class Payment
@@ -148,7 +149,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     }
 
     /**
-     * is the user allowed to use the discount
+     * is the user allowed to use this payment
      *
      * @param QUI\Interfaces\Users\User $User
      * @return boolean
@@ -158,6 +159,17 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         if ($this->isActive() === false) {
             return false;
         }
+
+        try {
+            QUI::getEvents()->fireEvent('quiqqerPaymentCanUsedBy', [$this, $User]);
+        } catch (PaymentCanNotBeUsed $Exception) {
+            return false;
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return false;
+        }
+
 
         try {
             $this->getPaymentType();
@@ -227,6 +239,27 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         }
 
         return false;
+    }
+
+    /**
+     * is the payment allowed in the order?
+     *
+     * @param QUI\ERP\Order\OrderInterface $Order
+     * @return bool
+     */
+    public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order)
+    {
+        try {
+            QUI::getEvents()->fireEvent('paymentsCanUsedInOrder', [$this, $Order]);
+        } catch (PaymentCanNotBeUsed $Exception) {
+            return false;
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

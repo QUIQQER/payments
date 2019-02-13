@@ -55,3 +55,5 @@ Developer Events
 ------
 
 - onPaymentsGatewayReadRequest [Gateway]
+- onPaymentsCanUsedBy [Payment, User]
+- onPaymentCanUsedInOrder [payment, Order]

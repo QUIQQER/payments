@@ -175,6 +175,16 @@ abstract class AbstractPayment implements PaymentsInterface
     }
 
     /**
+     * has the payment a plan support (Abonnement)
+     *
+     * @return bool
+     */
+    public function planSupport()
+    {
+        return false;
+    }
+
+    /**
      * Execute a refund
      *
      * @param QUI\ERP\Accounting\Payments\Transactions\Transaction $Transaction
