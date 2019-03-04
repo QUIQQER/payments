@@ -68,6 +68,8 @@ class Factory extends QUI\CRUD\Factory
             ]);
         }
 
+        QUI::getEvents()->fireEvent('paymentsCreateBegin', [$data['payment_type']]);
+
         $payment       = $data['payment_type'];
         $PaymentMethod = new $payment();
 
@@ -112,6 +114,8 @@ class Factory extends QUI\CRUD\Factory
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
+
+        QUI::getEvents()->fireEvent('paymentsCreateEnd', [$NewChild]);
 
         return $NewChild;
     }
