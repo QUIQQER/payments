@@ -175,11 +175,21 @@ abstract class AbstractPayment implements PaymentsInterface
     }
 
     /**
-     * has the payment a plan support (Abonnement)
+     * Does the payment support recurring payments (e.g. for subscriptions)?
      *
      * @return bool
      */
-    public function planSupport()
+    public function supportsRecurringPayments()
+    {
+        return false;
+    }
+
+    /**
+     * Does the payment ONLY support recurring payments (e.g. for subscriptions)?
+     *
+     * @return bool
+     */
+    public function supportsRecurringPaymentsOnly()
     {
         return false;
     }
