@@ -254,7 +254,9 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         } catch (PaymentCanNotBeUsed $Exception) {
             return false;
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
+            QUI\System\Log::addDebug($Exception->getMessage());
+
+//            QUI\System\Log::writeDebugException($Exception);
 
             return false;
         }

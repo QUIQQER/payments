@@ -31,6 +31,20 @@ class Gateway extends QUI\Utils\Singleton
     protected $gatewayPayment = false;
 
     /**
+     * Indicates if the Gateway was called as a cancel request
+     *
+     * @var bool
+     */
+    protected $isCancelRequest = false;
+
+    /**
+     * Indicates if the Gateway was called as a success request
+     *
+     * @var bool
+     */
+    protected $isSuccessRequest = false;
+
+    /**
      * Read the request and look in which step we are
      *
      * @throws QUI\ERP\Order\Exception
@@ -52,6 +66,20 @@ class Gateway extends QUI\Utils\Singleton
 
         /* @var $Order QUI\ERP\Order\Order */
         $this->Order = $Handler->getOrderByHash($_REQUEST['orderHash']);
+
+        $Payment = $this->Order->getPayment();
+
+        if (!empty($Payment) && $Payment->getPaymentType()->isGateway()) {
+            $this->enableGatewayPayment();
+        }
+
+        if (!empty($_REQUEST['canceled'])) {
+            $this->isCancelRequest = true;
+        }
+
+        if (!empty($_REQUEST['success'])) {
+            $this->isSuccessRequest = true;
+        }
     }
 
     /**
@@ -408,5 +436,25 @@ class Gateway extends QUI\Utils\Singleton
         }
 
         return $HOST;
+    }
+
+    /**
+     * Is the current gateway request a cancel request?
+     *
+     * @return bool
+     */
+    public function isCancelRequest()
+    {
+        return $this->isCancelRequest;
+    }
+
+    /**
+     * Is the current gateway request a success request?
+     *
+     * @return bool
+     */
+    public function isSuccessRequest()
+    {
+        return $this->isSuccessRequest;
     }
 }

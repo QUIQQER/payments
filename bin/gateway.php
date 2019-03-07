@@ -13,7 +13,7 @@ use \Symfony\Component\HttpFoundation\Response;
 QUI\ERP\Debug::getInstance()->log('Gateway incoming');
 
 try {
-    QUI\ERP\Debug::getInstance()->log('Reed Request');
+    QUI\ERP\Debug::getInstance()->log('Read Request');
     QUI\ERP\Debug::getInstance()->log($_GET);
 
     QUI\Permissions\Permission::setUser(
@@ -26,7 +26,7 @@ try {
     $orderUrl = $Gateway->getOrderUrl();
     $Order    = $Gateway->getOrder();
 
-// Bezahlung vom Gateway (payment execution from the gateway)
+    // Bezahlung vom Gateway (payment execution from the gateway)
     if (isset($_REQUEST['GatewayPayment']) || $Gateway->isGatewayPayment()) {
         QUI\ERP\Debug::getInstance()->log('Execute Gateway Payment');
         QUI\ERP\Debug::getInstance()->log($Order->getHash());
@@ -47,7 +47,7 @@ try {
         exit;
     }
 
-// Umleitung zur Bestellung
+    // Umleitung zur Bestellung
     $Redirect = new RedirectResponse($orderUrl);
     $Redirect->setStatusCode(Response::HTTP_SEE_OTHER);
 
