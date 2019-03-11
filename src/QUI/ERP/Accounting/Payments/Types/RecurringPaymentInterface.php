@@ -33,9 +33,10 @@ interface RecurringPaymentInterface
      * Cancel a Billing Agreement
      *
      * @param int|string $billingAgreementId
+     * @param string $reason (optional) - The reason why the billing agreement is being cancelled
      * @return void
      */
-    public function cancelBillingAgreement($billingAgreementId);
+    public function cancelBillingAgreement($billingAgreementId, $reason = '');
 
     /**
      * Can the Billing Agreement of this payment method be edited
