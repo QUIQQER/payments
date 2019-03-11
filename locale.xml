@@ -96,6 +96,23 @@
             <de><![CDATA[]]></de>
             <en><![CDATA[]]></en>
         </locale>
+
+        <locale name="permission.quiqqer.payments._header">
+            <de><![CDATA[Zahlungsweisen]]></de>
+            <en><![CDATA[Payment types]]></en>
+        </locale>
+        <locale name="permission.quiqqer.payments.delete">
+            <de><![CDATA[Darf Zahlungsweisen löschen]]></de>
+            <en><![CDATA[Can delete payment type]]></en>
+        </locale>
+        <locale name="permission.quiqqer.payments.edit">
+            <de><![CDATA[Darf Zahlungsweisen editieren]]></de>
+            <en><![CDATA[Can edit payment type]]></en>
+        </locale>
+        <locale name="permission.quiqqer.payments.create">
+            <de><![CDATA[Darf Zahlungsweisen anlegen]]></de>
+            <en><![CDATA[Can create payment type]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/payments" datatype="php">
