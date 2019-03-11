@@ -10,6 +10,8 @@ use QUI;
 use QUI\Package\Package;
 use QUI\ERP\Accounting\Payments\Methods;
 use QUI\ERP\Accounting\Payments\Types\Factory;
+use QUI\ERP\Accounting\Payments\Types\Payment;
+use QUI\ERP\Order\OrderInterface;
 
 /**
  * Class EventHandling
@@ -157,6 +159,45 @@ class EventHandling
             ]);
 
             $Payment->activate();
+        }
+    }
+
+    /**
+     * quiqqer/payments: onPaymentsCanUsedInOrder
+     *
+     * Check if an Order contains a plan product and if a payment method is allowed to be used
+     * in this case.
+     *
+     * @param Payment $Payment
+     * @param OrderInterface $Order
+     * @throws QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed
+     */
+    public static function onPaymentsCanUsedInOrder(Payment $Payment, OrderInterface $Order)
+    {
+        /**
+         * @todo In the future there may be other packages that check if payment types
+         * can be used for an Order. Currently this is only quiqqer/erp-plans.
+         *
+         * If quiqqer/erp-plans is installed it handles this process of deciding
+         * which payment type to allow
+         */
+        if (QUI::getPackageManager()->isInstalled('quiqqer/erp-plans')) {
+            return;
+        }
+
+        try {
+            $PaymentType = $Payment->getPaymentType();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return;
+        }
+
+        /**
+         * A payment type that can ONLY handle recurring payments is not suited
+         * for any order in a system where quiqqer/erp-plans is not installed.
+         */
+        if ($PaymentType->supportsRecurringPaymentsOnly()) {
+            throw new QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed();
         }
     }
 }
