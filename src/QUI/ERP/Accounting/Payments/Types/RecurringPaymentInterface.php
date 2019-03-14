@@ -14,44 +14,44 @@ use QUI\ERP\Accounting\Invoice\Invoice;
 interface RecurringPaymentInterface
 {
     /**
-     * Create a Billing Agreement from a (temporary) Order
+     * Create a Scubscription from a (temporary) Order
      *
      * @param AbstractOrder $Order
      * @return void
      */
-    public function createBillingAgreement(AbstractOrder $Order);
+    public function createSubscription(AbstractOrder $Order);
 
     /**
-     * Bills the balance for an agreement based on an Invoice
+     * Capture subscription amount based on an Invoice
      *
      * @param Invoice $Invoice
      * @return void
      */
-    public function billBillingAgreementBalance(Invoice $Invoice);
+    public function captureSubscription(Invoice $Invoice);
 
     /**
-     * Cancel a Billing Agreement
+     * Cancel a Subscription
      *
-     * @param int|string $billingAgreementId
-     * @param string $reason (optional) - The reason why the billing agreement is being cancelled
+     * @param int|string $subscriptionId
+     * @param string $reason (optional) - The reason why the subscription is cancelled
      * @return void
      */
-    public function cancelBillingAgreement($billingAgreementId, $reason = '');
+    public function cancelSubscription($subscriptionId, $reason = '');
 
     /**
-     * Can the Billing Agreement of this payment method be edited
+     * Can the Subscription of this payment method be edited
      * regarding essential data like invoice frequency, amount etc.?
      *
      * @return bool
      */
-    public function isBillingAgreementEditable();
+    public function isSubscriptionEditable();
 
     /**
-     * Check if a Billing Agreement is associated with an order and
+     * Check if a Subscription is associated with an order and
      * return its ID (= identification at the payment method side; e.g. PayPal)
      *
      * @param AbstractOrder $Order
      * @return int|string|false - ID or false of no ID associated
      */
-    public function getBillingAgreementIdByOrder(AbstractOrder $Order);
+    public function getSubscriptionIdByOrder(AbstractOrder $Order);
 }
