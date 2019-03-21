@@ -93,6 +93,8 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
 
             return '<div class="message-error">'.$Exception->getMessage().'</div>';
         } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
             $this->hasErrors = true;
 
             return '<div class="message-error">'.
