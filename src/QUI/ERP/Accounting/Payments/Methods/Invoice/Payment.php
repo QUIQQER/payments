@@ -62,6 +62,16 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     }
 
     /**
+     * Does the payment support recurring payments (e.g. for subscriptions)?
+     *
+     * @return bool
+     */
+    public function supportsRecurringPayments()
+    {
+        return true;
+    }
+
+    /**
      * Return an extra invoice text
      *
      * @param Invoice|InvoiceTemporary|InvoiceView $Invoice
