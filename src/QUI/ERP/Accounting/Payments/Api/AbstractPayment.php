@@ -180,7 +180,7 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @return bool
      */
-    public final function supportsRecurringPayments()
+    final public function supportsRecurringPayments()
     {
         return is_a($this, RecurringPaymentInterface::class, true);
     }
