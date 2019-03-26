@@ -9,6 +9,7 @@ namespace QUI\ERP\Accounting\Payments\Api;
 use QUI;
 use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Accounting\Payments\Transactions\Transaction;
+use QUI\ERP\Accounting\Payments\Types\RecurringPaymentInterface;
 
 /**
  * Payment abstract class
@@ -179,9 +180,9 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @return bool
      */
-    public function supportsRecurringPayments()
+    public final function supportsRecurringPayments()
     {
-        return false;
+        return is_a($this, RecurringPaymentInterface::class, true);
     }
 
     /**
