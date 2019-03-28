@@ -57,10 +57,17 @@ try {
 } catch (\Exception $Exception) {
     QUI\System\Log::writeException($Exception);
 
-    $Response = QUI::getGlobalResponse();
-    $Response->setStatusCode(Response::HTTP_BAD_REQUEST);
+    try {
+        $Project = QUI::getProjectManager()->getStandard();
+        $url     = QUI\ERP\Order\Utils\Utils::getOrderProcessUrl($Project);
+    } catch (QUI\Exception $Exception) {
+        $url = URL_DIR;
+    }
 
-    echo $Response->getContent();
-    $Response->send();
+    $Redirect = new RedirectResponse($url);
+    $Redirect->setStatusCode(Response::HTTP_SEE_OTHER);
+
+    echo $Redirect->getContent();
+    $Redirect->send();
     exit;
 }
