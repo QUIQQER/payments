@@ -2,11 +2,9 @@
 
 define('QUIQQER_SYSTEM', true);
 
-// @todo überdenken, vllt auf den order benutzer setzen
-define('SYSTEM_INTERN', true);
-
 require_once dirname(dirname(dirname(dirname(__FILE__)))).'/header.php';
 
+use \QUI\ERP\Accounting\Payments\Gateway\Gateway;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Response;
 
@@ -16,11 +14,23 @@ try {
     QUI\ERP\Debug::getInstance()->log('Read Request');
     QUI\ERP\Debug::getInstance()->log($_GET);
 
-    QUI\Permissions\Permission::setUser(
-        QUI::getUsers()->getSystemUser()
-    );
+    if (!isset($_GET[Gateway::URL_PARAM_USER_REDIRECTED])) {
+        $_GET[Gateway::URL_PARAM_USER_REDIRECTED] = 1;
+    }
 
-    $Gateway = new QUI\ERP\Accounting\Payments\Gateway\Gateway();
+    if ((int)$_GET[Gateway::URL_PARAM_USER_REDIRECTED] === 1) {
+        QUI\Permissions\Permission::setUser(
+            QUI::getUsers()->getUserBySession()
+        );
+    } else {
+        define('SYSTEM_INTERN', true);
+
+        QUI\Permissions\Permission::setUser(
+            QUI::getUsers()->getSystemUser()
+        );
+    }
+
+    $Gateway = new Gateway();
     $Gateway->readRequest();
 
     $orderUrl = $Gateway->getOrderUrl();

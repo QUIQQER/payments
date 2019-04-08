@@ -15,6 +15,18 @@ use QUI\ERP\Accounting\Payments\Transactions\Factory as Transactions;
 class Gateway extends QUI\Utils\Singleton
 {
     /**
+     * Gateway url param: for the flag if the user is redirected or a system user should be used
+     *
+     * URL_PARAM_USER_REDIRECTED = 1, URL_PARAM_USER_REDIRECTED = 0
+     */
+    const URL_PARAM_USER_REDIRECTED = 'UserRedirected';
+
+    /**
+     *
+     */
+    const URL_PARAM_GATEWAY_PAYMENT = 'GatewayPayment';
+
+    /**
      * Internal Order Object
      *
      * @var QUI\ERP\Order\Order|QUI\ERP\Order\OrderInProcess
@@ -286,6 +298,9 @@ class Gateway extends QUI\Utils\Singleton
      * - you can send params to the gateway with $params
      *
      * @param array $params
+     *
+     * $params[ Gateway::USER_REDIRECTED ] = 1
+     *
      * @return string
      */
     public function getGatewayUrl($params = [])
@@ -371,7 +386,7 @@ class Gateway extends QUI\Utils\Singleton
     public function getPaymentProviderUrl()
     {
         return $this->getGatewayUrl([
-            'GatewayPayment' => 1
+            Gateway::URL_PARAM_GATEWAY_PAYMENT => 1
         ]);
     }
 
