@@ -46,7 +46,9 @@ define('package/quiqqer/payments/bin/frontend/controls/order/Payment', [
          * event: on click
          */
         $onClick: function (event) {
-            event.stop();
+            if (event.target.nodeName !== 'INPUT') {
+                event.stop();
+            }
 
             this.getElm()
                 .getParent('.quiqqer-order-step-payments-list')
