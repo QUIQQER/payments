@@ -45,23 +45,23 @@ class Factory extends QUI\CRUD\Factory
      */
     public function createChild($data = [])
     {
-        if (!isset($data['active']) || !is_integer($data['active'])) {
+        if (!isset($data['active']) || !\is_integer($data['active'])) {
             $data['active'] = 0;
         }
 
-        if (!isset($data['purchase_quantity_from']) || !is_integer($data['purchase_quantity_from'])) {
+        if (!isset($data['purchase_quantity_from']) || !\is_integer($data['purchase_quantity_from'])) {
             $data['purchase_quantity_from'] = 0;
         }
 
-        if (!isset($data['purchase_quantity_until']) || !is_integer($data['purchase_quantity_until'])) {
+        if (!isset($data['purchase_quantity_until']) || !\is_integer($data['purchase_quantity_until'])) {
             $data['purchase_quantity_until'] = 0;
         }
 
-        if (!isset($data['priority']) || !is_integer($data['priority'])) {
+        if (!isset($data['priority']) || !\is_integer($data['priority'])) {
             $data['priority'] = 0;
         }
 
-        if (!isset($data['payment_type']) || !class_exists($data['payment_type'])) {
+        if (!isset($data['payment_type']) || !\class_exists($data['payment_type'])) {
             throw new QUI\ERP\Accounting\Payments\Exception([
                 'quiqqer/payments',
                 'exception.create.payment.class.not.found'

@@ -81,7 +81,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
         $timeForPayment = InvoiceUtils::getInvoiceTimeForPaymentDate($Invoice);
 
         // today
-        if (date('Y-m-d', $timeForPayment) === date('Y-m-d')) {
+        if (\date('Y-m-d', $timeForPayment) === \date('Y-m-d')) {
             return QUI::getLocale()->get(
                 'quiqqer/payments',
                 'text.invoice.information.for.invoicePayment.pay.now'

@@ -79,7 +79,7 @@ abstract class AbstractPayment implements PaymentsInterface
      */
     public function getName()
     {
-        return md5(get_class($this));
+        return \md5(\get_class($this));
     }
 
     /**
@@ -89,7 +89,7 @@ abstract class AbstractPayment implements PaymentsInterface
      */
     public function getClass()
     {
-        return get_class($this);
+        return \get_class($this);
     }
 
     /**
@@ -182,7 +182,7 @@ abstract class AbstractPayment implements PaymentsInterface
      */
     final public function supportsRecurringPayments()
     {
-        return is_a($this, RecurringPaymentInterface::class, true);
+        return \is_a($this, RecurringPaymentInterface::class, true);
     }
 
     /**
@@ -288,7 +288,7 @@ abstract class AbstractPayment implements PaymentsInterface
     {
         return $this->getLocale()->get(
             'plugin/payment',
-            strtolower($this->getSetting('name')).'.order.mailtext'
+            \strtolower($this->getSetting('name')).'.order.mailtext'
         );
     }
 
@@ -302,7 +302,7 @@ abstract class AbstractPayment implements PaymentsInterface
     {
         return $this->getLocale()->get(
             'plugin/payment',
-            strtolower($this->getSetting('name')).'.bill.text'
+            \strtolower($this->getSetting('name')).'.bill.text'
         );
     }
 

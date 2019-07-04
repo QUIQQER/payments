@@ -25,7 +25,7 @@ QUI::$Ajax->registerFunction(
 
         $current = QUI::getLocale()->getCurrent();
 
-        usort($result, function ($a, $b) use ($current) {
+        \usort($result, function ($a, $b) use ($current) {
             $aTitle = $a['title'][$current];
             $bTitle = $b['title'][$current];
 
@@ -37,7 +37,7 @@ QUI::$Ajax->registerFunction(
                 $bTitle = $b['workingTitle'][$current];
             }
 
-            return strcmp($aTitle, $bTitle);
+            return \strcmp($aTitle, $bTitle);
         });
 
         return $result;

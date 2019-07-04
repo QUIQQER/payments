@@ -47,7 +47,7 @@ class Payments extends QUI\Utils\Singleton
                     $Package = QUI::getPackage($package);
 
                     if ($Package->isQuiqqerPackage()) {
-                        $providers = array_merge($providers, $Package->getProvider('payment'));
+                        $providers = \array_merge($providers, $Package->getProvider('payment'));
                     }
                 } catch (QUI\Exception $Exception) {
                 }
@@ -94,7 +94,7 @@ class Payments extends QUI\Utils\Singleton
             $providerPayments = $Provider->getPaymentTypes();
 
             foreach ($providerPayments as $providerPayment) {
-                if (!class_exists($providerPayment)) {
+                if (!\class_exists($providerPayment)) {
                     continue;
                 }
 
@@ -210,7 +210,7 @@ class Payments extends QUI\Utils\Singleton
         }
 
         $host = $Project->getVHost(true, true);
-        $host = trim($host, '/');
+        $host = \trim($host, '/');
 
         return $host;
     }

@@ -51,7 +51,7 @@ class EventHandling
             return;
         }
 
-        $settings = json_decode($params['payments']['paymentsJson'], true);
+        $settings = \json_decode($params['payments']['paymentsJson'], true);
 
         foreach ($settings as $payment => $status) {
             try {
@@ -84,12 +84,12 @@ class EventHandling
         $Factory  = new Factory();
         $children = $Factory->getChildren();
 
-        $existingTypes = array_map(function ($PaymentType) {
+        $existingTypes = \array_map(function ($PaymentType) {
             /* @var $PaymentType QUI\ERP\Accounting\Payments\Types\Payment */
             return $PaymentType->getAttribute('payment_type');
         }, $children);
 
-        $existingTypes = array_flip($existingTypes);
+        $existingTypes = \array_flip($existingTypes);
 
 
         if (!isset($existingTypes[Methods\AdvancePayment\Payment::class])) {

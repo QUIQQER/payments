@@ -18,7 +18,7 @@ QUI::$Ajax->registerFunction(
     function ($paymentId, $data) {
         $Payments = new Factory();
         $Payment  = $Payments->getChild($paymentId);
-        $data     = json_decode($data, true);
+        $data     = \json_decode($data, true);
 
         /* @var $Payment QUI\ERP\Accounting\Payments\Types\Payment */
         if (isset($data['title'])) {

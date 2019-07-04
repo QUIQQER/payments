@@ -186,7 +186,7 @@ class Gateway extends QUI\Utils\Singleton
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
-            $Order->addComment(json_encode([
+            $Order->addComment(\json_encode([
                 'message' => $Exception->getMessage(),
                 'code'    => $Exception->getCode()
             ]));
@@ -308,7 +308,7 @@ class Gateway extends QUI\Utils\Singleton
         $host = $this->getHost();
         $dir  = URL_OPT_DIR.'quiqqer/payments/bin/gateway.php';
 
-        if (!is_array($params)) {
+        if (!\is_array($params)) {
             $params = [];
         }
 
@@ -316,7 +316,7 @@ class Gateway extends QUI\Utils\Singleton
             $params['orderHash'] = $this->getOrder()->getHash();
         }
 
-        return $host.$dir.'?'.http_build_query($params);
+        return $host.$dir.'?'.\http_build_query($params);
     }
 
     /**
@@ -403,7 +403,7 @@ class Gateway extends QUI\Utils\Singleton
             $HOST = QUI::conf('globals', 'httpshost');
         }
 
-        if (isset($_REQUEST['project']) && strpos($_REQUEST['project'], '{') !== false) {
+        if (isset($_REQUEST['project']) && \strpos($_REQUEST['project'], '{') !== false) {
             try {
                 $Project = QUI::getProjectManager()->decode($_REQUEST['project']);
 
@@ -417,7 +417,7 @@ class Gateway extends QUI\Utils\Singleton
 
         if (isset($_REQUEST['project'])
             && isset($_REQUEST['lang'])
-            && strpos($_REQUEST['project'], '{') === false) {
+            && \strpos($_REQUEST['project'], '{') === false) {
             try {
                 $Project = QUI::getProjectManager()->getProject(
                     $_REQUEST['project'],

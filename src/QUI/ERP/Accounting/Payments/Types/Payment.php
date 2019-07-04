@@ -127,7 +127,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     {
         $type = $this->getAttribute('payment_type');
 
-        if (!class_exists($type)) {
+        if (!\class_exists($type)) {
             throw new QUI\ERP\Accounting\Payments\Exception([
                 'quiqqer/payments',
                 'exception.payment.type.not.found',
@@ -182,13 +182,13 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         // usage definitions / limits
         $dateFrom  = $this->getAttribute('date_from');
         $dateUntil = $this->getAttribute('date_until');
-        $now       = time();
+        $now       = \time();
 
-        if ($dateFrom && strtotime($dateFrom) > $now) {
+        if ($dateFrom && \strtotime($dateFrom) > $now) {
             return false;
         }
 
-        if ($dateUntil && strtotime($dateUntil) < $now) {
+        if ($dateUntil && \strtotime($dateUntil) < $now) {
             return false;
         }
 
@@ -202,7 +202,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         }
 
         // not in area
-        $areasValue = explode(',', $areasValue);
+        $areasValue = \explode(',', $areasValue);
 
         if (!empty($areasValue) && !AreaUtils::isUserInAreas($User, $areasValue)) {
             return false;

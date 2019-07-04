@@ -17,13 +17,13 @@ QUI::$Ajax->registerFunction(
         $User = QUI::getUserBySession();
 
         $errMsg = Orthos::clear($errMsg);
-        $errMsg = mb_substr($errMsg, 0, 1024);
+        $errMsg = \mb_substr($errMsg, 0, 1024);
 
         $errCode = Orthos::clear($errCode);
-        $errCode = mb_substr($errCode, 0, 255);
+        $errCode = \mb_substr($errCode, 0, 255);
 
         $error = "\n";
-        $error .= "Time: ".date('Y-m-d H:i:s')."\n\n";
+        $error .= "Time: ".\date('Y-m-d H:i:s')."\n\n";
         $error .= "Error message: {$errMsg}\n";
         $error .= "Error code: {$errCode}\n";
         $error .= "\n";

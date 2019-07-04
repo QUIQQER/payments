@@ -72,7 +72,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
             $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
             $payments = $Payments->getUserPayments($User);
 
-            $payments = array_filter($payments, function ($Payment) use ($Order) {
+            $payments = \array_filter($payments, function ($Payment) use ($Order) {
                 /* @var $Payment QUI\ERP\Accounting\Payments\Types\Payment */
                 if ($Payment->canUsedInOrder($Order) === false) {
                     return false;
@@ -89,7 +89,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
             'payments'        => $payments
         ]);
 
-        return $Engine->fetch(dirname(__FILE__).'/Payment.html');
+        return $Engine->fetch(\dirname(__FILE__).'/Payment.html');
     }
 
     /**
