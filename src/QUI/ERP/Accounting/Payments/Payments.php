@@ -169,7 +169,11 @@ class Payments extends QUI\Utils\Singleton
             $queryParams['order'] = 'priority ASC';
         }
 
-        return Factory::getInstance()->getChildren($queryParams);
+        try {
+            return Factory::getInstance()->getChildren($queryParams);
+        } catch (QUI\Exception $Exception) {
+            return [];
+        }
     }
 
     /**
@@ -184,7 +188,7 @@ class Payments extends QUI\Utils\Singleton
             $User = QUI::getUserBySession();
         }
 
-        $payments = array_filter($this->getPayments(), function ($Payment) use ($User) {
+        $payments = \array_filter($this->getPayments(), function ($Payment) use ($User) {
             /* @var $Payment Payment */
             return $Payment->canUsedBy($User);
         });

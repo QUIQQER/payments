@@ -298,6 +298,15 @@
             <de><![CDATA[Welche Zahlungsmethode soll Ihre Zahlungsart verwenden?]]></de>
             <en><![CDATA[What payment type should your Payment type use?]]></en>
         </locale>
+
+        <locale name="window.search.title">
+            <de><![CDATA[Eine Bezahlmethode suchen]]></de>
+            <en><![CDATA[Search for a payment]]></en>
+        </locale>
+        <locale name="control.select.search.placeholder">
+            <de><![CDATA[Eine Bezahlmethode suchen]]></de>
+            <en><![CDATA[Search for a payment]]></en>
+        </locale>
     </groups>
 
 </locales>
