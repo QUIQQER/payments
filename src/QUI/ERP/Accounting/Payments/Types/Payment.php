@@ -251,12 +251,11 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     {
         try {
             QUI::getEvents()->fireEvent('paymentsCanUsedInOrder', [$this, $Order]);
+            QUI::getEvents()->fireEvent('quiqqerPaymentCanUsedInOrder', [$this, $Order]);
         } catch (PaymentCanNotBeUsed $Exception) {
             return false;
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
-
-//            QUI\System\Log::writeDebugException($Exception);
 
             return false;
         }

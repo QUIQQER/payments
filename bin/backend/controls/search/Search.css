@@ -1,0 +1,16 @@
+.quiqqer-payment-search {
+    float: left;
+    width: 100%;
+}
+
+.quiqqer-payment-search-form {
+    float: left;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.quiqqer-payment-search-form [type="search"] {
+    float: left;
+    max-width: calc(100% - 80px);
+    width: 300px;
+}

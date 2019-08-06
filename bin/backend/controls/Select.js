@@ -76,12 +76,12 @@ define('package/quiqqer/payments/bin/backend/controls/Select', [
         $onSearchButtonClick: function (self, Btn) {
             Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
 
-            require(['package/quiqqer/payments/bin/backend/controls/payments/search/Window'], function (Search) {
+            require(['package/quiqqer/payments/bin/backend/controls/search/Window'], function (Search) {
                 new Search({
                     events: {
                         onSubmit: function (Win, values) {
                             for (var i = 0, len = values.length; i < len; i++) {
-                                self.addItem(values[i]);
+                                self.addItem(parseInt(values[i].id));
                             }
                         }
                     }

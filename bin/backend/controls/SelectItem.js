@@ -6,10 +6,11 @@ define('package/quiqqer/payments/bin/backend/controls/SelectItem', [
 
     'qui/controls/Control',
     'package/quiqqer/payments/bin/backend/classes/Handler',
+    'Locale',
 
     'css!package/quiqqer/payments/bin/backend/controls/SelectItem.css'
 
-], function (QUIControl, Handler) {
+], function (QUIControl, Handler, QUILocale) {
     "use strict";
 
     var Payments = new Handler();
@@ -70,7 +71,8 @@ define('package/quiqqer/payments/bin/backend/controls/SelectItem', [
          * event : on inject
          */
         $onInject: function () {
-            var self = this;
+            var self    = this,
+                current = QUILocale.getCurrent();
 
             this.$Text.set({
                 html: '<span class="fa fa-spinner fa-spin"></span>'
@@ -84,10 +86,12 @@ define('package/quiqqer/payments/bin/backend/controls/SelectItem', [
                 return Promise.resolve();
             }
 
-            Payments.getDataForSelectItem(
-                this.getAttribute('id')
-            ).then(function (data) {
-                self.$Text.set('html', '#' + data.id + ' - <b>' + data.articleNo + '</b> (' + data.title + ')');
+
+            Payments.getPayment(this.getAttribute('id')).then(function (data) {
+                self.$Text.set(
+                    'html',
+                    '#' + data.id + ' - <b>' + data.title[current] + '</b> (' + data.workingTitle[current] + ')'
+                );
             }).catch(function () {
                 self.$Icon.removeClass('fa-credit-card-alt');
                 self.$Icon.addClass('fa-bolt');

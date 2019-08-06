@@ -1,4 +1,4 @@
-.quiqqer-products-selectItem {
+.quiqqer-payments-selectItem {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     clear: both;
     cursor: default;
@@ -9,7 +9,7 @@
     width: 100%;
 }
 
-.quiqqer-products-selectItem:hover {
+.quiqqer-payments-selectItem:hover {
     background: rgba(0, 0, 0, 0.1);
 }
 

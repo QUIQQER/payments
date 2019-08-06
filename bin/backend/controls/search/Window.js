@@ -23,7 +23,6 @@ define('package/quiqqer/payments/bin/backend/controls/search/Window', [
             'search',
             'submit',
             '$onOpen',
-            '$onOpenBegin',
             '$onResize',
             '$onSearch',
             '$onSearchBegin',
@@ -45,8 +44,7 @@ define('package/quiqqer/payments/bin/backend/controls/search/Window', [
             this.$Search = null;
 
             this.addEvents({
-                onOpen     : this.$onOpen,
-                onOpenBegin: this.$onOpenBegin
+                onOpen: this.$onOpen
             });
         },
 
@@ -60,27 +58,6 @@ define('package/quiqqer/payments/bin/backend/controls/search/Window', [
         },
 
         /**
-         * event: on open begin
-         */
-        $onOpenBegin: function () {
-            var size = document.body.getSize();
-
-            var width  = size.x - 100;
-            var height = size.y - 100;
-
-            if (width > 1400) {
-                width = 1400;
-            }
-
-            if (height > 1200) {
-                height = 1200;
-            }
-
-            this.setAttribute('maxWidth', width);
-            this.setAttribute('maxHeight', height);
-        },
-
-        /**
          * Return the DOMNode Element
          *
          * @returns {HTMLDivElement}
@@ -88,8 +65,6 @@ define('package/quiqqer/payments/bin/backend/controls/search/Window', [
         $onOpen: function (Win) {
             var self    = this,
                 Content = Win.getContent();
-
-            this.setAttribute('maxWidth', 1400);
 
             Content.set('html', '');
 
@@ -104,14 +79,13 @@ define('package/quiqqer/payments/bin/backend/controls/search/Window', [
                         self.Loader.show();
                     },
 
-                    onSearch: function () {
+                    onSearchEnd: function () {
                         self.Loader.hide();
                     }
                 }
             }).inject(Content);
 
             this.$Search.resize();
-            this.$Search.search();
         },
 
         /**
@@ -127,7 +101,7 @@ define('package/quiqqer/payments/bin/backend/controls/search/Window', [
          * @fires onSubmit
          */
         submit: function () {
-            var selected = this.$Search.getSelected();
+            var selected = this.$Search.getSelectedData();
 
             if (!selected.length) {
                 return;
