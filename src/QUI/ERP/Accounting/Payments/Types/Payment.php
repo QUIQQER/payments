@@ -39,6 +39,14 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         $this->Events->addEvent('onSaveBegin', function () {
             Permission::checkPermission('quiqqer.payments.edit');
+
+            $paymentFee = $this->getAttribute('paymentFee');
+
+            if ($paymentFee && !\is_float($paymentFee) && !\is_double($paymentFee)) {
+                $paymentFee = QUI\ERP\Money\Price::validatePrice($paymentFee);
+
+                $this->setAttribute('paymentFee', $paymentFee);
+            }
         });
     }
 
@@ -473,5 +481,90 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             QUI\System\Log::writeException($Exception);
         }
     }
+    //endregion
+
+    //region payment free
+
+    /**
+     * Set the payment fee title
+     *
+     * @param array $titles
+     */
+    public function setPaymentFeeTitle(array $titles)
+    {
+        $this->setPaymentLocale(
+            'payment.'.$this->getId().'.paymentFeeTitle',
+            $titles
+        );
+    }
+
+    /**
+     * Set the payment fee title
+     *
+     * @param string|float|double $paymentFee
+     */
+    public function setPaymentFee($paymentFee)
+    {
+        if (\is_string($paymentFee)) {
+            $paymentFee = \floatval($paymentFee);
+        }
+
+        if (!\is_float($paymentFee) && !\is_double($paymentFee)) {
+            return;
+        }
+
+        $this->setAttribute('paymentFee', $paymentFee);
+    }
+
+    /**
+     * Has the payment a payment fee?
+     *
+     * @return Bool
+     */
+    public function hasPaymentFee()
+    {
+        $paymentFee = $this->getAttribute('paymentFee');
+
+        if (empty($paymentFee)) {
+            return false;
+        }
+
+        return !empty(\floatval($paymentFee));
+    }
+
+    /**
+     * Return the payment fee
+     *
+     * @return float|int
+     */
+    public function getPaymentFee()
+    {
+        $paymentFee = $this->getAttribute('paymentFee');
+
+        if (empty($paymentFee)) {
+            return 0;
+        }
+
+        return \floatval($paymentFee);
+    }
+
+    /**
+     * Return the payment fee title / text
+     *
+     * @param null $Locale
+     * @return array|string
+     */
+    public function getPaymentFeeTitle($Locale = null)
+    {
+        if ($Locale === null) {
+            $Locale = QUI::getLocale();
+        }
+
+        return $Locale->get(
+            'quiqqer/payments',
+            'payment.'.$this->getId().'.paymentFeeTitle'
+        );
+    }
+
     //endregion
 }

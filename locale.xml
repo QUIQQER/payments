@@ -256,6 +256,29 @@
             <en><![CDATA[Define your own image for the payment method.]]></en>
         </locale>
 
+        <locale name="payment.edit.template.paymentFee.header">
+            <de><![CDATA[Zahlungsgebühr (optional)]]></de>
+            <en><![CDATA[Payment fee (optional)]]></en>
+        </locale>
+        <locale name="payment.edit.template.paymentFee.amount">
+            <de><![CDATA[Betrag Zahlungsgebühr]]></de>
+            <en><![CDATA[Amount of the Payment fee]]></en>
+        </locale>
+        <locale name="payment.edit.template.paymentFee.title">
+            <de><![CDATA[Name]]></de>
+            <en><![CDATA[Name]]></en>
+        </locale>
+        <locale name="payment.edit.template.paymentFee.title.help">
+            <de><![CDATA[
+Name welcher in der Zusammenfassung einer Rechnung oder Bestellung angezeigt werden soll.
+Beispiel: Nachnahmegebühr: 10,00 €
+            ]]></de>
+            <en><![CDATA[
+Name to be displayed in the summary of an invoice or purchase order.
+Beispiel: Nachnahmegebühr: 10,00 €
+            ]]></en>
+        </locale>
+
         <locale name="window.delete.title">
             <de><![CDATA[Zahlungsart löschen]]></de>
             <en><![CDATA[Delete payment type]]></en>
@@ -306,6 +329,14 @@
         <locale name="control.select.search.placeholder">
             <de><![CDATA[Eine Bezahlmethode suchen]]></de>
             <en><![CDATA[Search for a payment]]></en>
+        </locale>
+        <locale name="payment.type.panel.title">
+            <de><![CDATA[Zahlungsart: ---]]></de>
+            <en><![CDATA[Payment type: ---]]></en>
+        </locale>
+        <locale name="payment.type.panel.title.payment">
+            <de><![CDATA[Zahlungsart: [paymentType]]]></de>
+            <en><![CDATA[Payment type: [paymentType]]]></en>
         </locale>
     </groups>
 

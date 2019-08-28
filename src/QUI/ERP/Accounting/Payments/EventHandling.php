@@ -189,6 +189,7 @@ class EventHandling
             $PaymentType = $Payment->getPaymentType();
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
+
             return;
         }
 
@@ -198,6 +199,47 @@ class EventHandling
          */
         if ($PaymentType->supportsRecurringPaymentsOnly()) {
             throw new QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed();
+        }
+    }
+
+    public static function onQuiqqerOrderBasketToOrderEnd(
+        $Basket,
+        QUI\ERP\Order\AbstractOrder $Order,
+        QUI\ERP\Products\Product\ProductList $Products
+    ) {
+        $Payment = $Order->getPayment();
+
+        if (!$Payment) {
+            return;
+        }
+
+        if (!$Payment->hasPaymentFee()) {
+            return;
+        }
+
+        $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
+            'title'       => $Payment->getPaymentFeeTitle(),
+            'description' => '',
+            'priority'    => 1,
+            'calculation' => QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT,
+            'basis'       => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
+            'value'       => $Payment->getPaymentFee(),
+            'visible'     => true
+        ]);
+
+        $PriceFactors = $Products->getPriceFactors();
+        $PriceFactors->addToEnd($PriceFactor);
+
+        try {
+            $Products->recalculation();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
+        $Order->getArticles()->calc();
+
+        if (\method_exists($Order, 'save')) {
+            $Order->save();
         }
     }
 }

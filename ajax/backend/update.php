@@ -33,6 +33,14 @@ QUI::$Ajax->registerFunction(
             $Payment->setDescription($data['description']);
         }
 
+        if (isset($data['paymentFeeTitle'])) {
+            $Payment->setPaymentFeeTitle($data['paymentFeeTitle']);
+        }
+
+        if (isset($data['paymentFee'])) {
+            $Payment->setPaymentFee($data['paymentFee']);
+        }
+
         if (isset($data['icon'])) {
             $Payment->setIcon($data['icon']);
         }
