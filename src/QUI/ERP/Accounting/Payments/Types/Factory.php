@@ -146,6 +146,7 @@ class Factory extends QUI\CRUD\Factory
             'payment_type',
             'active',
             'icon',
+            'paymentFee',
 
             'date_from',
             'date_until',

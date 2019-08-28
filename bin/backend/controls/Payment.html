@@ -59,7 +59,6 @@
                 </label>
             </td>
         </tr>
-        </tbody>
         <tr>
             <td>
                 <label class="field-container">
@@ -74,6 +73,43 @@
                 <div class="field-container-item-desc">
                     {{{customIconDesc}}}
                 </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="data-table data-table-flexbox">
+        <thead>
+        <tr>
+            <th colspan="2">
+                {{paymentFeeHeader}}
+            </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item" title="{{paymentFeeAmount}}">
+                        {{paymentFeeAmount}}
+                    </span>
+                    <input name="paymentFee"
+                           class="field-container-field"
+                           type="text"
+                    />
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item" title="{{paymentFeeTitle}}">
+                        {{paymentFeeTitle}}
+                        <span class="field-container-item-help" title="{{paymentFeeHelp}}"></span>
+                    </span>
+                    <span class="field-container-field payment-fee-title"></span>
+                </label>
             </td>
         </tr>
         </tbody>
@@ -96,7 +132,7 @@
                         <span class="fa fa-calendar"></span>
                         {{usageFrom}}
                     </span>
-                    <input type="datetime" name="date_from"
+                    <input type="datetime-local" name="date_from"
                            class="field-container-field"/>
                 </label>
             </td>
@@ -106,7 +142,7 @@
                         <span class="fa fa-calendar"></span>
                         {{usageTo}}
                     </span>
-                    <input type="datetime" name="date_until"
+                    <input type="datetime-local" name="date_until"
                            class="field-container-field"/>
                 </label>
             </td>

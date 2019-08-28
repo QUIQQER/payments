@@ -2,4 +2,7 @@
 <events>
     <event on="onPackageConfigSave" fire="\QUI\ERP\Accounting\Payments\EventHandling::onPackageConfigSave"/>
     <event on="onPackageInstall" fire="\QUI\ERP\Accounting\Payments\EventHandling::onPackageInstall"/>
+    <event on="onQuiqqerOrderBasketToOrderEnd"
+           fire="\QUI\ERP\Accounting\Payments\EventHandling::onQuiqqerOrderBasketToOrderEnd"
+    />
 </events>

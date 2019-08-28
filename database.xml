@@ -15,8 +15,7 @@
             <field type="text NULL">purchase_value_until</field>
 
             <field type="INT(4) NULL">priority</field>
-            <!--<field type="INT(1) NULL">scope</field>-->
-            <!--<field type="varchar(20)">vat</field>-->
+            <field type="DOUBLE NULL">paymentFee</field>
 
             <field type="text NULL">areas</field>
             <field type="text NULL">articles</field>
