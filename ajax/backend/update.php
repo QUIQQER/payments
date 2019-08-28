@@ -39,6 +39,8 @@ QUI::$Ajax->registerFunction(
 
         if (isset($data['paymentFee'])) {
             $Payment->setPaymentFee($data['paymentFee']);
+        } else {
+            $Payment->clearPaymentFee();
         }
 
         if (isset($data['icon'])) {

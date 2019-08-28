@@ -46,6 +46,8 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
                 $paymentFee = QUI\ERP\Money\Price::validatePrice($paymentFee);
 
                 $this->setAttribute('paymentFee', $paymentFee);
+            } else {
+                $this->setAttribute('paymentFee', null);
             }
         });
     }
@@ -496,6 +498,14 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             'payment.'.$this->getId().'.paymentFeeTitle',
             $titles
         );
+    }
+
+    /**
+     * Clears the payment fee
+     */
+    public function clearPaymentFee()
+    {
+        $this->setAttribute('paymentFee', false);
     }
 
     /**
