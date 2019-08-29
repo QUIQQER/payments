@@ -103,11 +103,18 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     Payments.activatePayment(paymentId);
                 };
 
-                for (var i = 0, len = result.length; i < len; i++) {
-                    if (parseInt(result[i].active)) {
-                        result[i].status = {
+                var i, len, entry, title, workingTitle;
+
+                var gridResult = [];
+
+                for (i = 0, len = result.length; i < len; i++) {
+                    entry = result[i];
+
+                    if (parseInt(entry.active)) {
+                        entry.status = {
                             icon  : 'fa fa-check',
                             styles: {
+                                'float'   : 'none',
                                 lineHeight: 20,
                                 padding   : 0,
                                 width     : 20
@@ -117,9 +124,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                             }
                         };
                     } else {
-                        result[i].status = {
+                        entry.status = {
                             icon  : 'fa fa-remove',
                             styles: {
+                                'float'   : 'none',
                                 lineHeight: 20,
                                 padding   : 0,
                                 width     : 20
@@ -130,18 +138,38 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                         };
                     }
 
-                    result[i].paymentType_display = '';
+                    entry.paymentType_display = '';
 
-                    result[i].title        = result[i].title[current];
-                    result[i].workingTitle = result[i].workingTitle[current];
-
-                    if ("paymentType" in result[i] && result[i].paymentType) {
-                        result[i].paymentType_display = result[i].paymentType.title;
+                    if (typeof entry.title === 'undefined' ||
+                        typeof entry.title[current] === 'undefined') {
+                        title = '---';
+                    } else if (typeOf(entry.title) === 'string') {
+                        title = entry.title;
+                    } else if (typeof entry.title[current] !== 'undefined') {
+                        title = entry.title[current];
                     }
-                }
 
+                    if (typeof entry.workingTitle === 'undefined' ||
+                        typeof entry.workingTitle[current] === 'undefined') {
+                        workingTitle = '---';
+                    } else if (typeOf(entry.workingTitle) === 'string') {
+                        workingTitle = entry.workingTitle;
+                    } else if (typeof entry.workingTitle[current] !== 'undefined') {
+                        workingTitle = entry.workingTitle[current];
+                    }
+
+                    entry.title        = title;
+                    entry.workingTitle = workingTitle;
+
+                    if ("paymentType" in entry && entry.paymentType) {
+                        entry.paymentType_display = entry.paymentType.title;
+                    }
+
+                    gridResult.push(entry);
+                }
+                
                 self.$Grid.setData({
-                    data: result
+                    data: gridResult
                 });
 
                 self.Loader.hide();
@@ -195,7 +223,8 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     header   : QUILocale.get('quiqqer/system', 'status'),
                     dataIndex: 'status',
                     dataType : 'button',
-                    width    : 60
+                    width    : 60,
+                    className: 'grid-align-center'
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',

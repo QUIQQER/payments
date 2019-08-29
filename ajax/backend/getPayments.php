@@ -23,23 +23,6 @@ QUI::$Ajax->registerFunction(
             $result[] = $Payment->toArray();
         }
 
-        $current = QUI::getLocale()->getCurrent();
-
-        \usort($result, function ($a, $b) use ($current) {
-            $aTitle = $a['title'][$current];
-            $bTitle = $b['title'][$current];
-
-            if (!empty($a['workingTitle'][$current])) {
-                $aTitle = $a['workingTitle'][$current];
-            }
-
-            if (!empty($b['workingTitle'][$current])) {
-                $bTitle = $b['workingTitle'][$current];
-            }
-
-            return \strcmp($aTitle, $bTitle);
-        });
-
         return $result;
     },
     false,
