@@ -46,6 +46,8 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
                 $paymentFee = QUI\ERP\Money\Price::validatePrice($paymentFee);
 
                 $this->setAttribute('paymentFee', $paymentFee);
+            } else {
+                $this->setAttribute('paymentFee', null);
             }
         });
     }
@@ -60,15 +62,9 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         $lg = 'quiqqer/payments';
         $id = $this->getId();
 
-        $attributes = $this->getAttributes();
-        $Locale     = QUI::getLocale();
-
-        try {
-            $availableLanguages = QUI\Translator::getAvailableLanguages();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-            $availableLanguages = [];
-        }
+        $attributes         = $this->getAttributes();
+        $Locale             = QUI::getLocale();
+        $availableLanguages = QUI\Translator::getAvailableLanguages();
 
         foreach ($availableLanguages as $language) {
             $attributes['title'][$language] = $Locale->getByLang(
@@ -91,6 +87,9 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         }
 
         // payment type
+        $attributes['id']          = $id;
+        $attributes['priority']    = (int)$attributes['priority'];
+        $attributes['active']      = (int)$attributes['active'];
         $attributes['paymentType'] = false;
 
         try {
@@ -496,6 +495,14 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             'payment.'.$this->getId().'.paymentFeeTitle',
             $titles
         );
+    }
+
+    /**
+     * Clears the payment fee
+     */
+    public function clearPaymentFee()
+    {
+        $this->setAttribute('paymentFee', false);
     }
 
     /**

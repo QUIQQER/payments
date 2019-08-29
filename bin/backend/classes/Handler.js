@@ -35,7 +35,7 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
          */
         getPayments: function () {
             if (this.$payments) {
-                return window.Promise.resolve(this.$payments);
+                return Promise.resolve(this.$payments);
             }
 
             var self = this;
@@ -124,9 +124,7 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
                 QUIAjax.get('package_quiqqer_payments_ajax_backend_update', function (result) {
                     self.$payments = null;
 
-                    require([
-                        'package/quiqqer/translator/bin/Translator'
-                    ], function (Translator) {
+                    require(['package/quiqqer/translator/bin/Translator'], function (Translator) {
                         Translator.refreshLocale().then(function () {
                             self.fireEvent('paymentUpdate', [self, paymentId, result]);
                             resolve(result);
@@ -136,7 +134,7 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
                     'package': 'quiqqer/payments',
                     onError  : reject,
                     paymentId: paymentId,
-                    data     : window.JSON.encode(data)
+                    data     : JSON.encode(data)
                 });
             });
         },

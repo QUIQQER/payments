@@ -49,6 +49,19 @@
             <en><![CDATA[]]></en>
         </locale>
 
+        <locale name="payment.cashOnDelivery.title">
+            <de><![CDATA[Bezahlung per Nachname]]></de>
+            <en><![CDATA[Cash on delivery]]></en>
+        </locale>
+        <locale name="payment.cashOnDelivery.workingTitle">
+            <de><![CDATA[Bezahlung per Nachname]]></de>
+            <en><![CDATA[Cash on delivery]]></en>
+        </locale>
+        <locale name="payment.cashOnDelivery.description">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+
         <locale name="payment.invoice.title">
             <de><![CDATA[Zahlung per Rechnung]]></de>
             <en><![CDATA[Payment by invoice]]></en>
