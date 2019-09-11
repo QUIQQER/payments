@@ -246,64 +246,22 @@ abstract class AbstractPayment implements PaymentsInterface
      * Return the extra text for the invoice
      *
      * @param QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
-     * @return mixed
+     * @return string
      */
     public function getInvoiceInformationText($Invoice)
     {
         return '';
     }
 
-    //endregion
-
-
-    //region OLD METHODS - DEPRECATED
-
     /**
-     * Template Methods
-     */
-
-    /**
-     * Return the Template if the order is successfull
-     * eq: The Basket display this Template on a successful payment
+     * Return the extra text for the invoice
      *
-     * @return String
-     * @deprecated
+     * @param QUI\ERP\Order\OrderInterface $Order
+     * @return string
      */
-    public function getOrderSuccessTpl($Bill, $Project = false)
+    public function getOrderInformationText($Order)
     {
         return '';
-    }
-
-    /**
-     * Text messages
-     */
-
-    /**
-     * Zusätzlicher bestätigungsmail Text
-     *
-     * @return String
-     * @deprecated
-     */
-    public function getOrderMailText()
-    {
-        return $this->getLocale()->get(
-            'plugin/payment',
-            \strtolower($this->getSetting('name')).'.order.mailtext'
-        );
-    }
-
-    /**
-     * Rechungstext erweiterung
-     *
-     * @return String
-     * @deprecated
-     */
-    public function getBillText()
-    {
-        return $this->getLocale()->get(
-            'plugin/payment',
-            \strtolower($this->getSetting('name')).'.bill.text'
-        );
     }
 
     //endregion
