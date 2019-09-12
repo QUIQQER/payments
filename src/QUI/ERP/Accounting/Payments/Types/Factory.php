@@ -68,6 +68,15 @@ class Factory extends QUI\CRUD\Factory
             ]);
         }
 
+        if (!isset($data['paymentFee'])) {
+            $data['paymentFee'] = null;
+        }
+
+        if ($data['paymentFee'] === '' || \is_numeric($data['paymentFee'])) {
+            $data['paymentFee'] = null;
+        }
+
+
         QUI::getEvents()->fireEvent('paymentsCreateBegin', [$data['payment_type']]);
 
         $payment       = $data['payment_type'];
@@ -83,7 +92,7 @@ class Factory extends QUI\CRUD\Factory
                 ]
             ]);
 
-            if (count($children)) {
+            if (\count($children)) {
                 throw new QUI\ERP\Accounting\Payments\Exception([
                     'quiqqer/payments',
                     'exception.create.unique.payment.already.exists'
