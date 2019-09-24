@@ -118,6 +118,11 @@ class Factory extends QUI\CRUD\Factory
             '&nbsp;'
         );
 
+        $this->createPaymentLocale(
+            'payment.'.$NewChild->getId().'.orderInformation',
+            '&nbsp;'
+        );
+
         try {
             QUI\Translator::publish('quiqqer/payments');
         } catch (QUI\Exception $Exception) {

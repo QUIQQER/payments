@@ -84,6 +84,12 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
                 $lg,
                 'payment.'.$id.'.workingTitle'
             );
+
+            $attributes['orderInformation'][$language] = $Locale->getByLang(
+                $language,
+                $lg,
+                'payment.'.$id.'.orderInformation'
+            );
         }
 
         // payment type
@@ -363,6 +369,50 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     }
 
     /**
+     * Return the extra text for the invoice
+     *
+     * @param QUI\ERP\Order\OrderInterface $Order
+     * @return string
+     */
+    public function getOrderInformationText(QUI\ERP\Order\OrderInterface $Order)
+    {
+        $Shipping = $Order->getShipping();
+        $Locale   = QUI::getLocale();
+        $Currency = $Order->getCurrency();
+
+        $id = $this->getId();
+
+        $shipping = '';
+        $paidDate = '';
+        $paid     = '';
+        $toPay    = '';
+
+        try {
+            $paidStatus = $Order->getPaidStatusInformation();
+
+            $paidDate = $paidStatus['paidDate'];
+            $paid     = $paidStatus['paid'];
+            $toPay    = $paidStatus['toPay'];
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addWarning($Exception->getMessage());
+        }
+
+        if ($Shipping) {
+            $shipping = $Shipping->getTitle();
+        }
+
+        // @todo bestellnr
+
+        return $Locale->get('quiqqer/payments', 'payment.'.$id.'.orderInformation', [
+            'orderId'  => $Order->getId(),
+            'shipping' => $shipping,
+            'paidDate' => $paidDate,
+            'paid'     => $Currency->format($paid),
+            'toPay'    => $Currency->format($toPay)
+        ]);
+    }
+
+    /**
      *  Return the icon for the Payment
      *
      * @return string - image url
@@ -414,6 +464,19 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         $this->setPaymentLocale(
             'payment.'.$this->getId().'.description',
             $descriptions
+        );
+    }
+
+    /**
+     * Set the order information text
+     *
+     * @param array $orderInformation
+     */
+    public function setOrderInformation(array $orderInformation)
+    {
+        $this->setPaymentLocale(
+            'payment.'.$this->getId().'.orderInformation',
+            $orderInformation
         );
     }
 

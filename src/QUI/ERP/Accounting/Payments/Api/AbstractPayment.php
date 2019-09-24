@@ -253,16 +253,5 @@ abstract class AbstractPayment implements PaymentsInterface
         return '';
     }
 
-    /**
-     * Return the extra text for the invoice
-     *
-     * @param QUI\ERP\Order\OrderInterface $Order
-     * @return string
-     */
-    public function getOrderInformationText($Order)
-    {
-        return '';
-    }
-
     //endregion
 }

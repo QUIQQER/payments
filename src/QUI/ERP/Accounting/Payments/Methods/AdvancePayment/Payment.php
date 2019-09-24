@@ -45,7 +45,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      */
     public function isSuccessful($hash)
     {
-        return false;
+        return true;
     }
 
     /**
