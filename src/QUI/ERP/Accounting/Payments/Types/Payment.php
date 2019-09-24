@@ -401,10 +401,8 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             $shipping = $Shipping->getTitle();
         }
 
-        // @todo bestellnr
-
         return $Locale->get('quiqqer/payments', 'payment.'.$id.'.orderInformation', [
-            'orderId'  => $Order->getId(),
+            'orderId'  => $Order->getIdPrefix(),
             'shipping' => $shipping,
             'paidDate' => $paidDate,
             'paid'     => $Currency->format($paid),
