@@ -118,6 +118,18 @@ class Factory extends QUI\CRUD\Factory
             '&nbsp;'
         );
 
+        if ($PaymentMethod instanceof QUI\ERP\Accounting\Payments\Methods\AdvancePayment\Payment) {
+            $this->createPaymentLocale(
+                'payment.'.$NewChild->getId().'.orderInformation',
+                '[quiqqer/payments] advanced.payment.default.text'
+            );
+        } else {
+            $this->createPaymentLocale(
+                'payment.'.$NewChild->getId().'.orderInformation',
+                '&nbsp;'
+            );
+        }
+
         try {
             QUI\Translator::publish('quiqqer/payments');
         } catch (QUI\Exception $Exception) {
@@ -196,18 +208,28 @@ class Factory extends QUI\CRUD\Factory
     protected function createPaymentLocale($var, $title)
     {
         $current = QUI::getLocale()->getCurrent();
+        $options = [
+            'datatype' => 'php,js',
+            'package'  => 'quiqqer/payments'
+        ];
 
         if (QUI::getLocale()->isLocaleString($title)) {
-            $parts = QUI::getLocale()->getPartsOfLocaleString($title);
-            $title = QUI::getLocale()->get($parts[0], $parts[1]);
+            $parts     = QUI::getLocale()->getPartsOfLocaleString($title);
+            $languages = QUI\Translator::getAvailableLanguages();
+
+            foreach ($languages as $language) {
+                $options[$language] = QUI::getLocale()->getByLang(
+                    $language,
+                    $parts[0],
+                    $parts[1]
+                );
+            }
+        } else {
+            $options[$current] = $title;
         }
 
         try {
-            QUI\Translator::addUserVar('quiqqer/payments', $var, [
-                $current   => $title,
-                'datatype' => 'php,js',
-                'package'  => 'quiqqer/payments'
-            ]);
+            QUI\Translator::addUserVar('quiqqer/payments', $var, $options);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());
         }

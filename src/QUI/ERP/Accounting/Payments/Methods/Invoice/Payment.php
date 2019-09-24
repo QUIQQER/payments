@@ -100,7 +100,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
     }
 
     /**
-     * Create a Scubscription from a (temporary) Order
+     * Create a Subscription from a (temporary) Order
      *
      * @param AbstractOrder $Order
      * @return void

@@ -33,6 +33,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
             'showInformation',
             'showDescription',
             'openDeleteDialog',
+            'showOrderInformation',
             'toggleStatus',
             'save',
             '$onCreate',
@@ -59,11 +60,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
             this.$Container = null;
             this.$IconField = null;
 
-            this.$DataTitle        = null;
-            this.$DataWorkingTitle = null;
-            this.$DataDescription  = null;
-            this.$PaymentFeeTitle  = null;
-
+            this.$DataTitle            = null;
+            this.$DataWorkingTitle     = null;
+            this.$DataDescription      = null;
+            this.$DataOrderInformation = null;
+            this.$PaymentFeeTitle      = null;
 
             this.addEvents({
                 onCreate : this.$onCreate,
@@ -130,6 +131,15 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 icon  : 'fa fa-file-text-o',
                 events: {
                     onClick: this.showDescription
+                }
+            });
+
+            this.addCategory({
+                name  : 'orderInformation',
+                text  : QUILocale.get(lg, 'panel.payment.order.information'),
+                icon  : 'fa fa-file-text-o',
+                events: {
+                    onClick: this.showOrderInformation
                 }
             });
 
@@ -435,7 +445,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         },
 
         /**
-         * SHow the description
+         * Show the description
          */
         showDescription: function () {
             var self = this;
@@ -456,6 +466,39 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                             events: {
                                 onLoad: function () {
                                     self.$DataDescription.setData(description);
+                                    resolve();
+                                }
+                            }
+                        }).inject(Container);
+                    });
+                });
+            }).then(function () {
+                return self.$showContainer();
+            });
+        },
+
+        /**
+         * Show the order information
+         */
+        showOrderInformation: function () {
+            var self = this;
+
+            Promise.all([
+                this.$hideContainer(),
+                this.$getTranslationData('orderInformation')
+            ]).then(function (result) {
+                var Container   = result[0],
+                    description = result[1];
+
+                return new Promise(function (resolve) {
+                    require(['controls/lang/ContentMultiLang'], function (ContentMultiLang) {
+                        self.$DataOrderInformation = new ContentMultiLang({
+                            styles: {
+                                height: '100%'
+                            },
+                            events: {
+                                onLoad: function () {
+                                    self.$DataOrderInformation.setData(description);
                                     resolve();
                                 }
                             }
@@ -566,6 +609,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 this.$DataDescription = null;
             }
 
+            if (this.$DataOrderInformation) {
+                this.$DataOrderInformation.destroy();
+                this.$DataOrderInformation = null;
+            }
+
             if (this.$DataTitle) {
                 this.$DataTitle.destroy();
                 this.$DataTitle = null;
@@ -596,6 +644,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
             if (this.$DataDescription) {
                 this.$setData('description', this.$DataDescription.getData());
+            }
+
+            if (this.$DataOrderInformation) {
+                this.$setData('orderInformation', this.$DataOrderInformation.getData());
             }
 
             if (this.$DataTitle) {
@@ -687,10 +739,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         $getTranslationData: function (name) {
             var paymentId = this.getAttribute('paymentId');
 
-            var title           = 'payment.' + paymentId + '.title';
-            var description     = 'payment.' + paymentId + '.description';
-            var workingTitle    = 'payment.' + paymentId + '.workingTitle';
-            var paymentFeeTitle = 'payment.' + paymentId + '.paymentFeeTitle';
+            var title            = 'payment.' + paymentId + '.title';
+            var description      = 'payment.' + paymentId + '.description';
+            var workingTitle     = 'payment.' + paymentId + '.workingTitle';
+            var paymentFeeTitle  = 'payment.' + paymentId + '.paymentFeeTitle';
+            var orderInformation = 'payment.' + paymentId + '.orderInformation';
 
             if (typeof this.$__running === 'undefined') {
                 this.$__storageData = {};
@@ -718,13 +771,15 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                         Translator.get(lg, description, lg),
                         Translator.get(lg, workingTitle, lg),
                         Translator.get(lg, paymentFeeTitle, lg),
+                        Translator.get(lg, orderInformation, lg),
                         Translator.getAvailableLanguages()
                     ]).then(function (promiseResult) {
-                        this.$__storageData.title           = promiseResult[0];
-                        this.$__storageData.description     = promiseResult[1];
-                        this.$__storageData.workingTitle    = promiseResult[2];
-                        this.$__storageData.paymentFeeTitle = promiseResult[3];
-                        this.$__storageData.languages       = promiseResult[4];
+                        this.$__storageData.title            = promiseResult[0];
+                        this.$__storageData.description      = promiseResult[1];
+                        this.$__storageData.workingTitle     = promiseResult[2];
+                        this.$__storageData.paymentFeeTitle  = promiseResult[3];
+                        this.$__storageData.orderInformation = promiseResult[4];
+                        this.$__storageData.languages        = promiseResult[5];
 
                         this.$__running = false;
                         resolve();
