@@ -402,7 +402,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         }
 
         return $Locale->get('quiqqer/payments', 'payment.'.$id.'.orderInformation', [
-            'orderId'  => $Order->getIdPrefix(),
+            'orderId'  => $Order->getIdPrefix().$Order->getId(),
             'shipping' => $shipping,
             'paidDate' => $paidDate,
             'paid'     => $Currency->format($paid),
