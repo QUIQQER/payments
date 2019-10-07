@@ -62,6 +62,11 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
      */
     public function onOrderStart(AbstractOrder $Order)
     {
+        if ($Order->isSuccessful()) {
+            $this->currentStatus = self::PROCESSING_STATUS_FINISH;
+            return $this->currentStatus;
+        }
+
         $this->Payment = $Order->getPayment()->getPaymentType();
 
         if ($this->Payment->isGateway()) {
