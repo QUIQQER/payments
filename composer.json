@@ -2,7 +2,7 @@
   "name": "quiqqer/payments",
   "type": "quiqqer-plugin",
   "description": "Provided the payment management for QUIQQER. Can manage payment methods",
-  "version": "dev-dev",
+  "version": "dev-master",
   "license": [
     "GPL-3.0+",
     "PCSG QEL-1.0"
