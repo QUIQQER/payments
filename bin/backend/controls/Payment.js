@@ -84,7 +84,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 text     : QUILocale.get('quiqqer/quiqqer', 'save'),
                 textimage: 'fa fa-save',
                 events   : {
-                    onClick: this.save
+                    onClick: function () {
+                        this.save().catch(function (e) {
+                            // nothing
+                        });
+                    }.bind(this)
                 }
             });
 
@@ -297,7 +301,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 }).then(function () {
                     resolve();
                     self.Loader.hide();
-                }).catch(reject);
+                }).catch(function (e) {
+                    self.Loader.hide();
+                    reject(e);
+                });
             });
         },
 
