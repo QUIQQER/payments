@@ -52,6 +52,16 @@ class PaymentType extends QUI\QDOM implements QUI\ERP\Accounting\Payments\Types\
     }
 
     /**
+     * Has the payment a payment fee?
+     *
+     * @return Bool
+     */
+    public function hasPaymentFee()
+    {
+        return false;
+    }
+
+    /**
      * @param $Locale
      * @return array|string
      */

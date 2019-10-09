@@ -55,6 +55,11 @@ interface PaymentInterface
     public function getPaymentType();
 
     /**
+     * @return bool
+     */
+    public function hasPaymentFee();
+
+    /**
      * @param QUI\Interfaces\Users\User $User
      * @return bool
      */
