@@ -39,6 +39,17 @@ interface RecurringPaymentInterface
     public function cancelSubscription($subscriptionId, $reason = '');
 
     /**
+     * Sets a subscription as inactive (on the side of this QUIQQER system only!)
+     *
+     * IMPORTANT: This does NOT mean that the corresponding subscription at the payment provider
+     * side is cancelled. If you want to do this please use cancelSubscription() !
+     *
+     * @param $subscriptionId
+     * @return void
+     */
+    public function setSubscriptionAsInactive($subscriptionId);
+
+    /**
      * Can the Subscription of this payment method be edited
      * regarding essential data like invoice frequency, amount etc.?
      *
@@ -54,4 +65,28 @@ interface RecurringPaymentInterface
      * @return int|string|false - ID or false of no ID associated
      */
     public function getSubscriptionIdByOrder(AbstractOrder $Order);
+
+    /**
+     * Checks if the subscription is active at the payment provider side
+     *
+     * @param string|int $subscriptionId
+     * @return bool
+     */
+    public function isSubscriptionActiveAtPaymentProvider($subscriptionId);
+
+    /**
+     * Get IDs of all subscriptions
+     *
+     * @param bool $includeInactive (optional) - Include inactive subscriptions [default: false]
+     * @return int[]
+     */
+    public function getSubscriptionIds($includeInactive = false);
+
+    /**
+     * Get global processing ID of a subscription
+     *
+     * @param string|int $subscriptionId
+     * @return string|false
+     */
+    public function getSubscriptionGlobalProcessingId($subscriptionId);
 }

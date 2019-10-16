@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file contains QUI\ERP\Accounting\Payments\Methods\Invoice\Payment
- */
-
 namespace QUI\ERP\Accounting\Payments\Methods\Invoice;
 
 use QUI;
@@ -134,6 +130,20 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
     }
 
     /**
+     * Sets a subscription as inactive (on the side of this QUIQQER system only!)
+     *
+     * IMPORTANT: This does NOT mean that the corresponding subscription at the payment provider
+     * side is cancelled. If you want to do this please use cancelSubscription() !
+     *
+     * @param $subscriptionId
+     * @return void
+     */
+    public function setSubscriptionAsInactive($subscriptionId)
+    {
+        // Since payment by invoice is not connected to a external service, there is nothing to set as inactive
+    }
+
+    /**
      * Can the Subscription of this payment method be edited
      * regarding essential data like invoice frequency, amount etc.?
      *
@@ -153,6 +163,41 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      */
     public function getSubscriptionIdByOrder(AbstractOrder $Order)
     {
+        return false;
+    }
+
+    /**
+     * Checks if the subscription is active at the payment provider side
+     *
+     * @param string|int $subscriptionId
+     * @return bool
+     */
+    public function isSubscriptionActiveAtPaymentProvider($subscriptionId)
+    {
+        return true;
+    }
+
+    /**
+     * Get IDs of all subscriptions
+     *
+     * @param bool $includeInactive (optional) - Include inactive subscriptions [default: false]
+     * @return int[]
+     */
+    public function getSubscriptionIds($includeInactive = false)
+    {
+        // There are no external subscription IDs
+        return [];
+    }
+
+    /**
+     * Get global processing ID of a subscription
+     *
+     * @param string|int $subscriptionId
+     * @return string|false
+     */
+    public function getSubscriptionGlobalProcessingId($subscriptionId)
+    {
+        // Since there are no external subscription IDs, nothing can be returned here
         return false;
     }
 }
