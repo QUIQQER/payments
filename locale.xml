@@ -17,6 +17,7 @@
             ]]></en>
         </locale>
 
+        <!-- Settings -->
         <locale name="window.erp.title">
             <de><![CDATA[Shop]]></de>
             <en><![CDATA[Shop]]></en>
@@ -28,11 +29,6 @@
         <locale name="payments.settings.title">
             <de><![CDATA[Zahlungsarten]]></de>
             <en><![CDATA[Payments]]></en>
-        </locale>
-
-        <locale name="payments.type">
-            <de><![CDATA[Zahlungsmethode]]></de>
-            <en><![CDATA[Payment type]]></en>
         </locale>
 
 
