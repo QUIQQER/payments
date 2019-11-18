@@ -186,7 +186,7 @@ class Gateway extends QUI\Utils\Singleton
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
-            $Order->addComment(\json_encode([
+            $Order->addHistory(\json_encode([
                 'message' => $Exception->getMessage(),
                 'code'    => $Exception->getCode()
             ]));
@@ -249,7 +249,7 @@ class Gateway extends QUI\Utils\Singleton
 
         $hash = $Order->getHash();
 
-        $Order->addComment($paymentComment);
+        $Order->addHistory($paymentComment);
 
         $Transaction = Transactions::createPaymentTransaction(
             $amount,
@@ -271,7 +271,7 @@ class Gateway extends QUI\Utils\Singleton
         if ($Order->isPosted()) {
             try {
                 /* @var $Order QUI\ERP\Order\Order */
-                $Order->getInvoice()->addComment($paymentComment);
+                $Order->getInvoice()->addHistory($paymentComment);
             } catch (QUI\ERP\Accounting\Invoice\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             } catch (QUI\Exception $Exception) {
