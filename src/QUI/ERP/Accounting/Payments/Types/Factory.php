@@ -136,6 +136,10 @@ class Factory extends QUI\CRUD\Factory
             QUI\System\Log::writeException($Exception);
         }
 
+        // Set new payment method as changeable
+        $Settings = QUI\ERP\Accounting\Payments\Settings::getInstance();
+        $Settings->set('paymentChangeable', $NewChild->getId(), "1");
+
         QUI::getEvents()->fireEvent('paymentsCreateEnd', [$NewChild]);
 
         return $NewChild;
