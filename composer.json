@@ -33,6 +33,5 @@
       "QUI\\ERP\\": "src\/QUI\/ERP",
       "QUI\\ERP\\Accounting\\Payments\\": "src\/QUI\/ERP\/Accounting\/Payments"
     }
-  },
-  "version": "dev-dev"
+  }
 }
