@@ -25,6 +25,7 @@ class Provider extends Api\AbstractPaymentProvider
             Methods\Cash\Payment::class,
             Methods\Invoice\Payment::class,
             Methods\AdvancePayment\Payment::class,
+            Methods\Standard\Payment::class,
         ];
     }
 }

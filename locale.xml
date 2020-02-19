@@ -45,6 +45,19 @@
             <en><![CDATA[]]></en>
         </locale>
 
+        <locale name="payment.standard.title">
+            <de><![CDATA[Standard Bezahlung]]></de>
+            <en><![CDATA[Standard payment]]></en>
+        </locale>
+        <locale name="payment.standard.workingTitle">
+            <de><![CDATA[Einfache standard Bezahlung]]></de>
+            <en><![CDATA[Simple standard payment]]></en>
+        </locale>
+        <locale name="payment.standard.description">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+
         <locale name="payment.cashOnDelivery.title">
             <de><![CDATA[Bezahlung per Nachname]]></de>
             <en><![CDATA[Cash on delivery]]></en>
