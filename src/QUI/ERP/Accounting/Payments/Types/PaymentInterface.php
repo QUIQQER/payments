@@ -64,4 +64,10 @@ interface PaymentInterface
      * @return bool
      */
     public function canUsedBy(QUI\Interfaces\Users\User $User);
+
+    /**
+     * @param QUI\ERP\Order\OrderInterface $Order
+     * @return string
+     */
+    public function getOrderInformationText(QUI\ERP\Order\OrderInterface $Order);
 }

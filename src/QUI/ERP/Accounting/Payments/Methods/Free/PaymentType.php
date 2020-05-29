@@ -130,4 +130,12 @@ class PaymentType extends QUI\QDOM implements QUI\ERP\Accounting\Payments\Types\
     {
         return true;
     }
+
+    /**
+     * @return string
+     */
+    public function getOrderInformationText(QUI\ERP\Order\OrderInterface $Order)
+    {
+        return '';
+    }
 }
