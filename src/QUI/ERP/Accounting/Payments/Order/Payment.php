@@ -59,28 +59,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $Customer = $Order->getCustomer();
         $Payment  = $Order->getPayment();
-        $Articles = $Order->getArticles();
-
-        $calculations = $Articles->getCalculations();
-        $payments     = [];
-
-        // leave this line even if it's curios
-        // floatval sum === 0 doesn't work -> floatval => float, 0 = int
-        if ($calculations['sum'] >= 0 && $calculations['sum'] <= 0) {
-            $payments[] = new QUI\ERP\Accounting\Payments\Methods\Free\PaymentType();
-        } else {
-            $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
-            $payments = $Payments->getUserPayments($User);
-
-            $payments = \array_filter($payments, function ($Payment) use ($Order) {
-                /* @var $Payment QUI\ERP\Accounting\Payments\Types\Payment */
-                if ($Payment->canUsedInOrder($Order) === false) {
-                    return false;
-                }
-
-                return $Payment->getPaymentType()->isVisible();
-            });
-        }
+        $payments = $this->getPaymentList();
 
         $Engine->assign([
             'User'            => $User,
@@ -97,10 +76,22 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
      */
     public function validate()
     {
-        $Order   = $this->getOrder();
-        $Payment = $Order->getPayment();
+        $Order       = $this->getOrder();
+        $Payment     = $Order->getPayment();
+        $paymentList = $this->getPaymentList();
 
-        if ($Payment === null) {
+        if ($Payment === null && \count($paymentList) === 1) {
+            try {
+                $Order->setPayment($paymentList[0]);
+                $Order->save();
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+            }
+
+            $Payment = $Order->getPayment();
+        }
+
+        if ($Payment === null && !empty($paymentList)) {
             throw new QUI\ERP\Order\Exception([
                 'quiqqer/order',
                 'exception.missing.payment'
@@ -149,5 +140,37 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $Order->setPayment($Payment->getId());
         $Order->save();
+    }
+
+    /**
+     * return the available payment list
+     *
+     * @return []
+     */
+    protected function getPaymentList()
+    {
+        $Order    = $this->getOrder();
+        $Articles = $Order->getArticles();
+
+        $calculations = $Articles->getCalculations();
+        // leave this line even if it's curios
+        // floatval sum === 0 doesn't work -> floatval => float, 0 = int
+        if ($calculations['sum'] >= 0 && $calculations['sum'] <= 0) {
+            $payments[] = new QUI\ERP\Accounting\Payments\Methods\Free\PaymentType();
+        } else {
+            $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
+            $payments = $Payments->getUserPayments($User);
+
+            $payments = \array_filter($payments, function ($Payment) use ($Order) {
+                /* @var $Payment QUI\ERP\Accounting\Payments\Types\Payment */
+                if ($Payment->canUsedInOrder($Order) === false) {
+                    return false;
+                }
+
+                return $Payment->getPaymentType()->isVisible();
+            });
+        }
+
+        return $payments;
     }
 }
