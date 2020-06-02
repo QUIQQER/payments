@@ -104,12 +104,30 @@ abstract class AbstractPayment implements PaymentsInterface
 
     /**
      * Is the payment successful?
-     * This method returns the payment success type
+     *
+     * Successful = The payment process was executed correctly
+     *
+     * IMPORTANT: This does NOT mean that actual money was transferred!
      *
      * @param string $hash - Vorgangsnummer - hash number - procedure number
      * @return bool
      */
     abstract public function isSuccessful($hash);
+
+    /**
+     * Is the payment approved?
+     *
+     * Approved = The payment amount is considered to be safe for payment
+     *
+     * IMPORTANT: This does NOT mean that actual money was transferred!
+     *
+     * @param string $hash - Vorgangsnummer - hash number - procedure number
+     * @return bool
+     */
+    public function isApproved($hash)
+    {
+        return $this->isSuccessful($hash);
+    }
 
     /**
      * Return the payment icon (the URL path)

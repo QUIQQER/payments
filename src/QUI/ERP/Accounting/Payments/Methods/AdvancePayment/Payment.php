@@ -8,6 +8,7 @@ namespace QUI\ERP\Accounting\Payments\Methods\AdvancePayment;
 
 use QUI;
 use QUI\ERP\Accounting\Payments\Payments;
+use QUI\ERP\Order\Handler as OrderHandler;
 
 /**
  * Class Payment
@@ -46,6 +47,28 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     public function isSuccessful($hash)
     {
         return true;
+    }
+
+    /**
+     * Is the payment approved?
+     *
+     * Approved = The payment amount is considered to be safe for payment
+     *
+     * IMPORTANT: This does NOT mean that actual money was transferred!
+     *
+     * @param string $hash - Vorgangsnummer - hash number - procedure number
+     * @return bool
+     */
+    public function isApproved($hash)
+    {
+        try {
+            $Order = OrderHandler::getInstance()->getOrderByHash($hash);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return false;
+        }
+
+        return $Order->isPaid();
     }
 
     /**
