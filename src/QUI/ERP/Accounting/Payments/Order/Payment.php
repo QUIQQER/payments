@@ -123,10 +123,9 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         if (empty($payment)) {
             return;
         }
-
-
-        $User  = QUI::getUserBySession();
+        
         $Order = $this->getOrder();
+        $User  = QUI::getUserBySession();
 
         try {
             $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
@@ -151,6 +150,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     {
         $Order    = $this->getOrder();
         $Articles = $Order->getArticles();
+        $User     = QUI::getUserBySession();
 
         $calculations = $Articles->getCalculations();
         // leave this line even if it's curios
