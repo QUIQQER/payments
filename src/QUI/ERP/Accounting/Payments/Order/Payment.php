@@ -123,7 +123,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         if (empty($payment)) {
             return;
         }
-        
+
         $Order = $this->getOrder();
         $User  = QUI::getUserBySession();
 
@@ -144,7 +144,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     /**
      * return the available payment list
      *
-     * @return []
+     * @return array
      */
     protected function getPaymentList()
     {
@@ -152,6 +152,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $Articles = $Order->getArticles();
         $User     = QUI::getUserBySession();
 
+        $payments     = [];
         $calculations = $Articles->getCalculations();
         // leave this line even if it's curios
         // floatval sum === 0 doesn't work -> floatval => float, 0 = int
