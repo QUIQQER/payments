@@ -82,7 +82,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         if ($Payment === null && \count($paymentList) === 1) {
             try {
-                $Order->setPayment($paymentList[0]);
+                $Order->setPayment($paymentList[0]->getId());
                 $Order->save();
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addDebug($Exception->getMessage());
@@ -170,6 +170,8 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
                 return $Payment->getPaymentType()->isVisible();
             });
+
+            $payments = \array_values($payments);
         }
 
         return $payments;
