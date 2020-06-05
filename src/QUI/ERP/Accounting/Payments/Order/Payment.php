@@ -168,7 +168,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
                     return false;
                 }
 
-                return $Payment->getPaymentType()->isVisible();
+                return $Payment->getPaymentType()->isVisible($Order);
             });
 
             $payments = \array_values($payments);

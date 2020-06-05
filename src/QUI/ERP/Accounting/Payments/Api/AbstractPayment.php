@@ -168,9 +168,10 @@ abstract class AbstractPayment implements PaymentsInterface
      * Is the payment be visible in the frontend?
      * Every payment method can determine this by itself (API for developers)
      *
+     * @param AbstractOrder $Order
      * @return bool
      */
-    public function isVisible()
+    public function isVisible(AbstractOrder $Order)
     {
         return true;
     }
