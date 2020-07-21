@@ -6,7 +6,7 @@
         </title>
 
         <description>
-            <locale group="quiqqer/payments" var="package.title"/>
+            <locale group="quiqqer/payments" var="package.description"/>
         </description>
 
         <image src="URL_OPT_DIR/quiqqer/payments/bin/images/Logo.jpg"/>
