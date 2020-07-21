@@ -1,7 +1,7 @@
 {
   "name": "quiqqer\/payments",
   "type": "quiqqer-plugin",
-  "description": "Provided the payment management for QUIQQER. Can manage payment methods",
+  "description": "Provides payment method management for QUIQQER.",
   "license": [
     "GPL-3.0+",
     "PCSG QEL-1.0"
@@ -10,13 +10,13 @@
     {
       "name": "Henning Leutz",
       "email": "leutz@pcsg.de",
-      "homepage": "http:\/\/www.pcsg.de",
+      "homepage": "https:\/\/www.pcsg.de",
       "role": "Developer"
     },
     {
       "name": "Moritz Scholz",
       "email": "scholz@pcsg.de",
-      "homepage": "http:\/\/www.pcsg.de",
+      "homepage": "https:\/\/www.pcsg.de",
       "role": "Developer"
     }
   ],
