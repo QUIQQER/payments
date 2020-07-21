@@ -1,7 +1,7 @@
 {
   "name": "quiqqer\/payments",
   "type": "quiqqer-plugin",
-  "description": "Provides payment method management for QUIQQER.",
+  "description": "Extends QUIQQER (ERP) with a payment method API and management. Comes with cash, invoice and prepayment as payment methods.",
   "license": [
     "GPL-3.0+",
     "PCSG QEL-1.0"
