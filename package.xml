@@ -11,6 +11,12 @@
 
         <image src="URL_OPT_DIR/quiqqer/payments/bin/images/Logo.jpg"/>
 
+        <preview>
+            <image src="URL_OPT_DIR/quiqqer/payments/bin/images/screenshots/payments_panel.jpg"/>
+            <image src="URL_OPT_DIR/quiqqer/payments/bin/images/screenshots/edit_payment.jpg"/>
+            <image src="URL_OPT_DIR/quiqqer/payments/bin/images/screenshots/add_payment.jpg"/>
+        </preview>
+
         <provider>
             <payment src="\QUI\ERP\Accounting\Payments\Provider"/>
             <orderProcess src="\QUI\ERP\Accounting\Payments\OrderProcessProvider"/>
