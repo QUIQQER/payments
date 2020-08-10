@@ -75,6 +75,14 @@ interface RecurringPaymentInterface
     public function isSubscriptionActiveAtPaymentProvider($subscriptionId);
 
     /**
+     * Checks if the subscription is active at QUIQQER
+     *
+     * @param string|int $subscriptionId - Payment provider subscription ID
+     * @return bool
+     */
+    public function isSubscriptionActiveAtQuiqqer($subscriptionId);
+
+    /**
      * Get IDs of all subscriptions
      *
      * @param bool $includeInactive (optional) - Include inactive subscriptions [default: false]
