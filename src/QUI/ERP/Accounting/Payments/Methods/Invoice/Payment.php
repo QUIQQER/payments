@@ -178,6 +178,17 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
     }
 
     /**
+     * Checks if the subscription is active at QUIQQER
+     *
+     * @param string|int $subscriptionId - Payment provider subscription ID
+     * @return bool
+     */
+    public function isSubscriptionActiveAtQuiqqer($subscriptionId)
+    {
+        return true;
+    }
+
+    /**
      * Get IDs of all subscriptions
      *
      * @param bool $includeInactive (optional) - Include inactive subscriptions [default: false]
