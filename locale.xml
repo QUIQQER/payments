@@ -223,6 +223,11 @@
             BIC:</p>
             ]]></en>
         </locale>
+
+        <locale name="invoice.information.text.cache">
+            <de><![CDATA[Betrag Bar erhalten]]></de>
+            <en><![CDATA[Amount received in cash]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/payments" datatype="js">
