@@ -217,6 +217,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         // not in area
         if (!empty($areasValue)) {
             $areasValue = \explode(',', $areasValue);
+            $areasValue = \array_filter($areasValue);
 
             if (!AreaUtils::isUserInAreas($User, $areasValue)) {
                 return false;
