@@ -306,7 +306,8 @@ class Gateway extends QUI\Utils\Singleton
     public function getGatewayUrl($params = [])
     {
         $host = $this->getHost();
-        $dir  = URL_OPT_DIR.'quiqqer/payments/bin/gateway.php';
+        //$dir  = URL_OPT_DIR.'quiqqer/payments/bin/gateway.php';
+        $dir  = URL_DIR.'PaymentsGateway'; // new url
 
         if (!\is_array($params)) {
             $params = [];

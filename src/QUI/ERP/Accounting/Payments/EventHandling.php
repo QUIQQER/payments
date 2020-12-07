@@ -70,12 +70,31 @@ class EventHandling
     }
 
     /**
+     * Called as an event when an error code/header is shown/returned
+     *
+     * @param $code
+     * @param $url
+     */
+    public static function onErrorHeaderShow($code, $url)
+    {
+        if ($code !== 404) {
+            return;
+        }
+
+        if ($url !== 'PaymentsGateway') {
+            return;
+        }
+
+        require_once OPT_DIR.'quiqqer/payments/bin/gateway.php';
+    }
+
+    /**
      * @param Package $Package
      * @throws QUI\Exception
      */
     public static function onPackageInstall(Package $Package)
     {
-        if ($Package->getName() != 'quiqqer/products') {
+        if ($Package->getName() != 'quiqqer/payments') {
             return;
         }
 
