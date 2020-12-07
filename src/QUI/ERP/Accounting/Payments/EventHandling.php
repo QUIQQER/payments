@@ -81,6 +81,10 @@ class EventHandling
             return;
         }
 
+        if (!isset($_REQUEST['_url'])) {
+            return;
+        }
+
         if ($_REQUEST['_url'] !== 'PaymentsGateway') {
             return;
         }
