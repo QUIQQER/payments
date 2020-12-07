@@ -5,5 +5,5 @@
     <event on="onQuiqqerOrderBasketToOrderEnd"
            fire="\QUI\ERP\Accounting\Payments\EventHandling::onQuiqqerOrderBasketToOrderEnd"
     />
-    <event on="onErrorHeaderShowBefore" fire="\QUI\ERP\Accounting\Payments\EventHandler::onErrorHeaderShow"/>
+    <event on="onErrorHeaderShowBefore" fire="\QUI\ERP\Accounting\Payments\EventHandling::onErrorHeaderShow"/>
 </events>

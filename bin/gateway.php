@@ -1,6 +1,6 @@
 <?php
 
-if (defined('QUIQQER_SYSTEM')) {
+if (!defined('QUIQQER_SYSTEM')) {
     define('QUIQQER_SYSTEM', true);
 }
 
