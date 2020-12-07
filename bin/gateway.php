@@ -1,6 +1,8 @@
 <?php
 
-define('QUIQQER_SYSTEM', true);
+if (!defined('QUIQQER_SYSTEM')) {
+    define('QUIQQER_SYSTEM', true);
+}
 
 require_once dirname(dirname(dirname(dirname(__FILE__)))).'/header.php';
 
