@@ -20,10 +20,12 @@ try {
         $_GET[Gateway::URL_PARAM_USER_REDIRECTED] = 1;
     }
 
-    if ((int)$_GET[Gateway::URL_PARAM_USER_REDIRECTED] === 1) {
-        QUI\Permissions\Permission::setUser(
-            QUI::getUsers()->getUserBySession()
-        );
+    $SessionUser = QUI::getUsers()->getUserBySession();
+    $Users       = QUI::getUsers();
+
+    if ((int)$_GET[Gateway::URL_PARAM_USER_REDIRECTED] === 1
+        && !$Users->isNobodyUser($SessionUser)) {
+        QUI\Permissions\Permission::setUser($SessionUser);
     } else {
         define('SYSTEM_INTERN', true);
 
