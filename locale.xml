@@ -396,6 +396,10 @@ Beispiel: Nachnahmegebühr: 10,00 €
             <de><![CDATA[Bestellinformationstext]]></de>
             <en><![CDATA[Order information text]]></en>
         </locale>
+        <locale name="grid.payments.type">
+            <de><![CDATA[Zahlungsmethode]]></de>
+            <en><![CDATA[Payment type]]></en>
+        </locale>
     </groups>
 
 </locales>
