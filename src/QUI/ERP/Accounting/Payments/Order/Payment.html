@@ -3,6 +3,10 @@
         <h1>{locale group="quiqqer/order" var="ordering.step.title.Payment"}</h1>
     </header>
 
+    <div class="quiqqer-order-step-payments-description">
+        {locale group="quiqqer/order" var="ordering.step.title.Payment.description"}
+    </div>
+
     <div class="quiqqer-order-step-payments-list">
         {foreach $payments as $Payment}
         <div class="quiqqer-order-step-payments-list-entry"
@@ -19,7 +23,7 @@
                 />
             </div>
             <div class="quiqqer-order-step-payments-list-entry-icon">
-                <img src="{$Payment->getIcon()}"/>
+                <img src="{$Payment->getIcon()}" alt="{$Payment->getTitle()}"/>
             </div>
             <div class="quiqqer-order-step-payments-list-entry-text">
                 <label for="payment-{$Payment->getId()}">

@@ -241,7 +241,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     dataType : 'number',
                     width    : 30
                 }, {
-                    header   : QUILocale.get(lg, 'payments.type'),
+                    header   : QUILocale.get(lg, 'grid.payments.type'),
                     dataIndex: 'paymentType_display',
                     dataType : 'string',
                     width    : 200
