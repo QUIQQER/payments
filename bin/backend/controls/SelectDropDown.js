@@ -83,6 +83,10 @@ define('package/quiqqer/payments/bin/backend/controls/SelectDropDown', [
                     );
                 }
 
+                self.addEvent('onChange', function () {
+                    self.$Input.value = self.getValue();
+                });
+
                 if (self.getAttribute('paymentMethodId')) {
                     self.setValue(self.getAttribute('paymentMethodId'));
                 }
