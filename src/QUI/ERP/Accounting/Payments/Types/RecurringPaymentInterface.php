@@ -32,11 +32,43 @@ interface RecurringPaymentInterface
     /**
      * Cancel a Subscription
      *
+     * This *permanently* cancels the subscription and prevents any future payments / automated payment collections.
+     *
      * @param int|string $subscriptionId
      * @param string $reason (optional) - The reason why the subscription is cancelled
      * @return void
      */
     public function cancelSubscription($subscriptionId, $reason = '');
+
+    /**
+     * Suspend a Subscription
+     *
+     * This *temporarily* suspends the automated collection of payments until explicitly resumed.
+     *
+     * @param int|string $subscriptionId
+     * @param string $note (optional) - Suspension note
+     * @return void
+     */
+    public function suspendSubscription($subscriptionId, string $note = null);
+
+    /**
+     * Resume a suspended Subscription
+     *
+     * This resumes automated collection of payments of a previously supsendes Subscription.
+     *
+     * @param int|string $subscriptionId
+     * @param string $note (optional) - Resume note
+     * @return void
+     */
+    public function resumeSubscription($subscriptionId, string $note = null);
+
+    /**
+     * Checks if a subscription is currently suspended
+     *
+     * @param int|string $subscriptionId
+     * @return bool
+     */
+    public function isSuspended($subscriptionId);
 
     /**
      * Sets a subscription as inactive (on the side of this QUIQQER system only!)
