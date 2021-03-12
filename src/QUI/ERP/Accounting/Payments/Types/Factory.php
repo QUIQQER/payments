@@ -100,18 +100,33 @@ class Factory extends QUI\CRUD\Factory
             }
         }
 
+        $PaymentLocale        = $PaymentMethod->getLocale();
+        $paymentLocaleCurrent = $PaymentLocale->getCurrent();
+        $languages            = QUI\Translator::getAvailableLanguages();
+        $title                = [];
+
+        foreach ($languages as $lang) {
+            $PaymentLocale->setCurrent($lang);
+            $PaymentMethod->setLocale($PaymentLocale);
+
+            $titleString = $PaymentMethod->getTitle();
+
+            if ($PaymentLocale->isLocaleString($titleString)) {
+                $titleString = $PaymentLocale->get('quiqqer/payments', 'new.payment.placeholder');
+            }
+
+            $title[$lang] = $titleString;
+        }
+
+        // Reset payment locale
+        $PaymentLocale->setCurrent($paymentLocaleCurrent);
+        $PaymentMethod->setLocale($PaymentLocale);
+
         /* @var $NewChild Payment */
         $NewChild = parent::createChild($data);
 
-        $this->createPaymentLocale(
-            'payment.'.$NewChild->getId().'.title',
-            '[quiqqer/payments] new.payment.paceholder'
-        );
-
-        $this->createPaymentLocale(
-            'payment.'.$NewChild->getId().'.workingTitle',
-            '[quiqqer/payments] new.payment.paceholder'
-        );
+        $this->createPaymentLocale('payment.'.$NewChild->getId().'.title', $title);
+        $this->createPaymentLocale('payment.'.$NewChild->getId().'.workingTitle', $title);
 
         $this->createPaymentLocale(
             'payment.'.$NewChild->getId().'.description',
@@ -207,7 +222,7 @@ class Factory extends QUI\CRUD\Factory
      * Creates a locale
      *
      * @param $var
-     * @param $title
+     * @param string|array $title
      */
     protected function createPaymentLocale($var, $title)
     {
@@ -217,19 +232,23 @@ class Factory extends QUI\CRUD\Factory
             'package'  => 'quiqqer/payments'
         ];
 
-        if (QUI::getLocale()->isLocaleString($title)) {
-            $parts     = QUI::getLocale()->getPartsOfLocaleString($title);
-            $languages = QUI\Translator::getAvailableLanguages();
+        if (\is_string($title)) {
+            if (QUI::getLocale()->isLocaleString($title)) {
+                $parts     = QUI::getLocale()->getPartsOfLocaleString($title);
+                $languages = QUI\Translator::getAvailableLanguages();
 
-            foreach ($languages as $language) {
-                $options[$language] = QUI::getLocale()->getByLang(
-                    $language,
-                    $parts[0],
-                    $parts[1]
-                );
+                foreach ($languages as $language) {
+                    $options[$language] = QUI::getLocale()->getByLang(
+                        $language,
+                        $parts[0],
+                        $parts[1]
+                    );
+                }
+            } else {
+                $options[$current] = $title;
             }
         } else {
-            $options[$current] = $title;
+            $options = \array_merge($options, $title);
         }
 
         try {
