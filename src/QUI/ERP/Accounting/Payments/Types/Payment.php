@@ -402,12 +402,19 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             $shipping = $Shipping->getTitle();
         }
 
+        $Config = QUI::getPackage('quiqqer/erp')->getConfig();
+
         return $Locale->get('quiqqer/payments', 'payment.'.$id.'.orderInformation', [
-            'orderId'  => $Order->getIdPrefix().$Order->getId(),
-            'shipping' => $shipping,
-            'paidDate' => $paidDate,
-            'paid'     => $Currency->format($paid),
-            'toPay'    => $Currency->format($toPay)
+            'orderId'           => $Order->getIdPrefix().$Order->getId(),
+            'shipping'          => $shipping,
+            'paidDate'          => $paidDate,
+            'paid'              => $Currency->format($paid),
+            'toPay'             => $Currency->format($toPay),
+            'bankName'          => $Config->get('company', 'bankName') ? $Config->get('company', 'bankName') : '',
+            'bankAccountNumber' => $Config->get('company', 'bankAccountNumber') ? $Config->get('company', 'bankAccountNumber') : '',
+            'bankIban'          => $Config->get('company', 'bankIban') ? $Config->get('company', 'bankIban') : '',
+            'bankCode'          => $Config->get('company', 'bankCode') ? $Config->get('company', 'bankCode') : '',
+            'bankBic'           => $Config->get('company', 'bankBic') ? $Config->get('company', 'bankBic') : ''
         ]);
     }
 

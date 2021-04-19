@@ -203,24 +203,24 @@
 
             <p>Bite überweisen Sie den Betrag in Höhe von [toPay] mit der Angabe der Bestellnummer <strong>[orderId]</strong> auf folgendes Konto:</p>
 
-            <p>Name der Bank</p>
+            <p>Name der Bank: [bankName]</p>
 
-            <p>Bankleitzahl:<br />
-            Konto:<br />
-            IBAN:<br />
-            BIC:</p>
+            <p>Bankleitzahl: [bankCode]<br />
+            Konto: [bankAccountNumber]<br />
+            IBAN: [bankIban]<br />
+            BIC:[bankBic]</p>
             ]]></de>
             <en><![CDATA[
             <p><strong>Payment information</strong></p>
 
             <p>Please transfer [toPay] with the indication of the order number <strong>[orderId]</strong> to the following account:</p>
 
-            <p>Name of the bank</p>
+            <p>Name of the bank: [bankName]</p>
 
-            <p>Bankleitzahl:<br />
-            Account:<br />
-            IBAN:<br />
-            BIC:</p>
+            <p>Bank code: [bankCode]<br />
+            Account: [bankAccountNumber]<br />
+            IBAN: [bankIban]<br />
+            BIC: [bankBic]</p>
             ]]></en>
         </locale>
 
