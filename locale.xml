@@ -201,13 +201,11 @@
             <de><![CDATA[
             <p><strong>Zahlungsinformationen</strong></p>
 
-            <p>Bite überweisen Sie den Betrag in Höhe von [toPay] mit der Angabe der Bestellnummer <strong>[orderId]</strong> auf folgendes Konto:</p>
+            <p>Bitte überweisen Sie den Betrag in Höhe von [toPay] mit der Angabe der Bestellnummer <strong>[orderId]</strong> auf folgendes Konto:</p>
 
             <p>Name der Bank: [bankName]</p>
 
-            <p>Bankleitzahl: [bankCode]<br />
-            Konto: [bankAccountNumber]<br />
-            IBAN: [bankIban]<br />
+            <p>IBAN: <strong>[bankIban]</strong><br />
             BIC:[bankBic]</p>
             ]]></de>
             <en><![CDATA[
@@ -217,10 +215,8 @@
 
             <p>Name of the bank: [bankName]</p>
 
-            <p>Bank code: [bankCode]<br />
-            Account: [bankAccountNumber]<br />
-            IBAN: [bankIban]<br />
-            BIC: [bankBic]</p>
+            <p>IBAN: <strong>[bankIban]</strong><br />
+            BIC: <strong>[bankBic]</strong></p>
             ]]></en>
         </locale>
 
