@@ -83,4 +83,15 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
                URL_OPT_DIR.
                'quiqqer/payments/bin/payments/Vorkasse.png';
     }
+
+    /**
+     * Return the extra text for the invoice
+     *
+     * @param QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
+     * @return string
+     */
+    public function getInvoiceInformationText($Invoice)
+    {
+        return QUI::getLocale()->get('quiqqer/payments', 'invoice.information.text.advancedPayment');
+    }
 }

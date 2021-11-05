@@ -224,6 +224,10 @@
             <de><![CDATA[Betrag Bar erhalten]]></de>
             <en><![CDATA[Amount received in cash]]></en>
         </locale>
+        <locale name="invoice.information.text.advancedPayment">
+            <de><![CDATA[Betrag per Vorkasse erhalten]]></de>
+            <en><![CDATA[Amount received in advance]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/payments" datatype="js">
