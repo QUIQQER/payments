@@ -204,9 +204,9 @@
             <p>Bitte überweisen Sie den Betrag in Höhe von [toPay] mit der Angabe der Bestellnummer <strong>[orderId]</strong> auf folgendes Konto:</p>
 
             <p>Name der Bank: [bankName]</p>
-
+            <p>Begünstigter: <strong>[company]</strong><br />
             <p>IBAN: <strong>[bankIban]</strong><br />
-            BIC:[bankBic]</p>
+            BIC: [bankBic]</p>
             ]]></de>
             <en><![CDATA[
             <p><strong>Payment information</strong></p>
@@ -214,7 +214,7 @@
             <p>Please transfer [toPay] with the indication of the order number <strong>[orderId]</strong> to the following account:</p>
 
             <p>Name of the bank: [bankName]</p>
-
+            <p>Beneficiary: <strong>[company]</strong><br />
             <p>IBAN: <strong>[bankIban]</strong><br />
             BIC: <strong>[bankBic]</strong></p>
             ]]></en>
