@@ -89,7 +89,7 @@ class EventHandling
             return;
         }
 
-        require_once OPT_DIR.'quiqqer/payments/bin/gateway.php';
+        require_once OPT_DIR . 'quiqqer/payments/bin/gateway.php';
     }
 
     /**
@@ -247,7 +247,8 @@ class EventHandling
             'calculation' => QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT,
             'basis'       => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
             'value'       => $Payment->getPaymentFee(),
-            'visible'     => true
+            'visible'     => true,
+            'currency'    => $Order->getCurrency()->getCode()
         ]);
 
         $PriceFactors = $Products->getPriceFactors();
