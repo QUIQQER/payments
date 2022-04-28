@@ -7,6 +7,7 @@
 namespace QUI\ERP\Accounting\Payments\Methods\Free;
 
 use QUI;
+use QUI\CRUD\Factory;
 
 /**
  * Class PaymentType
@@ -15,8 +16,14 @@ use QUI;
  *
  * @package QUI\ERP\Accounting\Payments\Methods\Free\PaymentType
  */
-class PaymentType extends QUI\QDOM implements QUI\ERP\Accounting\Payments\Types\PaymentInterface
+class PaymentType
+    extends QUI\ERP\Accounting\Payments\Types\Payment
+    implements QUI\ERP\Accounting\Payments\Types\PaymentInterface
 {
+    public function __construct($id, Factory $Factory)
+    {
+    }
+    
     /**
      * @return array
      */
