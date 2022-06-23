@@ -143,7 +143,7 @@ class Payments extends QUI\Utils\Singleton
     public function getPayment($paymentId)
     {
         if ((int)$paymentId == Methods\Free\Payment::ID) {
-            return new Methods\Free\PaymentType();
+            return new Methods\Free\PaymentType(Methods\Free\Payment::ID, new Factory());
         }
 
         /* @var $Payment Payment */
