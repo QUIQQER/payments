@@ -17,8 +17,8 @@ define('package/quiqqer/payments/bin/backend/controls/Select', [
 ], function (QUI, QUIElementSelect, Handler, QUILocale) {
     "use strict";
 
-    var lg       = 'quiqqer/payments';
-    var Payments = new Handler();
+    const lg = 'quiqqer/payments';
+    const Payments = new Handler();
 
     /**
      * @class package/quiqqer/payments/bin/backend/controls/Select
@@ -62,8 +62,33 @@ define('package/quiqqer/payments/bin/backend/controls/Select', [
          * @returns {Promise}
          */
         paymentSearch: function (value) {
-            return Payments.search({
-                freetext: value
+            const current = QUILocale.getCurrent();
+
+            return Payments.getPayments().then(function (result) {
+                result = result.filter(function (entry) {
+                    let title = JSON.stringify(entry.title).toLowerCase();
+
+                    return title.indexOf(value.toLowerCase()) !== -1;
+                });
+
+                result = result.map(function (entry) {
+                    let title = '';
+
+                    if (typeof entry.title[current] !== 'undefined') {
+                        title = entry.title[current];
+                    }
+
+                    if (title === '') {
+                        title = entry.title[Object.keys(entry.title)[0]];
+                    }
+
+                    return {
+                        id   : entry.id,
+                        title: title
+                    };
+                });
+                
+                return result;
             });
         },
 
@@ -80,7 +105,7 @@ define('package/quiqqer/payments/bin/backend/controls/Select', [
                 new Search({
                     events: {
                         onSubmit: function (Win, values) {
-                            for (var i = 0, len = values.length; i < len; i++) {
+                            for (let i = 0, len = values.length; i < len; i++) {
                                 self.addItem(parseInt(values[i].id));
                             }
                         }

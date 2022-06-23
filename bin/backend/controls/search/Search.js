@@ -18,7 +18,7 @@ define('package/quiqqer/payments/bin/backend/controls/search/Search', [
     "use strict";
 
     var Payments = new Handler();
-    var lg       = 'quiqqer/payments';
+    var lg = 'quiqqer/payments';
 
     return new Class({
 
@@ -39,8 +39,8 @@ define('package/quiqqer/payments/bin/backend/controls/search/Search', [
             this.parent(options);
 
             this.$Container = null;
-            this.$Grid      = null;
-            this.$Input     = null;
+            this.$Grid = null;
+            this.$Input = null;
         },
 
         /**
@@ -68,39 +68,46 @@ define('package/quiqqer/payments/bin/backend/controls/search/Search', [
             this.$Container.inject(this.$Elm);
 
             this.$Grid = new Grid(this.$Container, {
-                columnModel      : [{
-                    header   : QUILocale.get('quiqqer/system', 'priority'),
-                    dataIndex: 'priority',
-                    dataType : 'number',
-                    width    : 50
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'status'),
-                    dataIndex: 'status',
-                    dataType : 'node',
-                    width    : 60,
-                    className: 'grid-align-center'
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
-                    dataIndex: 'title',
-                    dataType : 'string',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'workingtitle'),
-                    dataIndex: 'workingTitle',
-                    dataType : 'string',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'id'),
-                    dataIndex: 'id',
-                    dataType : 'number',
-                    width    : 30
-                }, {
-                    header   : QUILocale.get(lg, 'payments.type'),
-                    dataIndex: 'paymentType_display',
-                    dataType : 'string',
-                    width    : 200
-                }],
-                pagination       : true,
+                columnModel      : [
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'priority'),
+                        dataIndex: 'priority',
+                        dataType : 'number',
+                        width    : 50
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'status'),
+                        dataIndex: 'status',
+                        dataType : 'node',
+                        width    : 60,
+                        className: 'grid-align-center'
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        dataIndex: 'title',
+                        dataType : 'string',
+                        width    : 200
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'workingtitle'),
+                        dataIndex: 'workingTitle',
+                        dataType : 'string',
+                        width    : 200
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        dataIndex: 'id',
+                        dataType : 'number',
+                        width    : 30
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'grid.payments.type'),
+                        dataIndex: 'paymentType_display',
+                        dataType : 'string',
+                        width    : 200
+                    }
+                ],
+                pagination       : false,
                 filterInput      : true,
                 perPage          : this.getAttribute('limit'),
                 page             : this.getAttribute('page'),
