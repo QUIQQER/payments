@@ -376,12 +376,12 @@ Beispiel: Nachnahmegebühr: 10,00 €
         </locale>
 
         <locale name="window.search.title">
-            <de><![CDATA[Eine Bezahlmethode suchen]]></de>
-            <en><![CDATA[Search for a payment]]></en>
+            <de><![CDATA[Eine Zahlungsart suchen]]></de>
+            <en><![CDATA[Search for a payment type]]></en>
         </locale>
         <locale name="control.select.search.placeholder">
-            <de><![CDATA[Eine Bezahlmethode suchen]]></de>
-            <en><![CDATA[Search for a payment]]></en>
+            <de><![CDATA[Eine Zahlungsart suchen]]></de>
+            <en><![CDATA[Search for a payment type]]></en>
         </locale>
         <locale name="payment.type.panel.title">
             <de><![CDATA[Zahlungsart: ---]]></de>
