@@ -7,11 +7,15 @@
 namespace QUI\ERP\Accounting\Payments;
 
 use QUI;
-use QUI\Package\Package;
 use QUI\ERP\Accounting\Payments\Methods;
 use QUI\ERP\Accounting\Payments\Types\Factory;
 use QUI\ERP\Accounting\Payments\Types\Payment;
 use QUI\ERP\Order\OrderInterface;
+use QUI\Package\Package;
+
+use function array_flip;
+use function array_map;
+use function method_exists;
 
 /**
  * Class EventHandling
@@ -107,12 +111,12 @@ class EventHandling
         $Factory  = new Factory();
         $children = $Factory->getChildren();
 
-        $existingTypes = \array_map(function ($PaymentType) {
+        $existingTypes = array_map(function ($PaymentType) {
             /* @var $PaymentType QUI\ERP\Accounting\Payments\Types\Payment */
             return $PaymentType->getAttribute('payment_type');
         }, $children);
 
-        $existingTypes = \array_flip($existingTypes);
+        $existingTypes = array_flip($existingTypes);
 
 
         if (!isset($existingTypes[Methods\AdvancePayment\Payment::class])) {
@@ -262,8 +266,13 @@ class EventHandling
 
         $Order->getArticles()->calc();
 
-        if (\method_exists($Order, 'save')) {
+        if (method_exists($Order, 'save')) {
             $Order->save();
         }
+    }
+
+    public static function onUpdateEnd()
+    {
+        QUI\Cache\Manager::clear('package/quiqqer/payments/provider');
     }
 }
