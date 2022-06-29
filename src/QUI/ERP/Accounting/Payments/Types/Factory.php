@@ -9,6 +9,12 @@ namespace QUI\ERP\Accounting\Payments\Types;
 use QUI;
 use QUI\Permissions\Permission;
 
+use function array_merge;
+use function class_exists;
+use function count;
+use function is_integer;
+use function is_string;
+
 /**
  * Class Factory
  *
@@ -45,23 +51,23 @@ class Factory extends QUI\CRUD\Factory
      */
     public function createChild($data = [])
     {
-        if (!isset($data['active']) || !\is_integer($data['active'])) {
+        if (!isset($data['active']) || !is_integer($data['active'])) {
             $data['active'] = 0;
         }
 
-        if (!isset($data['purchase_quantity_from']) || !\is_integer($data['purchase_quantity_from'])) {
+        if (!isset($data['purchase_quantity_from']) || !is_integer($data['purchase_quantity_from'])) {
             $data['purchase_quantity_from'] = 0;
         }
 
-        if (!isset($data['purchase_quantity_until']) || !\is_integer($data['purchase_quantity_until'])) {
+        if (!isset($data['purchase_quantity_until']) || !is_integer($data['purchase_quantity_until'])) {
             $data['purchase_quantity_until'] = 0;
         }
 
-        if (!isset($data['priority']) || !\is_integer($data['priority'])) {
+        if (!isset($data['priority']) || !is_integer($data['priority'])) {
             $data['priority'] = 0;
         }
 
-        if (!isset($data['payment_type']) || !\class_exists($data['payment_type'])) {
+        if (!isset($data['payment_type']) || !class_exists($data['payment_type'])) {
             throw new QUI\ERP\Accounting\Payments\Exception([
                 'quiqqer/payments',
                 'exception.create.payment.class.not.found'
@@ -92,7 +98,7 @@ class Factory extends QUI\CRUD\Factory
                 ]
             ]);
 
-            if (\count($children)) {
+            if (count($children)) {
                 throw new QUI\ERP\Accounting\Payments\Exception([
                     'quiqqer/payments',
                     'exception.create.unique.payment.already.exists'
@@ -125,22 +131,22 @@ class Factory extends QUI\CRUD\Factory
         /* @var $NewChild Payment */
         $NewChild = parent::createChild($data);
 
-        $this->createPaymentLocale('payment.'.$NewChild->getId().'.title', $title);
-        $this->createPaymentLocale('payment.'.$NewChild->getId().'.workingTitle', $title);
+        $this->createPaymentLocale('payment.' . $NewChild->getId() . '.title', $title);
+        $this->createPaymentLocale('payment.' . $NewChild->getId() . '.workingTitle', $title);
 
         $this->createPaymentLocale(
-            'payment.'.$NewChild->getId().'.description',
+            'payment.' . $NewChild->getId() . '.description',
             '&nbsp;'
         );
 
         if ($PaymentMethod instanceof QUI\ERP\Accounting\Payments\Methods\AdvancePayment\Payment) {
             $this->createPaymentLocale(
-                'payment.'.$NewChild->getId().'.orderInformation',
+                'payment.' . $NewChild->getId() . '.orderInformation',
                 '[quiqqer/payments] advanced.payment.default.text'
             );
         } else {
             $this->createPaymentLocale(
-                'payment.'.$NewChild->getId().'.orderInformation',
+                'payment.' . $NewChild->getId() . '.orderInformation',
                 '&nbsp;'
             );
         }
@@ -232,7 +238,7 @@ class Factory extends QUI\CRUD\Factory
             'package'  => 'quiqqer/payments'
         ];
 
-        if (\is_string($title)) {
+        if (is_string($title)) {
             if (QUI::getLocale()->isLocaleString($title)) {
                 $parts     = QUI::getLocale()->getPartsOfLocaleString($title);
                 $languages = QUI\Translator::getAvailableLanguages();
@@ -248,7 +254,7 @@ class Factory extends QUI\CRUD\Factory
                 $options[$current] = $title;
             }
         } else {
-            $options = \array_merge($options, $title);
+            $options = array_merge($options, $title);
         }
 
         try {

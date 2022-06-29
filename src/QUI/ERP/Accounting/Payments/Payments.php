@@ -7,10 +7,15 @@
 namespace QUI\ERP\Accounting\Payments;
 
 use QUI;
+use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
+use QUI\ERP\Accounting\Payments\Api\AbstractPaymentProvider;
 use QUI\ERP\Accounting\Payments\Types\Factory;
 use QUI\ERP\Accounting\Payments\Types\Payment;
-use QUI\ERP\Accounting\Payments\Api\AbstractPaymentProvider;
-use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
+
+use function array_filter;
+use function array_merge;
+use function class_exists;
+use function trim;
 
 /**
  * Payments
@@ -22,14 +27,14 @@ class Payments extends QUI\Utils\Singleton
     /**
      * @var array
      */
-    protected $payments = [];
+    protected array $payments = [];
 
     /**
      * Return all available payment provider
      *
      * @return array
      */
-    public function getPaymentProviders()
+    public function getPaymentProviders(): array
     {
         $cacheProvider = 'package/quiqqer/payments/provider';
 
@@ -47,7 +52,7 @@ class Payments extends QUI\Utils\Singleton
                     $Package = QUI::getPackage($package);
 
                     if ($Package->isQuiqqerPackage()) {
-                        $providers = \array_merge($providers, $Package->getProvider('payment'));
+                        $providers = array_merge($providers, $Package->getProvider('payment'));
                     }
                 } catch (QUI\Exception $Exception) {
                 }
@@ -85,7 +90,7 @@ class Payments extends QUI\Utils\Singleton
      *
      * @return array
      */
-    public function getPaymentTypes()
+    public function getPaymentTypes(): array
     {
         $payments  = [];
         $providers = $this->getPaymentProviders();
@@ -94,7 +99,7 @@ class Payments extends QUI\Utils\Singleton
             $providerPayments = $Provider->getPaymentTypes();
 
             foreach ($providerPayments as $providerPayment) {
-                if (!\class_exists($providerPayment)) {
+                if (!class_exists($providerPayment)) {
                     continue;
                 }
 
@@ -114,7 +119,7 @@ class Payments extends QUI\Utils\Singleton
      * @return AbstractPayment
      * @throws Exception
      */
-    public function getPaymentType($paymentHash)
+    public function getPaymentType($paymentHash): AbstractPayment
     {
         $types = $this->getPaymentTypes();
 
@@ -163,7 +168,7 @@ class Payments extends QUI\Utils\Singleton
      * @param array $queryParams
      * @return array
      */
-    public function getPayments($queryParams = [])
+    public function getPayments(array $queryParams = []): array
     {
         if (!isset($queryParams['order'])) {
             $queryParams['order'] = 'priority ASC';
@@ -182,24 +187,22 @@ class Payments extends QUI\Utils\Singleton
      * @param \QUI\Interfaces\Users\User|null $User - optional
      * @return array
      */
-    public function getUserPayments($User = null)
+    public function getUserPayments(QUI\Interfaces\Users\User $User = null): array
     {
         if ($User === null) {
             $User = QUI::getUserBySession();
         }
 
-        $payments = \array_filter($this->getPayments(), function ($Payment) use ($User) {
+        return array_filter($this->getPayments(), function ($Payment) use ($User) {
             /* @var $Payment Payment */
             return $Payment->canUsedBy($User);
         });
-
-        return $payments;
     }
 
     /**
-     * @return bool|string
+     * @return string
      */
-    public function getHost()
+    public function getHost(): string
     {
         try {
             $Project = QUI::getRewrite()->getProject();
@@ -214,8 +217,6 @@ class Payments extends QUI\Utils\Singleton
         }
 
         $host = $Project->getVHost(true, true);
-        $host = \trim($host, '/');
-
-        return $host;
+        return trim($host, '/');
     }
 }

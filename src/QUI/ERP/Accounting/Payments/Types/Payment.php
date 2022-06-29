@@ -8,12 +8,20 @@ namespace QUI\ERP\Accounting\Payments\Types;
 
 use QUI;
 use QUI\CRUD\Factory;
-use QUI\Translator;
-use QUI\Permissions\Permission;
-
-use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\Accounting\Payments\Api;
 use QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed;
+use QUI\ERP\Areas\Utils as AreaUtils;
+use QUI\Permissions\Permission;
+use QUI\Translator;
+
+use function array_filter;
+use function explode;
+use function floatval;
+use function is_double;
+use function is_float;
+use function is_string;
+use function strtotime;
+use function time;
 
 /**
  * Class Payment
@@ -42,7 +50,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
             $paymentFee = $this->getAttribute('paymentFee');
 
-            if ($paymentFee && !\is_float($paymentFee) && !\is_double($paymentFee)) {
+            if ($paymentFee && !is_float($paymentFee) && !is_double($paymentFee)) {
                 $paymentFee = QUI\ERP\Money\Price::validatePrice($paymentFee);
 
                 $this->setAttribute('paymentFee', $paymentFee);
@@ -70,25 +78,25 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             $attributes['title'][$language] = $Locale->getByLang(
                 $language,
                 $lg,
-                'payment.'.$id.'.title'
+                'payment.' . $id . '.title'
             );
 
             $attributes['description'][$language] = $Locale->getByLang(
                 $language,
                 $lg,
-                'payment.'.$id.'.description'
+                'payment.' . $id . '.description'
             );
 
             $attributes['workingTitle'][$language] = $Locale->getByLang(
                 $language,
                 $lg,
-                'payment.'.$id.'.workingTitle'
+                'payment.' . $id . '.workingTitle'
             );
 
             $attributes['orderInformation'][$language] = $Locale->getByLang(
                 $language,
                 $lg,
-                'payment.'.$id.'.orderInformation'
+                'payment.' . $id . '.orderInformation'
             );
         }
 
@@ -195,13 +203,13 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         // usage definitions / limits
         $dateFrom  = $this->getAttribute('date_from');
         $dateUntil = $this->getAttribute('date_until');
-        $now       = \time();
+        $now       = time();
 
-        if ($dateFrom && \strtotime($dateFrom) > $now) {
+        if ($dateFrom && strtotime($dateFrom) > $now) {
             return false;
         }
 
-        if ($dateUntil && \strtotime($dateUntil) < $now) {
+        if ($dateUntil && strtotime($dateUntil) < $now) {
             return false;
         }
 
@@ -216,8 +224,8 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         // not in area
         if (!empty($areasValue)) {
-            $areasValue = \explode(',', $areasValue);
-            $areasValue = \array_filter($areasValue);
+            $areasValue = explode(',', $areasValue);
+            $areasValue = array_filter($areasValue);
 
             if (!AreaUtils::isUserInAreas($User, $areasValue)) {
                 return false;
@@ -329,7 +337,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         return $Locale->get(
             'quiqqer/payments',
-            'payment.'.$this->getId().'.title'
+            'payment.' . $this->getId() . '.title'
         );
     }
 
@@ -347,7 +355,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         return $Locale->get(
             'quiqqer/payments',
-            'payment.'.$this->getId().'.description'
+            'payment.' . $this->getId() . '.description'
         );
     }
 
@@ -365,7 +373,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         return $Locale->get(
             'quiqqer/payments',
-            'payment.'.$this->getId().'.workingTitle'
+            'payment.' . $this->getId() . '.workingTitle'
         );
     }
 
@@ -404,8 +412,8 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         $Config = QUI::getPackage('quiqqer/erp')->getConfig();
 
-        return $Locale->get('quiqqer/payments', 'payment.'.$id.'.orderInformation', [
-            'orderId'           => $Order->getIdPrefix().$Order->getId(),
+        return $Locale->get('quiqqer/payments', 'payment.' . $id . '.orderInformation', [
+            'orderId'           => $Order->getIdPrefix() . $Order->getId(),
             'shipping'          => $shipping,
             'paidDate'          => $paidDate,
             'paid'              => $Currency->format($paid),
@@ -456,7 +464,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     public function setTitle(array $titles)
     {
         $this->setPaymentLocale(
-            'payment.'.$this->getId().'.title',
+            'payment.' . $this->getId() . '.title',
             $titles
         );
     }
@@ -469,7 +477,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     public function setDescription(array $descriptions)
     {
         $this->setPaymentLocale(
-            'payment.'.$this->getId().'.description',
+            'payment.' . $this->getId() . '.description',
             $descriptions
         );
     }
@@ -482,7 +490,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     public function setOrderInformation(array $orderInformation)
     {
         $this->setPaymentLocale(
-            'payment.'.$this->getId().'.orderInformation',
+            'payment.' . $this->getId() . '.orderInformation',
             $orderInformation
         );
     }
@@ -495,7 +503,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     public function setWorkingTitle(array $titles)
     {
         $this->setPaymentLocale(
-            'payment.'.$this->getId().'.workingTitle',
+            'payment.' . $this->getId() . '.workingTitle',
             $titles
         );
     }
@@ -530,8 +538,8 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
                 continue;
             }
 
-            $data[$language]         = $title[$language];
-            $data[$language.'_edit'] = $title[$language];
+            $data[$language]           = $title[$language];
+            $data[$language . '_edit'] = $title[$language];
         }
 
         $exists = Translator::getVarData('quiqqer/payments', $var, 'quiqqer/payments');
@@ -564,7 +572,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     public function setPaymentFeeTitle(array $titles)
     {
         $this->setPaymentLocale(
-            'payment.'.$this->getId().'.paymentFeeTitle',
+            'payment.' . $this->getId() . '.paymentFeeTitle',
             $titles
         );
     }
@@ -580,15 +588,15 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Set the payment fee title
      *
-     * @param string|float|double $paymentFee
+     * @param string|float $paymentFee
      */
     public function setPaymentFee($paymentFee)
     {
-        if (\is_string($paymentFee)) {
-            $paymentFee = \floatval($paymentFee);
+        if (is_string($paymentFee)) {
+            $paymentFee = floatval($paymentFee);
         }
 
-        if (!\is_float($paymentFee) && !\is_double($paymentFee)) {
+        if (!is_float($paymentFee) && !is_double($paymentFee)) {
             return;
         }
 
@@ -608,7 +616,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             return false;
         }
 
-        return !empty(\floatval($paymentFee));
+        return !empty(floatval($paymentFee));
     }
 
     /**
@@ -624,7 +632,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             return 0;
         }
 
-        return \floatval($paymentFee);
+        return floatval($paymentFee);
     }
 
     /**
@@ -641,7 +649,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         return $Locale->get(
             'quiqqer/payments',
-            'payment.'.$this->getId().'.paymentFeeTitle'
+            'payment.' . $this->getId() . '.paymentFeeTitle'
         );
     }
 
