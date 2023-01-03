@@ -7,6 +7,10 @@
 namespace QUI\ERP\Accounting\Payments\Order;
 
 use QUI;
+use QUI\ERP\Accounting\Payments\Types\Factory;
+
+use function array_filter;
+use function array_values;
 
 /**
  * Class Payment
@@ -24,7 +28,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     {
         parent::__construct($attributes);
 
-        $this->addCSSFile(dirname(__FILE__).'/Payment.css');
+        $this->addCSSFile(dirname(__FILE__) . '/Payment.css');
     }
 
     /**
@@ -68,7 +72,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
             'payments'        => $payments
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/Payment.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/Payment.html');
     }
 
     /**
@@ -97,7 +101,6 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
                 'exception.missing.payment'
             ]);
         }
-
         // @todo validate customer payment data
     }
 
@@ -154,15 +157,15 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $payments     = [];
         $calculations = $Articles->getCalculations();
-        // leave this line even if it's curios
+        // leave this line even if it's strange
         // floatval sum === 0 doesn't work -> floatval => float, 0 = int
         if ($calculations['sum'] >= 0 && $calculations['sum'] <= 0) {
-            $payments[] = new QUI\ERP\Accounting\Payments\Methods\Free\PaymentType();
+            $payments[] = new QUI\ERP\Accounting\Payments\Methods\Free\PaymentType(0, new Factory());
         } else {
             $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
             $payments = $Payments->getUserPayments($User);
 
-            $payments = \array_filter($payments, function ($Payment) use ($Order) {
+            $payments = array_filter($payments, function ($Payment) use ($Order) {
                 /* @var $Payment QUI\ERP\Accounting\Payments\Types\Payment */
                 if ($Payment->canUsedInOrder($Order) === false) {
                     return false;
@@ -171,7 +174,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
                 return $Payment->getPaymentType()->isVisible($Order);
             });
 
-            $payments = \array_values($payments);
+            $payments = array_values($payments);
         }
 
         return $payments;
