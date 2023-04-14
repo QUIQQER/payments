@@ -18,8 +18,8 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
 ], function (QUI, QUIPanel, QUIConfirm, QUIButton, Payments, Grid, Mustache, QUILocale) {
     "use strict";
 
-    var lg      = 'quiqqer/payments';
-    var current = QUILocale.getCurrent();
+    const lg = 'quiqqer/payments';
+    const current = QUILocale.getCurrent();
 
     return new Class({
 
@@ -75,7 +75,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
 
             this.Loader.show();
 
-            var self = this;
+            const self = this;
 
             this.$Grid.getButtons().filter(function (Btn) {
                 return Btn.getAttribute('name') === 'edit';
@@ -87,10 +87,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
 
 
             Payments.getPayments().then(function (result) {
-                var toggle = function (Btn) {
-                    var data      = Btn.getAttribute('data'),
-                        paymentId = data.id,
-                        status    = parseInt(data.active);
+                const toggle = function (Btn) {
+                    const data      = Btn.getAttribute('data'),
+                          paymentId = data.id,
+                          status    = parseInt(data.active);
 
 
                     Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
@@ -103,9 +103,9 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     Payments.activatePayment(paymentId);
                 };
 
-                var i, len, entry, title, workingTitle;
+                let i, len, entry, title, workingTitle;
 
-                var gridResult = [];
+                const gridResult = [];
 
                 for (i = 0, len = result.length; i < len; i++) {
                     entry = result[i];
@@ -158,7 +158,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                         workingTitle = entry.workingTitle[current];
                     }
 
-                    entry.title        = title;
+                    entry.title = title;
                     entry.workingTitle = workingTitle;
 
                     if ("paymentType" in entry && entry.paymentType) {
@@ -167,7 +167,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
 
                     gridResult.push(entry);
                 }
-                
+
                 self.$Grid.setData({
                     data: gridResult
                 });
@@ -180,7 +180,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
          * event: on create
          */
         $onCreate: function () {
-            var Container = new Element('div', {
+            const Container = new Element('div', {
                 styles: {
                     minHeight: 300,
                     width    : '100%'
@@ -188,64 +188,76 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
             }).inject(this.getContent());
 
             this.$Grid = new Grid(Container, {
-                buttons    : [{
-                    name     : 'add',
-                    text     : QUILocale.get('quiqqer/quiqqer', 'add'),
-                    textimage: 'fa fa-plus',
-                    events   : {
-                        onClick: this.$openCreateDialog
+                buttons    : [
+                    {
+                        name     : 'add',
+                        text     : QUILocale.get('quiqqer/quiqqer', 'add'),
+                        textimage: 'fa fa-plus',
+                        events   : {
+                            onClick: this.$openCreateDialog
+                        }
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        name     : 'edit',
+                        text     : QUILocale.get('quiqqer/quiqqer', 'edit'),
+                        textimage: 'fa fa-edit',
+                        disabled : true,
+                        events   : {
+                            onClick: this.$onEditClick
+                        }
+                    },
+                    {
+                        name     : 'delete',
+                        text     : QUILocale.get('quiqqer/system', 'delete'),
+                        textimage: 'fa fa-trash',
+                        disabled : true,
+                        events   : {
+                            onClick: this.$openDeleteDialog
+                        }
                     }
-                }, {
-                    type: 'separator'
-                }, {
-                    name     : 'edit',
-                    text     : QUILocale.get('quiqqer/quiqqer', 'edit'),
-                    textimage: 'fa fa-edit',
-                    disabled : true,
-                    events   : {
-                        onClick: this.$onEditClick
+                ],
+                columnModel: [
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'priority'),
+                        dataIndex: 'priority',
+                        dataType : 'number',
+                        width    : 50
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'status'),
+                        dataIndex: 'status',
+                        dataType : 'button',
+                        width    : 60,
+                        className: 'grid-align-center'
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        dataIndex: 'title',
+                        dataType : 'string',
+                        width    : 200
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'workingtitle'),
+                        dataIndex: 'workingTitle',
+                        dataType : 'string',
+                        width    : 200
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        dataIndex: 'id',
+                        dataType : 'number',
+                        width    : 30
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'grid.payments.type'),
+                        dataIndex: 'paymentType_display',
+                        dataType : 'string',
+                        width    : 200
                     }
-                }, {
-                    name     : 'delete',
-                    text     : QUILocale.get('quiqqer/system', 'delete'),
-                    textimage: 'fa fa-trash',
-                    disabled : true,
-                    events   : {
-                        onClick: this.$openDeleteDialog
-                    }
-                }],
-                columnModel: [{
-                    header   : QUILocale.get('quiqqer/system', 'priority'),
-                    dataIndex: 'priority',
-                    dataType : 'number',
-                    width    : 50
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'status'),
-                    dataIndex: 'status',
-                    dataType : 'button',
-                    width    : 60,
-                    className: 'grid-align-center'
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
-                    dataIndex: 'title',
-                    dataType : 'string',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'workingtitle'),
-                    dataIndex: 'workingTitle',
-                    dataType : 'string',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'id'),
-                    dataIndex: 'id',
-                    dataType : 'number',
-                    width    : 30
-                }, {
-                    header   : QUILocale.get(lg, 'grid.payments.type'),
-                    dataIndex: 'paymentType_display',
-                    dataType : 'string',
-                    width    : 200
-                }]
+                ]
             });
 
             this.$Grid.addEvents({
@@ -283,13 +295,13 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                 return;
             }
 
-            var Body = this.getContent();
+            const Body = this.getContent();
 
             if (!Body) {
                 return;
             }
 
-            var size = Body.getSize();
+            const size = Body.getSize();
             this.$Grid.setHeight(size.y - 40);
             this.$Grid.setWidth(size.x - 40);
         },
@@ -322,7 +334,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
          * event: on edit
          */
         $onEditClick: function () {
-            var data = this.$Grid.getSelectedData();
+            const data = this.$Grid.getSelectedData();
 
             if (data.length) {
                 this.openPayment(data[0].id);
@@ -333,7 +345,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
          * open the add dialog
          */
         $openCreateDialog: function () {
-            var self = this;
+            const self = this;
 
             new QUIConfirm({
                 icon       : 'fa fa-plus',
@@ -346,12 +358,12 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                 maxWidth   : 600,
                 events     : {
                     onOpen  : function (Win) {
-                        var Content = Win.getContent(),
-                            Body    = Content.getElement('.textbody');
+                        const Content = Win.getContent(),
+                              Body    = Content.getElement('.textbody');
 
                         Win.Loader.show();
 
-                        var Container = new Element('div', {
+                        const Container = new Element('div', {
                             html  : QUILocale.get(lg, 'window.create.paymentType'),
                             styles: {
                                 clear      : 'both',
@@ -362,7 +374,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                             }
                         }).inject(Body, 'after');
 
-                        var Select = new Element('select', {
+                        const Select = new Element('select', {
                             styles: {
                                 marginTop: 10,
                                 maxWidth : '100%',
@@ -371,7 +383,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                         }).inject(Container);
 
                         Payments.getPaymentTypes().then(function (result) {
-                            for (var i in result) {
+                            for (const i in result) {
                                 if (!result.hasOwnProperty(i)) {
                                     continue;
                                 }
@@ -390,7 +402,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     onSubmit: function (Win) {
                         Win.Loader.show();
 
-                        var Select = Win.getContent().getElement('select');
+                        const Select = Win.getContent().getElement('select');
 
                         Payments.createPayment(Select.value).then(function (newId) {
                             Win.close();
@@ -408,14 +420,14 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
          * open the add dialog
          */
         $openDeleteDialog: function () {
-            var selected = this.$Grid.getSelectedData();
+            const selected = this.$Grid.getSelectedData();
 
             if (!selected.length) {
                 return;
             }
 
-            var self      = this,
-                payment   = selected[0].title,
+            const self = this;
+            let payment   = selected[0].title,
                 paymentId = selected[0].id;
 
             if (payment === '') {
@@ -457,14 +469,14 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
          * looks at the grid
          */
         $refreshButtonStatus: function () {
-            var selected = this.$Grid.getSelectedIndices(),
-                buttons  = this.$Grid.getButtons();
+            const selected = this.$Grid.getSelectedIndices(),
+                  buttons  = this.$Grid.getButtons();
 
-            var Edit = buttons.filter(function (Btn) {
+            const Edit = buttons.filter(function (Btn) {
                 return Btn.getAttribute('name') === 'edit';
             })[0];
 
-            var Delete = buttons.filter(function (Btn) {
+            const Delete = buttons.filter(function (Btn) {
                 return Btn.getAttribute('name') === 'delete';
             })[0];
 
