@@ -533,6 +533,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         ];
 
         $languages = QUI::availableLanguages();
+        $Locale = QUI::getLocale();
 
         foreach ($languages as $language) {
             if (!isset($title[$language])) {
@@ -542,11 +543,11 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             $str = $title[$language];
 
             if (QUI::getLocale()->isLocaleString($str)) {
-                $parts = QUI::getLocale()->getPartsOfLocaleString($str);
+                $parts = $Locale->getPartsOfLocaleString($str);
 
                 if (count($parts) === 2) {
-                    $data[$language] = QUI::getLocale()->getByLang($language, $parts[0], $parts[1]);
-                    $data[$language . '_edit'] = QUI::getLocale()->getByLang($language, $parts[0], $parts[1]);
+                    $data[$language] = $Locale->getByLang($language, $parts[0], $parts[1]);
+                    $data[$language . '_edit'] = $Locale->getByLang($language, $parts[0], $parts[1]);
                 } else {
                     $data[$language] = $title[$language];
                     $data[$language . '_edit'] = $title[$language];
