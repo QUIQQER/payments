@@ -4,7 +4,7 @@
   "description": "Extends QUIQQER (ERP) with a payment method API and management. Comes with cash, invoice and prepayment as payment methods.",
   "license": [
     "GPL-3.0-or-later",
-    "PCSG QEL-1.0"
+    "PCSG-QEL-1.0"
   ],
   "authors": [
     {
