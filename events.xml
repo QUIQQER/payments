@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <events>
     <event on="onPackageConfigSave" fire="\QUI\ERP\Accounting\Payments\EventHandling::onPackageConfigSave"/>
-    <event on="onPackageInstallAfter" fire="\QUI\ERP\Accounting\Payments\EventHandling::onPackageInstall"/>
+    <event on="onPackageInstallAfter" fire="\QUI\ERP\Accounting\Payments\EventHandling::onPackageInstallAfter"/>
     <event on="onQuiqqerOrderBasketToOrderEnd"
            fire="\QUI\ERP\Accounting\Payments\EventHandling::onQuiqqerOrderBasketToOrderEnd"
     />
