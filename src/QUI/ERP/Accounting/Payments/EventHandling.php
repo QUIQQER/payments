@@ -101,7 +101,7 @@ class EventHandling
      * @param Package $Package
      * @throws QUI\Exception
      */
-    public static function onPackageInstall(Package $Package)
+    public static function onPackageInstallAfter(Package $Package)
     {
         if ($Package->getName() != 'quiqqer/payments') {
             return;
