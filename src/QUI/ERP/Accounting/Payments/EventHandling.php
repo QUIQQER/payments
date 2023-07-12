@@ -7,7 +7,6 @@
 namespace QUI\ERP\Accounting\Payments;
 
 use QUI;
-use QUI\ERP\Accounting\Payments\Methods;
 use QUI\ERP\Accounting\Payments\Types\Factory;
 use QUI\ERP\Accounting\Payments\Types\Payment;
 use QUI\ERP\Order\OrderInterface;
@@ -15,6 +14,7 @@ use QUI\Package\Package;
 
 use function array_flip;
 use function array_map;
+use function json_decode;
 use function method_exists;
 
 /**
@@ -34,7 +34,8 @@ class EventHandling
             return;
         }
 
-        if (!isset($params['payments'])
+        if (
+            !isset($params['payments'])
             || !isset($params['payments']['paymentsJson'])
         ) {
             return;
@@ -55,7 +56,7 @@ class EventHandling
             return;
         }
 
-        $settings = \json_decode($params['payments']['paymentsJson'], true);
+        $settings = json_decode($params['payments']['paymentsJson'], true);
 
         foreach ($settings as $payment => $status) {
             try {
@@ -107,8 +108,8 @@ class EventHandling
         }
 
         // create the standard payment types
-        $Locale   = QUI::getLocale();
-        $Factory  = new Factory();
+        $Locale = QUI::getLocale();
+        $Factory = new Factory();
         $children = $Factory->getChildren();
 
         $existingTypes = array_map(function ($PaymentType) {
@@ -245,14 +246,14 @@ class EventHandling
         }
 
         $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
-            'title'       => $Payment->getPaymentFeeTitle(),
+            'title' => $Payment->getPaymentFeeTitle(),
             'description' => '',
-            'priority'    => 1,
+            'priority' => 1,
             'calculation' => QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT,
-            'basis'       => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
-            'value'       => $Payment->getPaymentFee(),
-            'visible'     => true,
-            'currency'    => $Order->getCurrency()->getCode()
+            'basis' => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
+            'value' => $Payment->getPaymentFee(),
+            'visible' => true,
+            'currency' => $Order->getCurrency()->getCode()
         ]);
 
         $PriceFactors = $Products->getPriceFactors();
