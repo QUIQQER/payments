@@ -11,6 +11,8 @@ use QUI\ERP\Accounting\Payments\Types\Factory;
 
 use function array_filter;
 use function array_values;
+use function count;
+use function dirname;
 
 /**
  * Class Payment
@@ -56,23 +58,27 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     public function getBody()
     {
         $Engine = QUI::getTemplateManager()->getEngine();
-        $User   = QUI::getUserBySession();
+        $User = QUI::getUserBySession();
 
         $Order = $this->getOrder();
         $Order->recalculate();
 
         $Customer = $Order->getCustomer();
-        $Payment  = $Order->getPayment();
+        $SelectedPayment = $Order->getPayment();
         $payments = $this->getPaymentList();
 
+        foreach ($payments as $PaymentEntry) {
+            $PaymentEntry->setAttribute('Order', $Order);
+        }
+
         $Engine->assign([
-            'User'            => $User,
-            'Customer'        => $Customer,
-            'SelectedPayment' => $Payment,
-            'payments'        => $payments
+            'User' => $User,
+            'Customer' => $Customer,
+            'SelectedPayment' => $SelectedPayment,
+            'payments' => $payments
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/Payment.html');
+        return $Engine->fetch(dirname(__FILE__) . '/Payment.html');
     }
 
     /**
@@ -80,11 +86,11 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
      */
     public function validate()
     {
-        $Order       = $this->getOrder();
-        $Payment     = $Order->getPayment();
+        $Order = $this->getOrder();
+        $Payment = $Order->getPayment();
         $paymentList = $this->getPaymentList();
 
-        if ($Payment === null && \count($paymentList) === 1) {
+        if ($Payment === null && count($paymentList) === 1) {
             try {
                 $Order->setPayment($paymentList[0]->getId());
                 $Order->save();
@@ -128,11 +134,11 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         }
 
         $Order = $this->getOrder();
-        $User  = QUI::getUserBySession();
+        $User = QUI::getUserBySession();
 
         try {
             $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
-            $Payment  = $Payments->getPayment($payment);
+            $Payment = $Payments->getPayment($payment);
             $Payment->canUsedBy($User);
         } catch (QUI\ERP\Accounting\Payments\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
@@ -151,11 +157,11 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
      */
     protected function getPaymentList()
     {
-        $Order    = $this->getOrder();
+        $Order = $this->getOrder();
         $Articles = $Order->getArticles();
-        $User     = QUI::getUserBySession();
+        $User = QUI::getUserBySession();
 
-        $payments     = [];
+        $payments = [];
         $calculations = $Articles->getCalculations();
         // leave this line even if it's strange
         // floatval sum === 0 doesn't work -> floatval => float, 0 = int

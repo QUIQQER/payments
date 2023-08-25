@@ -17,9 +17,7 @@
                        type="radio"
                        name="payment"
                        value="{$Payment->getId()}"
-                       {if $SelectedPayment && $Payment->getId() === $SelectedPayment->getId()}
-                       checked="checked"
-                       {/if}
+                       {if $SelectedPayment && $Payment->getId() === $SelectedPayment->getId()} checked="checked" {/if}
                 />
             </div>
             <div class="quiqqer-order-step-payments-list-entry-icon">
@@ -32,6 +30,11 @@
                 <div class="quiqqer-order-step-payments-list-entry-text-description">
                     {$Payment->getDescription()}
                 </div>
+            </div>
+            <div class="quiqqer-order-step-payments-list-entry-payments">
+                {if $Payment->hasPaymentFee()}
+                {$Payment->getPaymentFeeDisplay()}
+                {/if}
             </div>
         </div>
         {/foreach}

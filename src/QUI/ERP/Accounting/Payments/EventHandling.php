@@ -245,6 +245,9 @@ class EventHandling
             return;
         }
 
+        $PriceFactor = $Payment->toPriceFactor(null, $Order);
+
+        /*
         $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
             'title' => $Payment->getPaymentFeeTitle(),
             'description' => '',
@@ -255,6 +258,7 @@ class EventHandling
             'visible' => true,
             'currency' => $Order->getCurrency()->getCode()
         ]);
+        */
 
         $PriceFactors = $Products->getPriceFactors();
         $PriceFactors->addToEnd($PriceFactor);

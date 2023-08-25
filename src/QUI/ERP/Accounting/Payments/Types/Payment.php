@@ -12,6 +12,7 @@ use QUI\ERP\Accounting\Payments\Api;
 use QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed;
 use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\BankAccounts\Handler as BankAccountsHandler;
+use QUI\Exception;
 use QUI\Permissions\Permission;
 use QUI\Translator;
 
@@ -654,10 +655,10 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Return the payment fee title / text
      *
-     * @param null $Locale
+     * @param null|QUI\Locale $Locale
      * @return array|string
      */
-    public function getPaymentFeeTitle($Locale = null)
+    public function getPaymentFeeTitle(QUI\Locale $Locale = null)
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -667,6 +668,79 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             'quiqqer/payments',
             'payment.' . $this->getId() . '.paymentFeeTitle'
         );
+    }
+
+    public function toPriceFactor(
+        $Locale = null,
+        QUI\ERP\Order\AbstractOrder $Order = null
+    ): QUI\ERP\Products\Utils\PriceFactor {
+        $Currency = QUI\ERP\Defaults::getCurrency();
+
+        if ($Order) {
+            $Currency = $Order->getCurrency();
+        }
+
+        return new QUI\ERP\Products\Utils\PriceFactor([
+            'title' => $this->getPaymentFeeTitle($Locale),
+            'description' => '',
+            'priority' => 1,
+            'calculation' => QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT,
+            'basis' => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
+            'value' => $this->getPaymentFee(),
+            'visible' => true,
+            'currency' => $Currency->getCode()
+        ]);
+    }
+
+    /**
+     * Return the price display
+     *
+     * @return string
+     */
+    public function getPaymentFeeDisplay(): string
+    {
+        if (!$this->hasPaymentFee()) {
+            return '';
+        }
+
+        $paymentFee = $this->getPaymentFee();
+        $Order = $this->getAttribute('Order');
+        $isNetto = false;
+
+        if ($Order instanceof QUI\ERP\Order\AbstractOrder) {
+            $Customer = $Order->getCustomer();
+            $isNetto = $Customer->isNetto();
+        }
+
+        // display is incl vat
+        $Calc = $Order->getPriceCalculation();
+        $vatArray = $Calc->getVat();
+        $VatEntry = reset($vatArray);
+
+        /* @var QUI\ERP\Accounting\CalculationVatValue $VatEntry */
+        $vat = $VatEntry->getVat();
+
+        if (!$isNetto && $vat) {
+            $paymentFee = $paymentFee + ($paymentFee * ($vat / 100));
+        }
+
+
+        // if user currency is different to the default, we have to convert the price
+        $DefaultCurrency = QUI\ERP\Defaults::getCurrency();
+        $UserCurrency = QUI\ERP\Defaults::getUserCurrency();
+
+        if ($DefaultCurrency->getCode() !== $UserCurrency->getCode()) {
+            try {
+                $price = $DefaultCurrency->convert($paymentFee, $UserCurrency);
+                $Price = new QUI\ERP\Money\Price($price, $UserCurrency);
+            } catch (Exception $exception) {
+                $Price = new QUI\ERP\Money\Price($paymentFee, $DefaultCurrency);
+            }
+        } else {
+            $Price = new QUI\ERP\Money\Price($paymentFee, $DefaultCurrency);
+        }
+
+        return '+' . $Price->getDisplayPrice();
     }
 
     //endregion
