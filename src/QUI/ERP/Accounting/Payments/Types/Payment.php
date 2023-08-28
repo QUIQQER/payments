@@ -17,6 +17,7 @@ use QUI\Permissions\Permission;
 use QUI\Translator;
 
 use function array_filter;
+use function class_exists;
 use function count;
 use function explode;
 use function floatval;
@@ -152,7 +153,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     {
         $type = $this->getAttribute('payment_type');
 
-        if (!\class_exists($type)) {
+        if (!class_exists($type)) {
             throw new QUI\ERP\Accounting\Payments\Exception([
                 'quiqqer/payments',
                 'exception.payment.type.not.found',
