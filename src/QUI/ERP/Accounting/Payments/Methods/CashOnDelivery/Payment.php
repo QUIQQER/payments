@@ -71,8 +71,8 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      */
     public function getIcon()
     {
-        return Payments::getInstance()->getHost().
-               URL_OPT_DIR.
-               'quiqqer/payments/bin/payments/Bar.jpg';
+        return Payments::getInstance()->getHost() .
+            URL_OPT_DIR .
+            'quiqqer/payments/bin/payments/Bar.jpg';
     }
 }

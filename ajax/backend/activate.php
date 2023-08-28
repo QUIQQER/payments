@@ -4,7 +4,7 @@
  * This file contains package_quiqqer_payments_ajax_backend_activate
  */
 
-use \QUI\ERP\Accounting\Payments\Types\Factory;
+use QUI\ERP\Accounting\Payments\Types\Factory;
 
 /**
  * Activate a payment
@@ -16,7 +16,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_payments_ajax_backend_activate',
     function ($paymentId) {
         $Payments = new Factory();
-        $Payment  = $Payments->getChild($paymentId);
+        $Payment = $Payments->getChild($paymentId);
         $Payment->activate();
 
         QUI::getMessagesHandler()->addSuccess(

@@ -4,11 +4,11 @@ if (!defined('QUIQQER_SYSTEM')) {
     define('QUIQQER_SYSTEM', true);
 }
 
-require_once dirname(dirname(dirname(dirname(__FILE__)))).'/header.php';
+require_once dirname(__FILE__, 4) . '/header.php';
 
-use \QUI\ERP\Accounting\Payments\Gateway\Gateway;
-use \Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\HttpFoundation\Response;
+use QUI\ERP\Accounting\Payments\Gateway\Gateway;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 QUI\ERP\Debug::getInstance()->log('Gateway incoming');
 
@@ -21,10 +21,12 @@ try {
     }
 
     $SessionUser = QUI::getUsers()->getUserBySession();
-    $Users       = QUI::getUsers();
+    $Users = QUI::getUsers();
 
-    if ((int)$_GET[Gateway::URL_PARAM_USER_REDIRECTED] === 1
-        && !$Users->isNobodyUser($SessionUser)) {
+    if (
+        (int)$_GET[Gateway::URL_PARAM_USER_REDIRECTED] === 1
+        && !$Users->isNobodyUser($SessionUser)
+    ) {
         QUI\Permissions\Permission::setUser($SessionUser);
     } else {
         define('SYSTEM_INTERN', true);
@@ -38,7 +40,7 @@ try {
     $Gateway->readRequest();
 
     $orderUrl = $Gateway->getOrderUrl();
-    $Order    = $Gateway->getOrder();
+    $Order = $Gateway->getOrder();
 
     // Bezahlung vom Gateway (payment execution from the gateway)
     if (isset($_REQUEST['GatewayPayment']) || $Gateway->isGatewayPayment()) {
@@ -49,14 +51,16 @@ try {
     }
 
     if (empty($orderUrl)) {
-        QUI\System\Log::writeDebugException(new QUI\Exception(
-            'No Order found in gateway request.',
-            404,
-            [
-                'headers'   => getallheaders(),
-                '$_REQUEST' => $_REQUEST
-            ]
-        ));
+        QUI\System\Log::writeDebugException(
+            new QUI\Exception(
+                'No Order found in gateway request.',
+                404,
+                [
+                    'headers' => getallheaders(),
+                    '$_REQUEST' => $_REQUEST
+                ]
+            )
+        );
 
         exit;
     }
@@ -73,7 +77,7 @@ try {
 
     try {
         $Project = QUI::getProjectManager()->getStandard();
-        $url     = QUI\ERP\Order\Utils\Utils::getOrderProcessUrl($Project);
+        $url = QUI\ERP\Order\Utils\Utils::getOrderProcessUrl($Project);
     } catch (QUI\Exception $Exception) {
         $url = URL_DIR;
     }

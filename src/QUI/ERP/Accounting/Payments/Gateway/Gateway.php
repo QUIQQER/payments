@@ -178,7 +178,7 @@ class Gateway extends QUI\Utils\Singleton
      */
     public function executeGatewayPayment()
     {
-        $Order   = $this->getOrder();
+        $Order = $this->getOrder();
         $Payment = $Order->getPayment()->getPaymentType();
 
         try {
@@ -186,10 +186,12 @@ class Gateway extends QUI\Utils\Singleton
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
-            $Order->addHistory(\json_encode([
-                'message' => $Exception->getMessage(),
-                'code'    => $Exception->getCode()
-            ]));
+            $Order->addHistory(
+                \json_encode([
+                    'message' => $Exception->getMessage(),
+                    'code' => $Exception->getCode()
+                ])
+            );
         }
     }
 
@@ -242,8 +244,8 @@ class Gateway extends QUI\Utils\Singleton
         $paymentData = []
     ) {
         $paymentComment = QUI::getLocale()->get('quiqqer/payments', 'comment.add.payment', [
-            'payment'  => $Payment->getTitle(),
-            'amount'   => $amount,
+            'payment' => $Payment->getTitle(),
+            'amount' => $amount,
             'currency' => $Currency->getCode()
         ]);
 
@@ -307,7 +309,7 @@ class Gateway extends QUI\Utils\Singleton
     {
         $host = $this->getHost();
         //$dir  = URL_OPT_DIR.'quiqqer/payments/bin/gateway.php';
-        $dir  = URL_DIR.'PaymentsGateway'; // new url
+        $dir = URL_DIR . 'PaymentsGateway'; // new url
 
         if (!\is_array($params)) {
             $params = [];
@@ -317,7 +319,7 @@ class Gateway extends QUI\Utils\Singleton
             $params['orderHash'] = $this->getOrder()->getHash();
         }
 
-        return $host.$dir.'?'.\http_build_query($params);
+        return $host . $dir . '?' . \http_build_query($params);
     }
 
     /**
@@ -326,7 +328,7 @@ class Gateway extends QUI\Utils\Singleton
     public function getSuccessUrl()
     {
         return $this->getGatewayUrl([
-            'success'   => 1,
+            'success' => 1,
             'orderHash' => $this->getOrder()->getHash()
         ]);
     }
@@ -365,7 +367,7 @@ class Gateway extends QUI\Utils\Singleton
     public function getCancelUrl()
     {
         return $this->getGatewayUrl([
-            'canceled'  => 1,
+            'canceled' => 1,
             'orderHash' => $this->getOrder()->getHash()
         ]);
     }
@@ -376,7 +378,7 @@ class Gateway extends QUI\Utils\Singleton
     public function getErrorUrl()
     {
         return $this->getGatewayUrl([
-            'error'     => 1,
+            'error' => 1,
             'orderHash' => $this->getOrder()->getHash()
         ]);
     }
@@ -416,9 +418,11 @@ class Gateway extends QUI\Utils\Singleton
             }
         }
 
-        if (isset($_REQUEST['project'])
+        if (
+            isset($_REQUEST['project'])
             && isset($_REQUEST['lang'])
-            && \strpos($_REQUEST['project'], '{') === false) {
+            && \strpos($_REQUEST['project'], '{') === false
+        ) {
             try {
                 $Project = QUI::getProjectManager()->getProject(
                     $_REQUEST['project'],
@@ -434,7 +438,7 @@ class Gateway extends QUI\Utils\Singleton
         }
 
         if (isset($_SERVER['HTTP_HOST'])) {
-            return 'http://'.$_SERVER['HTTP_HOST'];
+            return 'http://' . $_SERVER['HTTP_HOST'];
         }
 
         try {
