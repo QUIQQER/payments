@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<quiqqer>
+
+    <settings name="ERP">
+        <config>
+            <section name="payments">
+                <conf name="listUnsupportedPayment">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>1</defaultvalue>
+                </conf>
+            </section>
+        </config>
+
+        <window name="ERP">
+            <title>
+                <locale group="quiqqer/currency" var="window.erp.title"/>
+            </title>
+            <params>
+                <icon>fa fa-sun-o</icon>
+            </params>
+
+            <categories>
+
+                <category name="currencies" index="2">
+                    <text>
+                        <locale group="quiqqer/currency" var="currency.title"/>
+                    </text>
+                    <icon>fa fa-money</icon>
+
+                    <settings title="payments" name="payments">
+                        <title>
+                            <locale group="quiqqer/payments" var="currency.settings.title"/>
+                        </title>
+
+                        <input conf="payments.listUnsupportedPayment" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/payments" var="currency.settings.listUnsupportedPayment.text"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/payments"
+                                        var="currency.settings.listUnsupportedPayment.description"/>
+                            </description>
+                        </input>
+                    </settings>
+                </category>
+
+            </categories>
+        </window>
+    </settings>
+
+</quiqqer>

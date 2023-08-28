@@ -18,16 +18,17 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
     'text!package/quiqqer/payments/bin/backend/controls/Payment.html'
 
-], function (QUI, QUIPanel, QUIConfirm, Payments, Translator, FormUtils,
-             Mustache, QUILocale, QUIAjax, template) {
-    "use strict";
+], function(QUI, QUIPanel, QUIConfirm, Payments, Translator, FormUtils,
+    Mustache, QUILocale, QUIAjax, template
+) {
+    'use strict';
 
     const lg = 'quiqqer/payments';
 
     return new Class({
 
         Extends: QUIPanel,
-        Type   : 'package/quiqqer/payments/bin/backend/controls/Payment',
+        Type: 'package/quiqqer/payments/bin/backend/controls/Payment',
 
         Binds: [
             'showInformation',
@@ -49,11 +50,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
             paymentId: false
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.setAttributes({
-                '#id': "paymentId" in options ? options.paymentId : false,
+                '#id': 'paymentId' in options ? options.paymentId : false,
                 title: QUILocale.get(lg, 'payment.type.panel.title')
             });
 
@@ -67,8 +68,8 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
             this.$PaymentFeeTitle = null;
 
             this.addEvents({
-                onCreate : this.$onCreate,
-                onInject : this.$onInject,
+                onCreate: this.$onCreate,
+                onInject: this.$onInject,
                 onRefresh: this.$onRefresh,
                 onDestroy: this.$onDestroy
             });
@@ -77,15 +78,15 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * event: on create
          */
-        $onCreate: function () {
+        $onCreate: function() {
             this.addButton({
-                name     : 'save',
-                title    : QUILocale.get('quiqqer/quiqqer', 'save'),
-                text     : QUILocale.get('quiqqer/quiqqer', 'save'),
+                name: 'save',
+                title: QUILocale.get('quiqqer/quiqqer', 'save'),
+                text: QUILocale.get('quiqqer/quiqqer', 'save'),
                 textimage: 'fa fa-save',
-                events   : {
-                    onClick: function () {
-                        this.save().catch(function () {
+                events: {
+                    onClick: function() {
+                        this.save().catch(function() {
                             // nothing
                         });
                     }.bind(this)
@@ -97,20 +98,20 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
             });
 
             this.addButton({
-                name     : 'status',
-                text     : QUILocale.get('quiqqer/quiqqer', 'deactivate'),
-                title    : QUILocale.get('quiqqer/quiqqer', 'deactivate'),
+                name: 'status',
+                text: QUILocale.get('quiqqer/quiqqer', 'deactivate'),
+                title: QUILocale.get('quiqqer/quiqqer', 'deactivate'),
                 textimage: 'fa fa-remove',
-                disabled : true,
-                events   : {
+                disabled: true,
+                events: {
                     onClick: this.toggleStatus
                 }
             });
 
             this.addButton({
-                name  : 'delete',
-                title : QUILocale.get('quiqqer/system', 'delete'),
-                icon  : 'fa fa-trash',
+                name: 'delete',
+                title: QUILocale.get('quiqqer/system', 'delete'),
+                icon: 'fa fa-trash',
                 events: {
                     onClick: this.openDeleteDialog
                 },
@@ -121,27 +122,27 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
 
             this.addCategory({
-                name  : 'information',
-                text  : QUILocale.get('quiqqer/system', 'information'),
-                icon  : 'fa fa-file-o',
+                name: 'information',
+                text: QUILocale.get('quiqqer/system', 'information'),
+                icon: 'fa fa-file-o',
                 events: {
                     onClick: this.showInformation
                 }
             });
 
             this.addCategory({
-                name  : 'description',
-                text  : QUILocale.get('quiqqer/system', 'description'),
-                icon  : 'fa fa-file-text-o',
+                name: 'description',
+                text: QUILocale.get('quiqqer/system', 'description'),
+                icon: 'fa fa-file-text-o',
                 events: {
                     onClick: this.showDescription
                 }
             });
 
             this.addCategory({
-                name  : 'orderInformation',
-                text  : QUILocale.get(lg, 'panel.payment.order.information'),
-                icon  : 'fa fa-file-text-o',
+                name: 'orderInformation',
+                text: QUILocale.get(lg, 'panel.payment.order.information'),
+                icon: 'fa fa-file-text-o',
                 events: {
                     onClick: this.showOrderInformation
                 }
@@ -149,16 +150,16 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
             this.$Container = new Element('div', {
                 styles: {
-                    height  : '100%',
+                    height: '100%',
                     overflow: 'auto',
-                    padding : 10,
+                    padding: 10,
                     position: 'relative',
-                    width   : '100%'
+                    width: '100%'
                 }
             }).inject(this.getContent());
 
             this.getContent().setStyles({
-                padding : 0,
+                padding: 0,
                 position: 'relative'
             });
         },
@@ -166,19 +167,19 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * event : on inject
          */
-        $onInject: function () {
+        $onInject: function() {
             const self = this;
 
             this.Loader.show();
 
             Payments.addEvents({
                 onPaymentDeactivate: this.$onPaymentChange,
-                onPaymentActivate  : this.$onPaymentChange,
-                onPaymentDelete    : this.$onPaymentDelete,
-                onPaymentUpdate    : this.$onPaymentChange
+                onPaymentActivate: this.$onPaymentChange,
+                onPaymentDelete: this.$onPaymentDelete,
+                onPaymentUpdate: this.$onPaymentChange
             });
 
-            this.reload().then(function () {
+            this.reload().then(function() {
                 self.getCategory('information').click();
             });
         },
@@ -186,15 +187,15 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * event: on refresh
          */
-        $onRefresh: function () {
+        $onRefresh: function() {
             const data = this.getAttribute('data');
 
-            if (!data || !("active" in data)) {
+            if (!data || !('active' in data)) {
                 return;
             }
 
             const status = parseInt(data.active),
-                  Status = this.getButtons('status');
+                Status = this.getButtons('status');
 
             if (status) {
                 Status.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'deactivate'));
@@ -212,23 +213,23 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * event: on destroy
          */
-        $onDestroy: function () {
+        $onDestroy: function() {
             Payments.removeEvents({
                 onPaymentDeactivate: this.$onPaymentChange,
-                onPaymentActivate  : this.$onPaymentChange,
-                onPaymentDelete    : this.$onPaymentDelete,
-                onPaymentUpdate    : this.$onPaymentChange
+                onPaymentActivate: this.$onPaymentChange,
+                onPaymentDelete: this.$onPaymentDelete,
+                onPaymentUpdate: this.$onPaymentChange
             });
         },
 
         /**
          * event: on payment change
          *
-         * @param {Object} Payments
+         * @param {Object} PaymentsInstance
          * @param {Number} paymentId
          * @param {Object} data
          */
-        $onPaymentChange: function (Payments, paymentId, data) {
+        $onPaymentChange: function(PaymentsInstance, paymentId, data) {
             if (paymentId !== this.getAttribute('paymentId')) {
                 return;
             }
@@ -240,10 +241,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * event: on payment change
          *
-         * @param {Object} Payments
+         * @param {Object} PaymentsInstance
          * @param {Number} paymentId
          */
-        $onPaymentDelete: function (Payments, paymentId) {
+        $onPaymentDelete: function(PaymentsInstance, paymentId) {
             if (paymentId === this.getAttribute('paymentId')) {
                 this.destroy();
             }
@@ -252,11 +253,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * Reload the payment data
          */
-        reload: function () {
-            const self      = this,
-                  paymentId = this.getAttribute('paymentId');
+        reload: function() {
+            const self = this,
+                paymentId = this.getAttribute('paymentId');
 
-            return Payments.getPayment(paymentId).then(function (result) {
+            return Payments.getPayment(paymentId).then(function(result) {
                 const current = QUILocale.getCurrent();
 
                 self.setAttribute('title', QUILocale.get(lg, 'payment.type.panel.title.payment', {
@@ -272,7 +273,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
                 self.setAttribute('data', result);
                 self.refresh();
-            }).catch(function (err) {
+            }).catch(function(err) {
                 console.error(err);
                 self.destroy();
             });
@@ -283,9 +284,9 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          *
          * @return {Promise}
          */
-        save: function () {
-            const self      = this,
-                  paymentId = this.getAttribute('paymentId');
+        save: function() {
+            const self = this,
+                paymentId = this.getAttribute('paymentId');
 
             this.Loader.show();
             this.$unloadContainerData();
@@ -295,13 +296,13 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
             const data = this.getAttribute('data');
 
-            return new Promise(function (resolve, reject) {
-                Payments.updatePayment(paymentId, data).then(function () {
+            return new Promise(function(resolve, reject) {
+                Payments.updatePayment(paymentId, data).then(function() {
                     return self.reload();
-                }).then(function () {
+                }).then(function() {
                     resolve();
                     self.Loader.hide();
-                }).catch(function (e) {
+                }).catch(function(e) {
                     self.Loader.hide();
                     reject(e);
                 });
@@ -311,13 +312,13 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * Activate the payment
          */
-        activate: function () {
-            const self      = this,
-                  paymentId = this.getAttribute('paymentId');
+        activate: function() {
+            const self = this,
+                paymentId = this.getAttribute('paymentId');
 
             self.Loader.show();
 
-            Payments.activatePayment(paymentId).then(function (data) {
+            Payments.activatePayment(paymentId).then(function(data) {
                 self.setAttribute('data', data);
                 self.refresh();
                 self.Loader.hide();
@@ -327,11 +328,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * Deactivate the payment
          */
-        deactivate: function () {
-            const self      = this,
-                  paymentId = this.getAttribute('paymentId');
+        deactivate: function() {
+            const self = this,
+                paymentId = this.getAttribute('paymentId');
 
-            Payments.deactivatePayment(paymentId).then(function (data) {
+            Payments.deactivatePayment(paymentId).then(function(data) {
                 self.setAttribute('data', data);
                 self.refresh();
                 self.Loader.hide();
@@ -341,10 +342,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * Toggle the active status of the payment
          */
-        toggleStatus: function () {
+        toggleStatus: function() {
             const data = this.getAttribute('data');
 
-            if (!("active" in data)) {
+            if (!('active' in data)) {
                 return;
             }
 
@@ -358,40 +359,41 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * Show the information
          */
-        showInformation: function () {
-            const self    = this,
-                  data    = self.getAttribute('data'),
-                  current = QUILocale.getCurrent();
+        showInformation: function() {
+            const self = this,
+                data = self.getAttribute('data'),
+                current = QUILocale.getCurrent();
 
-            this.$hideContainer().then(function (Container) {
+            this.$hideContainer().then(function(Container) {
                 Container.set({
                     html: Mustache.render(template, {
-                        header              : QUILocale.get(lg, 'payment.edit.template.title'),
-                        id                  : QUILocale.get(lg, 'payment.edit.template.id'),
-                        type                : QUILocale.get(lg, 'payment.edit.template.type'),
-                        title               : QUILocale.get(lg, 'payment.edit.template.title'),
-                        workingTitle        : QUILocale.get('quiqqer/system', 'workingtitle'),
-                        usageHeader         : QUILocale.get(lg, 'payment.edit.template.usage'),
-                        usageFrom           : QUILocale.get(lg, 'payment.edit.template.usage.from'),
-                        usageTo             : QUILocale.get(lg, 'payment.edit.template.usage.to'),
-                        usageAmountOf       : QUILocale.get(lg, 'payment.edit.template.shopping.amount.of'),
-                        usageAmountTo       : QUILocale.get(lg, 'payment.edit.template.shopping.amount.to'),
-                        usageValueOf        : QUILocale.get(lg, 'payment.edit.template.purchase.value.of'),
-                        usageValueTo        : QUILocale.get(lg, 'payment.edit.template.purchase.value.to'),
-                        usageAssignment     : QUILocale.get(lg, 'payment.edit.template.assignment'),
+                        header: QUILocale.get(lg, 'payment.edit.template.title'),
+                        id: QUILocale.get(lg, 'payment.edit.template.id'),
+                        type: QUILocale.get(lg, 'payment.edit.template.type'),
+                        title: QUILocale.get(lg, 'payment.edit.template.title'),
+                        workingTitle: QUILocale.get('quiqqer/system', 'workingtitle'),
+                        usageHeader: QUILocale.get(lg, 'payment.edit.template.usage'),
+                        usageFrom: QUILocale.get(lg, 'payment.edit.template.usage.from'),
+                        usageTo: QUILocale.get(lg, 'payment.edit.template.usage.to'),
+                        usageAmountOf: QUILocale.get(lg, 'payment.edit.template.shopping.amount.of'),
+                        usageAmountTo: QUILocale.get(lg, 'payment.edit.template.shopping.amount.to'),
+                        usageValueOf: QUILocale.get(lg, 'payment.edit.template.purchase.value.of'),
+                        usageValueTo: QUILocale.get(lg, 'payment.edit.template.purchase.value.to'),
+                        usageAssignment: QUILocale.get(lg, 'payment.edit.template.assignment'),
                         usageAssignmentAreas: QUILocale.get(lg, 'payment.edit.template.areas'),
-                        calculationPriority : QUILocale.get(lg, 'payment.edit.template.calculationPriority'),
-                        customIcon          : QUILocale.get(lg, 'payment.edit.template.customIcon'),
-                        customIconDesc      : QUILocale.get(lg, 'payment.edit.template.customIcon.description'),
+                        calculationPriority: QUILocale.get(lg, 'payment.edit.template.calculationPriority'),
+                        customIcon: QUILocale.get(lg, 'payment.edit.template.customIcon'),
+                        customIconDesc: QUILocale.get(lg, 'payment.edit.template.customIcon.description'),
 
                         paymentFeeHeader: QUILocale.get(lg, 'payment.edit.template.paymentFee.header'),
                         paymentFeeAmount: QUILocale.get(lg, 'payment.edit.template.paymentFee.amount'),
-                        paymentFeeTitle : QUILocale.get(lg, 'payment.edit.template.paymentFee.title'),
-                        paymentFeeHelp  : QUILocale.get(lg, 'payment.edit.template.paymentFee.title.help'),
+                        paymentFeeTitle: QUILocale.get(lg, 'payment.edit.template.paymentFee.title'),
+                        paymentFeeHelp: QUILocale.get(lg, 'payment.edit.template.paymentFee.title.help'),
 
-                        usageAssignmentProduct : QUILocale.get(lg, 'payment.edit.template.assignment.product'),
+                        usageAssignmentProduct: QUILocale.get(lg, 'payment.edit.template.assignment.product'),
                         usageAssignmentCategory: QUILocale.get(lg, 'payment.edit.template.assignment.category'),
-                        usageAssignmentUser    : QUILocale.get(lg, 'payment.edit.template.assignment.user')
+                        usageAssignmentUser: QUILocale.get(lg, 'payment.edit.template.assignment.user'),
+                        usageAssignmentCurrencies: QUILocale.get(lg, 'payment.edit.template.assignment.currency')
                     })
                 });
 
@@ -404,8 +406,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
                 FormUtils.setDataToForm(data, Container.getElement('form'));
 
-                Container.getElement('[name="paymentFee"]')
-                         .addEvent('blur', self.$formatPaymentFee);
+                Container.getElement('[name="paymentFee"]').addEvent('blur', self.$formatPaymentFee);
 
                 self.$formatPaymentFee();
 
@@ -414,9 +415,9 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                     self.$getTranslationData('workingTitle'),
                     self.$getTranslationData('paymentFeeTitle')
                 ]);
-            }).then(function (translationData) {
-                return new Promise(function (resolve, reject) {
-                    require(['controls/lang/InputMultiLang'], function (InputMultiLang) {
+            }).then(function(translationData) {
+                return new Promise(function(resolve, reject) {
+                    require(['controls/lang/InputMultiLang'], function(InputMultiLang) {
                         self.$DataTitle = new InputMultiLang().replaces(self.$Container.getElement('.payment-title'));
                         self.$DataWorkingTitle =
                             new InputMultiLang().replaces(self.$Container.getElement('.payment-workingTitle'));
@@ -442,13 +443,13 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                         resolve();
                     }, reject);
                 });
-            }).then(function () {
+            }).then(function() {
                 return self.$showContainer();
-            }).then(function () {
+            }).then(function() {
                 self.$IconField = QUI.Controls.getById(
                     self.$Container.getElement('[name="icon"]').get('data-quiid')
                 );
-            }).catch(function (err) {
+            }).catch(function(err) {
                 console.error(err);
             });
         },
@@ -456,24 +457,24 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * Show the description
          */
-        showDescription: function () {
+        showDescription: function() {
             const self = this;
 
             Promise.all([
                 this.$hideContainer(),
                 this.$getTranslationData('description')
-            ]).then(function (result) {
-                const Container   = result[0],
-                      description = result[1];
+            ]).then(function(result) {
+                const Container = result[0],
+                    description = result[1];
 
-                return new Promise(function (resolve) {
-                    require(['controls/lang/ContentMultiLang'], function (ContentMultiLang) {
+                return new Promise(function(resolve) {
+                    require(['controls/lang/ContentMultiLang'], function(ContentMultiLang) {
                         self.$DataDescription = new ContentMultiLang({
                             styles: {
                                 height: '100%'
                             },
                             events: {
-                                onLoad: function () {
+                                onLoad: function() {
                                     self.$DataDescription.setData(description);
                                     resolve();
                                 }
@@ -481,7 +482,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                         }).inject(Container);
                     });
                 });
-            }).then(function () {
+            }).then(function() {
                 return self.$showContainer();
             });
         },
@@ -489,24 +490,24 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * Show the order information
          */
-        showOrderInformation: function () {
+        showOrderInformation: function() {
             const self = this;
 
             Promise.all([
                 this.$hideContainer(),
                 this.$getTranslationData('orderInformation')
-            ]).then(function (result) {
-                const Container   = result[0],
-                      description = result[1];
+            ]).then(function(result) {
+                const Container = result[0],
+                    description = result[1];
 
-                return new Promise(function (resolve) {
-                    require(['controls/lang/ContentMultiLang'], function (ContentMultiLang) {
+                return new Promise(function(resolve) {
+                    require(['controls/lang/ContentMultiLang'], function(ContentMultiLang) {
                         self.$DataOrderInformation = new ContentMultiLang({
                             styles: {
                                 height: '100%'
                             },
                             events: {
-                                onLoad: function () {
+                                onLoad: function() {
                                     self.$DataOrderInformation.setData(description);
                                     resolve();
                                 }
@@ -514,7 +515,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                         }).inject(Container);
                     });
                 });
-            }).then(function () {
+            }).then(function() {
                 return self.$showContainer();
             });
         },
@@ -522,32 +523,32 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * Opens the delete dialog
          */
-        openDeleteDialog: function () {
-            const self      = this,
-                  paymentId = this.getAttribute('paymentId');
+        openDeleteDialog: function() {
+            const self = this,
+                paymentId = this.getAttribute('paymentId');
 
             new QUIConfirm({
-                texticon   : 'fa fa-trash',
-                icon       : 'fa fa-trash',
-                title      : QUILocale.get(lg, 'window.delete.title'),
+                texticon: 'fa fa-trash',
+                icon: 'fa fa-trash',
+                title: QUILocale.get(lg, 'window.delete.title'),
                 information: QUILocale.get(lg, 'window.delete.information', {
                     payment: this.getAttribute('title')
                 }),
-                text       : QUILocale.get(lg, 'window.delete.text', {
+                text: QUILocale.get(lg, 'window.delete.text', {
                     payment: this.getAttribute('title')
                 }),
-                autoclose  : false,
-                maxHeight  : 400,
-                maxWidth   : 600,
-                ok_button  : {
-                    text     : QUILocale.get('quiqqer/system', 'delete'),
+                autoclose: false,
+                maxHeight: 400,
+                maxWidth: 600,
+                ok_button: {
+                    text: QUILocale.get('quiqqer/system', 'delete'),
                     textimage: 'fa fa-trash'
                 },
-                events     : {
-                    onSubmit: function (Win) {
+                events: {
+                    onSubmit: function(Win) {
                         Win.Loader.show();
 
-                        Payments.deletePayment(paymentId).then(function () {
+                        Payments.deletePayment(paymentId).then(function() {
                             Win.close();
                             self.destroy();
                         });
@@ -563,17 +564,17 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          *
          * @return {Promise}
          */
-        $showContainer: function () {
+        $showContainer: function() {
             const self = this;
 
-            return new Promise(function (resolve) {
-                QUI.parse(self.$Container).then(function () {
+            return new Promise(function(resolve) {
+                QUI.parse(self.$Container).then(function() {
                     moofx(self.$Container).animate({
                         opacity: 1,
-                        top    : 0
+                        top: 0
                     }, {
                         duration: 250,
-                        callback: function () {
+                        callback: function() {
                             self.Loader.hide();
                             resolve(self.$Container);
                         }
@@ -587,18 +588,18 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          *
          * @return {Promise}
          */
-        $hideContainer: function () {
+        $hideContainer: function() {
             const self = this;
 
             this.Loader.show();
 
-            return new Promise(function (resolve) {
+            return new Promise(function(resolve) {
                 moofx(self.$Container).animate({
                     opacity: 0,
-                    top    : -20
+                    top: -20
                 }, {
                     duration: 250,
-                    callback: function () {
+                    callback: function() {
                         self.$unloadContainer();
                         self.$Container.set('html', '');
                         resolve(self.$Container);
@@ -610,7 +611,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * unload the data from the current category
          */
-        $unloadContainer: function () {
+        $unloadContainer: function() {
             this.$unloadContainerData();
 
             if (this.$DataDescription) {
@@ -648,7 +649,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          * Unload the current container data and set the data to the payment object
          * The data is not saved
          */
-        $unloadContainerData: function () {
+        $unloadContainerData: function() {
             const Form = this.$Container.getElement('form');
 
             if (this.$DataDescription) {
@@ -690,21 +691,21 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          *
          * @return {Promise}
          */
-        $formatPaymentFee: function () {
+        $formatPaymentFee: function() {
             const PaymentField = this.getContent().getElement('[name="paymentFee"]');
 
             if (PaymentField.value === '') {
                 return Promise.resolve();
             }
 
-            return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_erp_ajax_money_formatPrice', function (result) {
+            return new Promise(function(resolve, reject) {
+                QUIAjax.get('package_quiqqer_erp_ajax_money_formatPrice', function(result) {
                     PaymentField.value = result;
                     resolve();
                 }, {
                     'package': 'quiqqer/erp',
-                    price    : PaymentField.value,
-                    onError  : reject
+                    price: PaymentField.value,
+                    onError: reject
                 });
             });
         },
@@ -717,7 +718,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          * @param {String} name
          * @param {String} value
          */
-        $setData: function (name, value) {
+        $setData: function(name, value) {
             let data = this.getAttribute('data');
             data[name] = value;
 
@@ -729,7 +730,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          *
          * @param {String} name
          */
-        $getData: function (name) {
+        $getData: function(name) {
             const data = this.getAttribute('data');
 
             if (name in data) {
@@ -745,7 +746,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
          * @param name
          * @return {Promise}
          */
-        $getTranslationData: function (name) {
+        $getTranslationData: function(name) {
             const paymentId = this.getAttribute('paymentId');
 
             const title = 'payment.' + paymentId + '.title';
@@ -759,15 +760,15 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 this.$__running = false;
             }
 
-            const getData = function () {
-                return new Promise(function (resolve, reject) {
-                    if ("title" in this.$__storageData) {
+            const getData = function() {
+                return new Promise(function(resolve, reject) {
+                    if ('title' in this.$__storageData) {
                         resolve();
                         return;
                     }
 
                     if (this.$__running) {
-                        (function () {
+                        (function() {
                             getData().then(resolve, reject);
                         }).delay(100);
                         return;
@@ -782,7 +783,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                         Translator.get(lg, paymentFeeTitle, lg),
                         Translator.get(lg, orderInformation, lg),
                         Translator.getAvailableLanguages()
-                    ]).then(function (promiseResult) {
+                    ]).then(function(promiseResult) {
                         this.$__storageData.title = promiseResult[0];
                         this.$__storageData.description = promiseResult[1];
                         this.$__storageData.workingTitle = promiseResult[2];
@@ -797,7 +798,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
             }.bind(this);
 
 
-            return getData().then(function () {
+            return getData().then(function() {
                 const data = this.$__storageData;
                 const result = {};
                 let value = data[name];
@@ -806,7 +807,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                     value = this.$getData(name);
                 }
 
-                data.languages.each(function (language) {
+                data.languages.each(function(language) {
                     let val = value[language];
 
                     if (value[language + '_edit'] !== '' && value[language + '_edit']) {

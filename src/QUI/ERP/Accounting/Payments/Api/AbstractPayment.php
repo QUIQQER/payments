@@ -7,9 +7,12 @@
 namespace QUI\ERP\Accounting\Payments\Api;
 
 use QUI;
-use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Accounting\Payments\Transactions\Transaction;
 use QUI\ERP\Accounting\Payments\Types\RecurringPaymentInterface;
+use QUI\ERP\Order\AbstractOrder;
+
+use function get_class;
+use function md5;
 
 /**
  * Payment abstract class
@@ -79,7 +82,7 @@ abstract class AbstractPayment implements PaymentsInterface
      */
     public function getName()
     {
-        return \md5(\get_class($this));
+        return md5(get_class($this));
     }
 
     /**
@@ -87,9 +90,9 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @return string
      */
-    public function getClass()
+    public function getClass(): string
     {
-        return \get_class($this);
+        return get_class($this);
     }
 
     /**
@@ -137,7 +140,7 @@ abstract class AbstractPayment implements PaymentsInterface
      */
     public function getIcon()
     {
-        return URL_OPT_DIR.'quiqqer/payments/bin/payments/default.png';
+        return URL_OPT_DIR . 'quiqqer/payments/bin/payments/default.png';
     }
 
     /**
@@ -145,11 +148,11 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
-            'name'        => $this->getName(),
-            'title'       => $this->getTitle(),
+            'name' => $this->getName(),
+            'title' => $this->getTitle(),
             'description' => $this->getDescription()
         ];
     }

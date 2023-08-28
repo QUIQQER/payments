@@ -14,7 +14,11 @@ use QUI\ERP\Accounting\Payments\Payments;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_payments_ajax_backend_getPayment',
     function ($paymentId) {
-        return Payments::getInstance()->getPayment($paymentId)->toArray();
+        $Payment = Payments::getInstance()->getPayment($paymentId);
+        $payment = $Payment->toArray();
+        $payment['icon'] = $Payment->getAttribute('icon');
+
+        return $payment;
     },
     ['paymentId'],
     'Permission::checkAdminUser'

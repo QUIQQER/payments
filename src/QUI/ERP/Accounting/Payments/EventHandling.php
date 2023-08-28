@@ -204,7 +204,7 @@ class EventHandling
     {
         /**
          * @todo In the future there may be other packages that check if payment types
-         * can be used for an Order. Currently this is only quiqqer/erp-plans.
+         * can be used for an Order. However, this is only quiqqer/erp-plans.
          *
          * If quiqqer/erp-plans is installed it handles this process of deciding
          * which payment type to allow
@@ -245,6 +245,9 @@ class EventHandling
             return;
         }
 
+        $PriceFactor = $Payment->toPriceFactor(null, $Order);
+
+        /*
         $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
             'title' => $Payment->getPaymentFeeTitle(),
             'description' => '',
@@ -255,6 +258,7 @@ class EventHandling
             'visible' => true,
             'currency' => $Order->getCurrency()->getCode()
         ]);
+        */
 
         $PriceFactors = $Products->getPriceFactors();
         $PriceFactors->addToEnd($PriceFactor);

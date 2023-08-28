@@ -26,6 +26,7 @@
     align-items: center;
     display: flex;
     flex: 1;
+    flex-grow: 0 !important;
     -webkit-flex: 1;
     justify-content: center;
     text-align: center;
@@ -41,7 +42,6 @@
 }
 
 .quiqqer-order-step-payments-list-entry-icon {
-    float: left;
     padding: 20px;
     width: 25%;
 }
@@ -51,9 +51,8 @@
 }
 
 .quiqqer-order-step-payments-list-entry-text {
-    float: left;
+    flex-grow: 1;
     padding: 20px;
-    width: calc(75% - 80px);
 }
 
 .quiqqer-order-step-payments-list-entry-text label {
@@ -64,6 +63,10 @@
 
 .quiqqer-order-step-payments-list-entry-text-description {
     font-size: 14px;
+}
+
+.quiqqer-order-step-payments-list-entry-payments {
+    padding: 20px;
 }
 
 @media (max-width: 768px) {

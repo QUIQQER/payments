@@ -53,7 +53,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      */
     public function getIcon()
     {
-        return URL_OPT_DIR.'quiqqer/payments/bin/payments/Rechnung.jpg';
+        return URL_OPT_DIR . 'quiqqer/payments/bin/payments/Rechnung.jpg';
     }
 
     /**

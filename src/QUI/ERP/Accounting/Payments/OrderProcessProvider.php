@@ -7,7 +7,6 @@
 namespace QUI\ERP\Accounting\Payments;
 
 use QUI;
-
 use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
 use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Order\AbstractOrderProcessProvider;
@@ -37,17 +36,17 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
     public function initSteps(OrderProcessSteps $OrderProcessSteps, OrderProcess $Process)
     {
         $orderId = null;
-        $Order   = null;
+        $Order = null;
 
         if ($Process->getOrder()) {
-            $Order   = $Process->getOrder();
+            $Order = $Process->getOrder();
             $orderId = $Order->getId();
         }
 
         $OrderProcessSteps->append(
             new Order\Payment([
-                'orderId'  => $orderId,
-                'Order'    => $Order,
+                'orderId' => $orderId,
+                'Order' => $Order,
                 'priority' => 30
             ])
         );
@@ -96,15 +95,15 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
         } catch (QUI\ERP\Order\ProcessingException $Exception) {
             $this->hasErrors = true;
 
-            return '<div class="message-error">'.$Exception->getMessage().'</div>';
+            return '<div class="message-error">' . $Exception->getMessage() . '</div>';
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
             $this->hasErrors = true;
 
-            return '<div class="message-error">'.
-                   QUI::getLocale()->get('quiqqer/order', 'exception.processing.error').
-                   '</div>';
+            return '<div class="message-error">' .
+                QUI::getLocale()->get('quiqqer/order', 'exception.processing.error') .
+                '</div>';
         }
     }
 }

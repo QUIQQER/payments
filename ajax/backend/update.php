@@ -5,7 +5,6 @@
  */
 
 use QUI\ERP\Accounting\Payments\Types\Factory;
-use QUI\ERP\Accounting\Payments\Payments;
 
 /**
  * Update a payment
@@ -17,8 +16,8 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_payments_ajax_backend_update',
     function ($paymentId, $data) {
         $Payments = new Factory();
-        $Payment  = $Payments->getChild($paymentId);
-        $data     = \json_decode($data, true);
+        $Payment = $Payments->getChild($paymentId);
+        $data = json_decode($data, true);
 
         /* @var $Payment QUI\ERP\Accounting\Payments\Types\Payment */
         if (isset($data['title'])) {
