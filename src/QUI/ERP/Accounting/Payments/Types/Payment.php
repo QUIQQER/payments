@@ -497,7 +497,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
                     return true;
                 }
             }
-            
+
             return false;
         };
 
