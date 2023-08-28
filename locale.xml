@@ -300,6 +300,10 @@
             <de><![CDATA[Kombinierbar mit]]></de>
             <en><![CDATA[Combined with]]></en>
         </locale>
+        <locale name="payment.edit.template.assignment.currency">
+            <de><![CDATA[Währungen]]></de>
+            <en><![CDATA[Currencies]]></en>
+        </locale>
         <locale name="payment.edit.template.customIcon">
             <de><![CDATA[Benutzerdefiniertes Bild]]></de>
             <en><![CDATA[Custom Icon]]></en>

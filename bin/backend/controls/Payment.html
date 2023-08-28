@@ -132,8 +132,7 @@
                         <span class="fa fa-calendar"></span>
                         {{usageFrom}}
                     </span>
-                    <input type="datetime-local" name="date_from"
-                           class="field-container-field"/>
+                    <input type="datetime-local" name="date_from" class="field-container-field"/>
                 </label>
             </td>
             <td>
@@ -142,8 +141,7 @@
                         <span class="fa fa-calendar"></span>
                         {{usageTo}}
                     </span>
-                    <input type="datetime-local" name="date_until"
-                           class="field-container-field"/>
+                    <input type="datetime-local" name="date_until" class="field-container-field"/>
                 </label>
             </td>
         </tr>
@@ -153,8 +151,7 @@
                     <span class="field-container-item">
                         {{usageAmountOf}}
                     </span>
-                    <input type="number" min="0" name="purchase_quantity_from"
-                           class="field-container-field"/>
+                    <input type="number" min="0" name="purchase_quantity_from" class="field-container-field"/>
                 </label>
             </td>
             <td>
@@ -162,8 +159,7 @@
                     <span class="field-container-item">
                         {{usageAmountTo}}
                     </span>
-                    <input type="number" min="0" name="purchase_quantity_until"
-                           class="field-container-field"/>
+                    <input type="number" min="0" name="purchase_quantity_until" class="field-container-field"/>
                 </label>
             </td>
         </tr>
@@ -174,8 +170,7 @@
                         <span class="fa fa-money"></span>
                         {{usageValueOf}}
                     </span>
-                    <input type="number" min="0" name="purchase_value_from"
-                           class="field-container-field"/>
+                    <input type="number" min="0" name="purchase_value_from" class="field-container-field"/>
                 </label>
             </td>
             <td>
@@ -184,8 +179,7 @@
                         <span class="fa fa-money"></span>
                         {{usageValueTo}}
                     </span>
-                    <input type="number" min="0" name="purchase_value_until"
-                           class="field-container-field"/>
+                    <input type="number" min="0" name="purchase_value_until" class="field-container-field"/>
                 </label>
             </td>
         </tr>
@@ -209,7 +203,8 @@
                         {{usageAssignmentProduct}}
                     </span>
                     <span class="field-container-field field-container-field-no-padding">
-                        <input type="text" name="articles"
+                        <input type="text"
+                               name="articles"
                                data-qui="package/quiqqer/products/bin/controls/products/Select"
                         />
                     </span>
@@ -223,7 +218,8 @@
                         {{usageAssignmentCategory}}
                     </span>
                     <span class="field-container-field field-container-field-no-padding">
-                        <input type="text" name="categories"
+                        <input type="text"
+                               name="categories"
                                data-qui="package/quiqqer/products/bin/controls/categories/Select"
                         />
                     </span>
@@ -237,7 +233,8 @@
                         {{usageAssignmentUser}}
                     </span>
                     <span class="field-container-field field-container-field-no-padding">
-                        <input type="text" name="user_groups"
+                        <input type="text"
+                               name="user_groups"
                                data-qui="controls/usersAndGroups/Select"
                         />
                     </span>
@@ -251,8 +248,24 @@
                         {{usageAssignmentAreas}}
                     </span>
                     <span class="field-container-field field-container-field-no-padding">
-                        <input type="text" name="areas"
+                        <input type="text"
+                               name="areas"
                                data-qui="package/quiqqer/areas/bin/controls/Select"
+                        />
+                    </span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{usageAssignmentCurrencies}}
+                    </span>
+                    <span class="field-container-field field-container-field-no-padding">
+                        <input type="text"
+                               name="currencies"
+                               data-qui="package/quiqqer/currency/bin/controls/Select"
                         />
                     </span>
                 </label>

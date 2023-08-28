@@ -85,7 +85,7 @@ class Factory extends QUI\CRUD\Factory
 
         QUI::getEvents()->fireEvent('paymentsCreateBegin', [$data['payment_type']]);
 
-        $payment       = $data['payment_type'];
+        $payment = $data['payment_type'];
         $PaymentMethod = new $payment();
 
         /* @var $PaymentMethod QUI\ERP\Accounting\Payments\Api\AbstractPayment */
@@ -106,10 +106,10 @@ class Factory extends QUI\CRUD\Factory
             }
         }
 
-        $PaymentLocale        = $PaymentMethod->getLocale();
+        $PaymentLocale = $PaymentMethod->getLocale();
         $paymentLocaleCurrent = $PaymentLocale->getCurrent();
-        $languages            = QUI\Translator::getAvailableLanguages();
-        $title                = [];
+        $languages = QUI\Translator::getAvailableLanguages();
+        $title = [];
 
         foreach ($languages as $lang) {
             $PaymentLocale->setCurrent($lang);
@@ -205,7 +205,8 @@ class Factory extends QUI\CRUD\Factory
             'areas',
             'articles',
             'categories',
-            'user_groups'
+            'user_groups',
+            'currencies'
         ];
     }
 
@@ -235,12 +236,12 @@ class Factory extends QUI\CRUD\Factory
         $current = QUI::getLocale()->getCurrent();
         $options = [
             'datatype' => 'php,js',
-            'package'  => 'quiqqer/payments'
+            'package' => 'quiqqer/payments'
         ];
 
         if (is_string($title)) {
             if (QUI::getLocale()->isLocaleString($title)) {
-                $parts     = QUI::getLocale()->getPartsOfLocaleString($title);
+                $parts = QUI::getLocale()->getPartsOfLocaleString($title);
                 $languages = QUI\Translator::getAvailableLanguages();
 
                 foreach ($languages as $language) {

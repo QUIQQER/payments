@@ -20,6 +20,7 @@ use function array_filter;
 use function count;
 use function explode;
 use function floatval;
+use function in_array;
 use function is_double;
 use function is_float;
 use function is_string;
@@ -216,6 +217,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             return false;
         }
 
+
         // assignment
         $userGroupValue = $this->getAttribute('user_groups');
         $areasValue = $this->getAttribute('areas');
@@ -276,6 +278,19 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      */
     public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order)
     {
+        // currencies
+        $currencies = $this->getAttribute('currencies');
+
+        if (!empty($currencies)) {
+            $currencies = explode(',', $currencies);
+            $currencies = array_filter($currencies);
+            $OrderCurrency = $Order->getCurrency();
+
+            if (!in_array($OrderCurrency->getCode(), $currencies)) {
+                return false;
+            }
+        }
+
         try {
             QUI::getEvents()->fireEvent('paymentsCanUsedInOrder', [$this, $Order]);
             QUI::getEvents()->fireEvent('quiqqerPaymentCanUsedInOrder', [$this, $Order]);
