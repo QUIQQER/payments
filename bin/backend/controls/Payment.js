@@ -225,11 +225,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * event: on payment change
          *
-         * @param {Object} Payments
+         * @param {Object} PaymentsInstance
          * @param {Number} paymentId
          * @param {Object} data
          */
-        $onPaymentChange: function(Payments, paymentId, data) {
+        $onPaymentChange: function(PaymentsInstance, paymentId, data) {
             if (paymentId !== this.getAttribute('paymentId')) {
                 return;
             }
@@ -241,10 +241,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
         /**
          * event: on payment change
          *
-         * @param {Object} Payments
+         * @param {Object} PaymentsInstance
          * @param {Number} paymentId
          */
-        $onPaymentDelete: function(Payments, paymentId) {
+        $onPaymentDelete: function(PaymentsInstance, paymentId) {
             if (paymentId === this.getAttribute('paymentId')) {
                 this.destroy();
             }
