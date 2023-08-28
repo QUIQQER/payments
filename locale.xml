@@ -228,6 +228,31 @@
             <de><![CDATA[Betrag per Vorkasse erhalten]]></de>
             <en><![CDATA[Amount received in advance]]></en>
         </locale>
+        <locale name="ordering.step.title.Payment.supportedCurrencies">
+            <de><![CDATA[Unterstützte Währungen:]]></de>
+            <en><![CDATA[Supported currencies:]]></en>
+        </locale>
+        <locale name="currency.settings.title">
+            <de><![CDATA[Zahlungen:]]></de>
+            <en><![CDATA[Payments:]]></en>
+        </locale>
+        <locale name="currency.settings.listUnsupportedPayment.text">
+            <de><![CDATA[Nicht unterstützte Zahlungsarten anzeigen:]]></de>
+            <en><![CDATA[Show unsupported payment methods:]]></en>
+        </locale>
+        <locale name="currency.settings.listUnsupportedPayment.description">
+            <de><![CDATA[
+            Auch wenn im Bestellprozess Zahlungsoptionen angeboten werden, die aktuell nicht zur Bestellung passen,
+            erhalten Kunden dennoch die Möglichkeit, diese anzuzeigen. Über eine eingebaute Funktion können sie
+            die Währung anpassen, um ihre bevorzugte Zahlungsoption zu nutzen.
+            ]]></de>
+            <en><![CDATA[
+            Even if payment options are offered in the ordering process that do not currently fit the order,
+            customers are still given the option to display them. A built-in feature allows them to adjust the
+            currency to match their preferred payment option.
+            ]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/payments" datatype="js">
@@ -404,6 +429,37 @@ Beispiel: Nachnahmegebühr: 10,00 €
             <de><![CDATA[Zahlungsmethode]]></de>
             <en><![CDATA[Payment type]]></en>
         </locale>
+
+        <locale name="order.change.to.supported.payment.title">
+            <de><![CDATA[Währungeswechsel durchführen?]]></de>
+            <en><![CDATA[Perform currency exchange?]]></en>
+        </locale>
+        <locale name="order.change.to.supported.payment.text">
+            <de><![CDATA[Währungeswechsel durchführen?]]></de>
+            <en><![CDATA[Perform currency exchange?]]></en>
+        </locale>
+        <locale name="order.change.to.supported.payment.information">
+            <de><![CDATA[
+            In deiner Bestellung wird eine andere Währung verwendet, die von dieser Zahlungsweise unterstützt wird.
+            Um diese Option zu nutzen, müsste die Währung deiner Bestellung angepasst werden.
+            Wenn du diese Änderung vornehmen möchtest, wähle bitte eine Währung aus den unten aufgeführten Optionen.
+            ]]></de>
+            <en><![CDATA[
+            Your order uses a different currency that is supported by this payment method.
+            To use this option, the currency of your order would need to be adjusted.
+            If you would like to make this change, please select a currency from the options below.
+            ]]></en>
+        </locale>
+        <locale name="order.change.to.supported.payment.btnCancel">
+            <de><![CDATA[Abbrechen]]></de>
+            <en><![CDATA[Cancel]]></en>
+        </locale>
+        <locale name="order.change.to.supported.payment.btnSubmit">
+            <de><![CDATA[Währung wechseln]]></de>
+            <en><![CDATA[Change currencies]]></en>
+        </locale>
+
+
     </groups>
 
 </locales>

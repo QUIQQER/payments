@@ -28,15 +28,15 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
      */
     public function toArray()
     {
-        $lg     = 'quiqqer/payments';
+        $lg = 'quiqqer/payments';
         $Locale = QUI::getLocale();
 
         return [
-            'title'        => $Locale->get($lg, 'payment.free.title'),
-            'description'  => $Locale->get($lg, 'payment.free.description'),
+            'title' => $Locale->get($lg, 'payment.free.title'),
+            'description' => $Locale->get($lg, 'payment.free.description'),
             'workingTitle' => $Locale->get($lg, 'payment.free.workingTitle'),
-            'paymentType'  => false,
-            'icon'         => ''
+            'paymentType' => false,
+            'icon' => ''
         ];
     }
 
@@ -44,7 +44,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
      * @param string $hash
      * @return bool
      */
-    public function isSuccessful($hash)
+    public function isSuccessful(string $hash)
     {
         return true;
     }
@@ -68,10 +68,10 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     }
 
     /**
-     * @param $Locale
+     * @param QUI\Locale|null $Locale
      * @return array|string
      */
-    public function getTitle($Locale = null)
+    public function getTitle(QUI\Locale $Locale = null)
     {
         $PaymentType = $this->getPaymentType();
 
@@ -83,10 +83,10 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     }
 
     /**
-     * @param $Locale
+     * @param QUI\Locale|null $Locale
      * @return array|string
      */
-    public function getWorkingTitle($Locale = null)
+    public function getWorkingTitle(QUI\Locale $Locale = null)
     {
         $PaymentType = $this->getPaymentType();
 
@@ -98,10 +98,10 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     }
 
     /**
-     * @param $Locale
+     * @param QUI\Locale|null $Locale
      * @return array|string
      */
-    public function getDescription($Locale = null)
+    public function getDescription(QUI\Locale $Locale = null)
     {
         $PaymentType = $this->getPaymentType();
 

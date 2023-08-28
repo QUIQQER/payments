@@ -69,7 +69,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $lg = 'quiqqer/payments';
         $id = $this->getId();
@@ -137,7 +137,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @throws QUI\ERP\Accounting\Payments\Exception
      */
-    public function isSuccessful($hash)
+    public function isSuccessful(string $hash): bool
     {
         return $this->getPaymentType()->isSuccessful($hash);
     }
@@ -148,7 +148,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * @return Api\AbstractPayment
      * @throws QUI\ERP\Accounting\Payments\Exception
      */
-    public function getPaymentType()
+    public function getPaymentType(): Api\AbstractPayment
     {
         $type = $this->getAttribute('payment_type');
 
@@ -179,7 +179,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * @param QUI\Interfaces\Users\User $User
      * @return boolean
      */
-    public function canUsedBy(QUI\Interfaces\Users\User $User)
+    public function canUsedBy(QUI\Interfaces\Users\User $User): bool
     {
         if ($this->isActive() === false) {
             return false;
@@ -276,18 +276,27 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * @param QUI\ERP\Order\OrderInterface $Order
      * @return bool
      */
-    public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order)
+    public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order): bool
     {
         // currencies
         $currencies = $this->getAttribute('currencies');
 
         if (!empty($currencies)) {
-            $currencies = explode(',', $currencies);
-            $currencies = array_filter($currencies);
-            $OrderCurrency = $Order->getCurrency();
+            try {
+                $Config = QUI::getPackage('quiqqer/payments')->getConfig();
+                $listUnsupportedPayment = !!$Config->getValue('payments', 'listUnsupportedPayment');
 
-            if (!in_array($OrderCurrency->getCode(), $currencies)) {
-                return false;
+                if ($listUnsupportedPayment === false) {
+                    $currencies = explode(',', $currencies);
+                    $currencies = array_filter($currencies);
+                    $OrderCurrency = $Order->getCurrency();
+
+                    if (!in_array($OrderCurrency->getCode(), $currencies)) {
+                        return false;
+                    }
+                }
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
             }
         }
 
@@ -322,7 +331,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return !!$this->getAttribute('active');
     }
@@ -344,10 +353,10 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Return the payment title
      *
-     * @param null $Locale
+     * @param null|QUI\Locale $Locale
      * @return array|string
      */
-    public function getTitle($Locale = null)
+    public function getTitle(QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -362,10 +371,10 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Return the payment description
      *
-     * @param null $Locale
+     * @param null|QUI\Locale $Locale
      * @return array|string
      */
-    public function getDescription($Locale = null)
+    public function getDescription(QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -380,10 +389,10 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Return the payment working title
      *
-     * @param null $Locale
+     * @param QUI\Locale|null $Locale
      * @return array|string
      */
-    public function getWorkingTitle($Locale = null)
+    public function getWorkingTitle(QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -401,7 +410,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * @param QUI\ERP\Order\OrderInterface $Order
      * @return string
      */
-    public function getOrderInformationText(QUI\ERP\Order\OrderInterface $Order)
+    public function getOrderInformationText(QUI\ERP\Order\OrderInterface $Order): string
     {
         $Shipping = $Order->getShipping();
         $Locale = QUI::getLocale();
@@ -450,7 +459,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * @return string - image url
      * @throws QUI\ERP\Accounting\Payments\Exception
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         if (!QUI\Projects\Media\Utils::isMediaUrl($this->getAttribute('icon'))) {
             return $this->getPaymentType()->getIcon();
@@ -467,6 +476,52 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         }
 
         return $this->getPaymentType()->getIcon();
+    }
+
+    /**
+     * @return QUI\ERP\Currency\Currency[]
+     */
+    public function getSupportedCurrencies(): array
+    {
+        // currencies
+        $currencies = $this->getAttribute('currencies');
+        $allowedCurrencies = QUI\ERP\Currency\Handler::getAllowedCurrencies();
+
+        if (empty($currencies)) {
+            return $allowedCurrencies;
+        }
+
+        $isInAllowedCurrencies = function ($WantedCurrency) use ($allowedCurrencies) {
+            foreach ($allowedCurrencies as $Currency) {
+                if ($Currency->getCode() === $WantedCurrency->getCode()) {
+                    return true;
+                }
+            }
+            
+            return false;
+        };
+
+        $currencies = explode(',', $currencies);
+        $currencies = array_filter($currencies);
+
+        $result = [];
+
+        foreach ($currencies as $currencyCode) {
+            try {
+                $Currency = QUI\ERP\Currency\Handler::getCurrency($currencyCode);
+
+                if ($isInAllowedCurrencies($Currency)) {
+                    $result[] = $Currency;
+                }
+            } catch (QUI\Exception $exception) {
+            }
+        }
+
+        if (empty($result)) {
+            return $allowedCurrencies;
+        }
+
+        return $result;
     }
 
     //endregion
@@ -638,9 +693,9 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Has the payment a payment fee?
      *
-     * @return Bool
+     * @return bool
      */
-    public function hasPaymentFee()
+    public function hasPaymentFee(): bool
     {
         $paymentFee = $this->getAttribute('paymentFee');
 

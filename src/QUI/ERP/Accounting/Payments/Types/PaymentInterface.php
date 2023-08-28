@@ -3,6 +3,7 @@
 namespace QUI\ERP\Accounting\Payments\Types;
 
 use QUI;
+use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
 
 /**
  * Interface PaymentInterface
@@ -22,52 +23,57 @@ interface PaymentInterface
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getTitle($Locale = null);
+    public function getTitle(QUI\Locale $Locale = null): string;
 
     /**
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getDescription($Locale = null);
+    public function getDescription(QUI\Locale $Locale = null): string;
 
     /**
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getWorkingTitle($Locale = null);
+    public function getWorkingTitle(QUI\Locale $Locale = null): string;
 
     //endregion
 
     /**
      * @return array
      */
-    public function toArray();
+    public function toArray(): array;
 
     /**
      * @param string $hash - order hash
      * @return bool
      */
-    public function isSuccessful($hash);
+    public function isSuccessful(string $hash): bool;
 
     /**
-     * @return \QUI\ERP\Accounting\Payments\Api\AbstractPayment
+     * @return AbstractPayment
      */
-    public function getPaymentType();
+    public function getPaymentType(): AbstractPayment;
+
+    /**
+     * @return QUI\ERP\Currency\Currency[]
+     */
+    public function getSupportedCurrencies(): array;
 
     /**
      * @return bool
      */
-    public function hasPaymentFee();
+    public function hasPaymentFee(): bool;
 
     /**
      * @param QUI\Interfaces\Users\User $User
      * @return bool
      */
-    public function canUsedBy(QUI\Interfaces\Users\User $User);
+    public function canUsedBy(QUI\Interfaces\Users\User $User): bool;
 
     /**
      * @param QUI\ERP\Order\OrderInterface $Order
      * @return string
      */
-    public function getOrderInformationText(QUI\ERP\Order\OrderInterface $Order);
+    public function getOrderInformationText(QUI\ERP\Order\OrderInterface $Order): string;
 }

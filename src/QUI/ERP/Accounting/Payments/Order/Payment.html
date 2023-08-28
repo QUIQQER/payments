@@ -11,6 +11,7 @@
         {foreach $payments as $Payment}
         <div class="quiqqer-order-step-payments-list-entry"
              data-qui="package/quiqqer/payments/bin/frontend/controls/order/Payment"
+             data-is-supported="{if $this->isSupported($Payment)}1{else}0{/if}"
         >
             <div class="quiqqer-order-step-payments-list-entry-select">
                 <input id="payment-{$Payment->getId()}"
@@ -29,6 +30,19 @@
                 </label>
                 <div class="quiqqer-order-step-payments-list-entry-text-description">
                     {$Payment->getDescription()}
+                </div>
+
+                <div class="quiqqer-order-step-payments-list-entry-text-supportedPayments">
+                    <span class="quiqqer-order-step-payments-list-entry-text-supportedPayments-label">
+                        {locale group="quiqqer/payments" var="ordering.step.title.Payment.supportedCurrencies"}
+                    </span>
+
+                    {assign var=supportedCurrencies value=$Payment->getSupportedCurrencies()}
+                    {foreach $supportedCurrencies as $Currency}
+                    <span class="quiqqer-order-step-payments-list-entry-text-supportedPayments-payment quiqqer-tags-tag">
+                        {$Currency->getCode()}
+                    </span>
+                    {/foreach}
                 </div>
             </div>
             <div class="quiqqer-order-step-payments-list-entry-payments">

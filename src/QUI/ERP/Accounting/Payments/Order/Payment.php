@@ -13,6 +13,8 @@ use function array_filter;
 use function array_values;
 use function count;
 use function dirname;
+use function explode;
+use function in_array;
 
 /**
  * Class Payment
@@ -37,7 +39,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getName($Locale = null)
+    public function getName($Locale = null): string
     {
         return 'Payment';
     }
@@ -45,7 +47,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     /**
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return 'fa-money';
     }
@@ -55,7 +57,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
      *
      * @throws QUI\Exception
      */
-    public function getBody()
+    public function getBody(): string
     {
         $Engine = QUI::getTemplateManager()->getEngine();
         $User = QUI::getUserBySession();
@@ -75,10 +77,37 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
             'User' => $User,
             'Customer' => $Customer,
             'SelectedPayment' => $SelectedPayment,
-            'payments' => $payments
+            'payments' => $payments,
+            'this' => $this
         ]);
 
         return $Engine->fetch(dirname(__FILE__) . '/Payment.html');
+    }
+
+    /**
+     * @param QUI\ERP\Accounting\Payments\Types\Payment $Payment
+     * @return bool
+     */
+    public function isSupported(QUI\ERP\Accounting\Payments\Types\Payment $Payment): bool
+    {
+        $Order = $this->getOrder();
+
+        // currencies
+        $currencies = $Payment->getAttribute('currencies');
+
+        if (empty($currencies)) {
+            return true;
+        }
+
+        $currencies = explode(',', $currencies);
+        $currencies = array_filter($currencies);
+        $OrderCurrency = $Order->getCurrency();
+
+        if (!in_array($OrderCurrency->getCode(), $currencies)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -153,9 +182,9 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     /**
      * return the available payment list
      *
-     * @return array
+     * @return QUI\ERP\Accounting\Payments\Types\Payment[]
      */
-    protected function getPaymentList()
+    protected function getPaymentList(): array
     {
         $Order = $this->getOrder();
         $Articles = $Order->getArticles();
