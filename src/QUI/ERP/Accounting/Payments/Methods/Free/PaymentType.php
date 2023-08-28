@@ -16,9 +16,8 @@ use QUI\CRUD\Factory;
  *
  * @package QUI\ERP\Accounting\Payments\Methods\Free\PaymentType
  */
-class PaymentType
-    extends QUI\ERP\Accounting\Payments\Types\Payment
-    implements QUI\ERP\Accounting\Payments\Types\PaymentInterface
+class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
+    QUI\ERP\Accounting\Payments\Types\PaymentInterface
 {
     public function __construct($id, Factory $Factory)
     {
