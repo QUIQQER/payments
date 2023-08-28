@@ -26,17 +26,17 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
-        $lg     = 'quiqqer/payments';
+        $lg = 'quiqqer/payments';
         $Locale = QUI::getLocale();
 
         return [
-            'title'        => $Locale->get($lg, 'payment.free.title'),
-            'description'  => $Locale->get($lg, 'payment.free.description'),
+            'title' => $Locale->get($lg, 'payment.free.title'),
+            'description' => $Locale->get($lg, 'payment.free.description'),
             'workingTitle' => $Locale->get($lg, 'payment.free.workingTitle'),
-            'paymentType'  => false,
-            'icon'         => ''
+            'paymentType' => false,
+            'icon' => ''
         ];
     }
 
@@ -44,7 +44,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
      * @param string $hash
      * @return bool
      */
-    public function isSuccessful($hash)
+    public function isSuccessful(string $hash): bool
     {
         return true;
     }
@@ -62,16 +62,16 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
      *
      * @return Bool
      */
-    public function hasPaymentFee()
+    public function hasPaymentFee(): bool
     {
         return false;
     }
 
     /**
-     * @param $Locale
+     * @param QUI\Locale|null $Locale
      * @return array|string
      */
-    public function getTitle($Locale = null)
+    public function getTitle(QUI\Locale $Locale = null): string
     {
         $PaymentType = $this->getPaymentType();
 
@@ -83,10 +83,10 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     }
 
     /**
-     * @param $Locale
+     * @param QUI\Locale|null $Locale
      * @return array|string
      */
-    public function getWorkingTitle($Locale = null)
+    public function getWorkingTitle(QUI\Locale $Locale = null): string
     {
         $PaymentType = $this->getPaymentType();
 
@@ -98,10 +98,10 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     }
 
     /**
-     * @param $Locale
+     * @param QUI\Locale|null $Locale
      * @return array|string
      */
-    public function getDescription($Locale = null)
+    public function getDescription(QUI\Locale $Locale = null): string
     {
         $PaymentType = $this->getPaymentType();
 
@@ -115,7 +115,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     /**
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return $this->getPaymentType()->getIcon();
     }
@@ -123,7 +123,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     /**
      * @return Payment
      */
-    public function getPaymentType()
+    public function getPaymentType(): QUI\ERP\Accounting\Payments\Api\AbstractPayment
     {
         return new Payment();
     }
@@ -132,7 +132,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
      * @param QUI\Interfaces\Users\User $User
      * @return bool
      */
-    public function canUsedBy(QUI\Interfaces\Users\User $User)
+    public function canUsedBy(QUI\Interfaces\Users\User $User): bool
     {
         return true;
     }
@@ -140,7 +140,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     /**
      * @return string
      */
-    public function getOrderInformationText(QUI\ERP\Order\OrderInterface $Order)
+    public function getOrderInformationText(QUI\ERP\Order\OrderInterface $Order): string
     {
         return '';
     }

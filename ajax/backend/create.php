@@ -4,8 +4,8 @@
  * This file contains package_quiqqer_payments_ajax_backend_getPayments
  */
 
-use \QUI\ERP\Accounting\Payments\Types\Factory;
-use \QUI\ERP\Accounting\Payments\Payments;
+use QUI\ERP\Accounting\Payments\Payments;
+use QUI\ERP\Accounting\Payments\Types\Factory;
 
 /**
  * Create a new payment method

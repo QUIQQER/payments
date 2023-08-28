@@ -9,7 +9,6 @@ use QUI\ERP\Accounting\Invoice\InvoiceView;
 use QUI\ERP\Accounting\Invoice\Utils\Invoice as InvoiceUtils;
 use QUI\ERP\Accounting\Payments\Types\RecurringPaymentInterface;
 use QUI\ERP\Order\AbstractOrder;
-use QUI\ERP\Payments\PayPal\Recurring\BillingAgreements;
 
 /**
  * Class Payment
@@ -57,7 +56,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      */
     public function getIcon()
     {
-        return URL_OPT_DIR.'quiqqer/payments/bin/payments/Rechnung.jpg';
+        return URL_OPT_DIR . 'quiqqer/payments/bin/payments/Rechnung.jpg';
     }
 
     /**
@@ -86,7 +85,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
         }
 
         // format time for payment
-        $Locale    = $Invoice->getCustomer()->getLocale();
+        $Locale = $Invoice->getCustomer()->getLocale();
         $Formatter = $Locale->getDateFormatter();
 
         return QUI::getLocale()->get(

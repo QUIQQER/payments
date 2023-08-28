@@ -1,0 +1,15 @@
+.quiqqer-payments-supportedPayments-currency-change {
+    display: inline-block;
+    padding: 1rem;
+    width: 100%;
+}
+
+.quiqqer-payments-supportedPayments-currency-change label {
+    display: block;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    width: 100%;
+}

@@ -69,7 +69,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     public function isSuccessful($hash)
     {
         try {
-            $Order       = QUI\ERP\Order\Handler::getInstance()->getOrderByHash($hash);
+            $Order = QUI\ERP\Order\Handler::getInstance()->getOrderByHash($hash);
             $Calculation = $Order->getPriceCalculation();
 
             if ($Calculation->getSum() === 0) {
@@ -97,8 +97,8 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      */
     public function getIcon()
     {
-        return Payments::getInstance()->getHost().
-               URL_OPT_DIR.
-               'quiqqer/payments/bin/payments/Free.png';
+        return Payments::getInstance()->getHost() .
+            URL_OPT_DIR .
+            'quiqqer/payments/bin/payments/Free.png';
     }
 }

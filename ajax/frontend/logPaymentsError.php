@@ -1,13 +1,14 @@
 <?php
 
-use QUI\Utils\Security\Orthos;
-
 /**
  * Log a payments error
  *
  * @param string $errMsg
  * @param string|number $errCode (optional) - Error code
  */
+
+use QUI\Utils\Security\Orthos;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_log_ajax_logPaymentsError',
     function (
@@ -23,7 +24,7 @@ QUI::$Ajax->registerFunction(
         $errCode = \mb_substr($errCode, 0, 255);
 
         $error = "\n";
-        $error .= "Time: ".\date('Y-m-d H:i:s')."\n\n";
+        $error .= "Time: " . \date('Y-m-d H:i:s') . "\n\n";
         $error .= "Error message: {$errMsg}\n";
         $error .= "Error code: {$errCode}\n";
         $error .= "\n";
