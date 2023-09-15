@@ -24,9 +24,9 @@
     "email": "support@pcsg.de"
   },
   "require": {
-    "quiqqer\/quiqqer": "*",
-    "quiqqer\/areas": "*",
-    "quiqqer\/payment-transactions": "*"
+    "quiqqer\/quiqqer": "^1.0|dev-master|dev-dev",
+    "quiqqer\/areas": "^1.0|dev-master|dev-dev",
+    "quiqqer\/payment-transactions": "^1.0|dev-master|dev-dev"
   },
   "autoload": {
     "psr-4": {
