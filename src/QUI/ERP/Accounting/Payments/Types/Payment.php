@@ -12,6 +12,7 @@ use QUI\ERP\Accounting\Payments\Api;
 use QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed;
 use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\BankAccounts\Handler as BankAccountsHandler;
+use QUI\ERP\Currency\Currency;
 use QUI\Exception;
 use QUI\Permissions\Permission;
 use QUI\Translator;
@@ -480,7 +481,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     }
 
     /**
-     * @return QUI\ERP\Currency\Currency[]
+     * @return Currency[]
      */
     public function getSupportedCurrencies(): array
     {
@@ -489,7 +490,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         $allowedCurrencies = QUI\ERP\Currency\Handler::getAllowedCurrencies();
 
         if (empty($currencies)) {
-            return $allowedCurrencies;
+            return [QUI\ERP\Defaults::getCurrency()];
         }
 
         $isInAllowedCurrencies = function ($WantedCurrency) use ($allowedCurrencies) {
@@ -523,6 +524,26 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Check if a currency is supported
+     *
+     * @param Currency $Currency The currency to check
+     *
+     * @return bool Returns true if the currency is supported, false otherwise
+     */
+    public function isCurrencySupported(Currency $Currency): bool
+    {
+        $currencies = $this->getSupportedCurrencies();
+
+        foreach ($currencies as $Supported) {
+            if ($Supported->getCode() === $Currency->getCode()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     //endregion

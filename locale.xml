@@ -459,6 +459,33 @@ Beispiel: Nachnahmegebühr: 10,00 €
             <en><![CDATA[Change currencies]]></en>
         </locale>
 
+        <locale name="order.change.currency.title">
+            <de><![CDATA[Währungeswechsel durchführen?]]></de>
+            <en><![CDATA[Perform currency exchange?]]></en>
+        </locale>
+        <locale name="order.change.currency.text">
+            <de><![CDATA[Währungeswechsel durchführen?]]></de>
+            <en><![CDATA[Perform currency exchange?]]></en>
+        </locale>
+        <locale name="order.change.currency.information">
+            <de><![CDATA[
+            Du kannst die Währung deiner Bestellung auf eine der unten aufgelisteten Optionen ändern.
+            Bitte beachte, dass nur eine Änderung der Währung möglich ist.
+            ]]></de>
+            <en><![CDATA[
+            You can change the currency of your order to one of the options listed below.
+            Please note that only one currency change is possible.
+            ]]></en>
+        </locale>
+        <locale name="order.change.currency.btnCancel">
+            <de><![CDATA[Abbrechen]]></de>
+            <en><![CDATA[Cancel]]></en>
+        </locale>
+        <locale name="order.change.currency.btnSubmit">
+            <de><![CDATA[Währung wechseln]]></de>
+            <en><![CDATA[Change currencies]]></en>
+        </locale>
+
 
     </groups>
 

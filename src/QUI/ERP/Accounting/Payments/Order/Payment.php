@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Order\Controls\Payment
+ * This file contains QUI\ERP\Accounting\Payments\Order\Payment
  */
 
 namespace QUI\ERP\Accounting\Payments\Order;
@@ -64,7 +64,8 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $Order = $this->getOrder();
         $Order->recalculate();
-
+        
+        $Currency = $Order->getCurrency();
         $Customer = $Order->getCustomer();
         $SelectedPayment = $Order->getPayment();
         $payments = $this->getPaymentList();
@@ -76,6 +77,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $Engine->assign([
             'User' => $User,
             'Customer' => $Customer,
+            'Currency' => $Currency,
             'SelectedPayment' => $SelectedPayment,
             'payments' => $payments,
             'this' => $this
