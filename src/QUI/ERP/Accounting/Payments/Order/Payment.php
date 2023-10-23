@@ -64,7 +64,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $Order = $this->getOrder();
         $Order->recalculate();
-        
+
         $Currency = $Order->getCurrency();
         $Customer = $Order->getCustomer();
         $SelectedPayment = $Order->getPayment();
