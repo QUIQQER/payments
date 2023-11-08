@@ -253,6 +253,10 @@
             ]]></en>
         </locale>
 
+        <locale name="payment.plus">
+            <de><![CDATA[zzgl.]]></de>
+            <en><![CDATA[plus.]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/payments" datatype="js">

@@ -26,7 +26,10 @@ use function in_array;
 use function is_double;
 use function is_float;
 use function is_string;
+use function round;
+use function strlen;
 use function strtotime;
+use function strval;
 use function time;
 
 /**
@@ -832,7 +835,42 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             $Price = new QUI\ERP\Money\Price($paymentFee, $DefaultCurrency);
         }
 
-        return '+' . $Price->getDisplayPrice();
+        if (!$paymentFee) {
+            return '';
+        }
+
+        if (isset($price)) {
+            $numberAsString = strval($price);
+        } else {
+            $numberAsString = strval($paymentFee);
+        }
+
+        $exploded = explode('.', $numberAsString);
+        $numberOfDecimalPlaces = isset($exploded[1]) ? strlen($exploded[1]) : 0;
+
+        $priceStringTitle = '';
+        $priceStringTitle .= QUI::getLocale()->get('quiqqer/payments', 'payment.plus');
+        $priceStringTitle .= ' ';
+        $priceStringTitle .= $Price->getDisplayPrice();
+
+        $priceString = $priceStringTitle;
+
+        if ($numberOfDecimalPlaces > 4) {
+            if (isset($price)) {
+                $priceRounded = round($price, 4);
+            } else {
+                $priceRounded = round($paymentFee, 4);
+            }
+            
+            $PriceDisplay = new QUI\ERP\Money\Price($priceRounded, $Price->getCurrency());
+
+            $priceString = '';
+            $priceString .= QUI::getLocale()->get('quiqqer/payments', 'payment.plus');
+            $priceString .= ' ~';
+            $priceString .= $PriceDisplay->getDisplayPrice();
+        }
+
+        return '<span title="' . $priceStringTitle . '">' . $priceString . '</span>';
     }
 
     //endregion
