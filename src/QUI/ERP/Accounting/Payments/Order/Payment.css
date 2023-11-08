@@ -69,6 +69,10 @@
     padding: 20px;
 }
 
+.quiqqer-order-step-payments-list-entry--notSupported {
+    opacity: 0.5;
+}
+
 @media (max-width: 768px) {
     .quiqqer-order-step-payments-list-entry {
         clear: both;

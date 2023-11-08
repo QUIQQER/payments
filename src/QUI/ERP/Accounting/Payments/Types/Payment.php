@@ -12,6 +12,7 @@ use QUI\ERP\Accounting\Payments\Api;
 use QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed;
 use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\BankAccounts\Handler as BankAccountsHandler;
+use QUI\ERP\Currency\Currency;
 use QUI\Exception;
 use QUI\Permissions\Permission;
 use QUI\Translator;
@@ -25,7 +26,10 @@ use function in_array;
 use function is_double;
 use function is_float;
 use function is_string;
+use function round;
+use function strlen;
 use function strtotime;
+use function strval;
 use function time;
 
 /**
@@ -480,7 +484,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     }
 
     /**
-     * @return QUI\ERP\Currency\Currency[]
+     * @return Currency[]
      */
     public function getSupportedCurrencies(): array
     {
@@ -489,7 +493,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         $allowedCurrencies = QUI\ERP\Currency\Handler::getAllowedCurrencies();
 
         if (empty($currencies)) {
-            return $allowedCurrencies;
+            return [QUI\ERP\Defaults::getCurrency()];
         }
 
         $isInAllowedCurrencies = function ($WantedCurrency) use ($allowedCurrencies) {
@@ -523,6 +527,26 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Check if a currency is supported
+     *
+     * @param Currency $Currency The currency to check
+     *
+     * @return bool Returns true if the currency is supported, false otherwise
+     */
+    public function isCurrencySupported(Currency $Currency): bool
+    {
+        $currencies = $this->getSupportedCurrencies();
+
+        foreach ($currencies as $Supported) {
+            if ($Supported->getCode() === $Currency->getCode()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     //endregion
@@ -811,7 +835,42 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             $Price = new QUI\ERP\Money\Price($paymentFee, $DefaultCurrency);
         }
 
-        return '+' . $Price->getDisplayPrice();
+        if (!$paymentFee) {
+            return '';
+        }
+
+        if (isset($price)) {
+            $numberAsString = strval($price);
+        } else {
+            $numberAsString = strval($paymentFee);
+        }
+
+        $exploded = explode('.', $numberAsString);
+        $numberOfDecimalPlaces = isset($exploded[1]) ? strlen($exploded[1]) : 0;
+
+        $priceStringTitle = '';
+        $priceStringTitle .= QUI::getLocale()->get('quiqqer/payments', 'payment.plus');
+        $priceStringTitle .= ' ';
+        $priceStringTitle .= $Price->getDisplayPrice();
+
+        $priceString = $priceStringTitle;
+
+        if ($numberOfDecimalPlaces > 4) {
+            if (isset($price)) {
+                $priceRounded = round($price, 4);
+            } else {
+                $priceRounded = round($paymentFee, 4);
+            }
+
+            $PriceDisplay = new QUI\ERP\Money\Price($priceRounded, $Price->getCurrency());
+
+            $priceString = '';
+            $priceString .= QUI::getLocale()->get('quiqqer/payments', 'payment.plus');
+            $priceString .= ' ~';
+            $priceString .= $PriceDisplay->getDisplayPrice();
+        }
+
+        return '<span title="' . $priceStringTitle . '">' . $priceString . '</span>';
     }
 
     //endregion
