@@ -861,7 +861,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             } else {
                 $priceRounded = round($paymentFee, 4);
             }
-            
+
             $PriceDisplay = new QUI\ERP\Money\Price($priceRounded, $Price->getCurrency());
 
             $priceString = '';
