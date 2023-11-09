@@ -436,11 +436,11 @@ Beispiel: Nachnahmegebühr: 10,00 €
 
         <locale name="order.change.to.supported.payment.title">
             <de><![CDATA[Währungeswechsel durchführen?]]></de>
-            <en><![CDATA[Perform currency exchange?]]></en>
+            <en><![CDATA[Change currency?]]></en>
         </locale>
         <locale name="order.change.to.supported.payment.text">
             <de><![CDATA[Währungeswechsel durchführen?]]></de>
-            <en><![CDATA[Perform currency exchange?]]></en>
+            <en><![CDATA[Change currency?]]></en>
         </locale>
         <locale name="order.change.to.supported.payment.information">
             <de><![CDATA[
@@ -465,11 +465,11 @@ Beispiel: Nachnahmegebühr: 10,00 €
 
         <locale name="order.change.currency.title">
             <de><![CDATA[Währungeswechsel durchführen?]]></de>
-            <en><![CDATA[Perform currency exchange?]]></en>
+            <en><![CDATA[Change currency?]]></en>
         </locale>
         <locale name="order.change.currency.text">
             <de><![CDATA[Währungeswechsel durchführen?]]></de>
-            <en><![CDATA[Perform currency exchange?]]></en>
+            <en><![CDATA[Change currency?]]></en>
         </locale>
         <locale name="order.change.currency.information">
             <de><![CDATA[
