@@ -144,7 +144,8 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      */
     public function isSuccessful(string $hash): bool
     {
-        return $this->getPaymentType()->isSuccessful($hash);
+        // bitte den bool cast stehen lassen
+        return (bool)$this->getPaymentType()->isSuccessful($hash);
     }
 
     /**
