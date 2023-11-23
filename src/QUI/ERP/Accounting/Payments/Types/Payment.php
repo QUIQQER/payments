@@ -825,7 +825,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         $DefaultCurrency = QUI\ERP\Defaults::getCurrency();
         $UserCurrency = QUI\ERP\Defaults::getUserCurrency();
 
-        if ($DefaultCurrency->getCode() !== $UserCurrency->getCode()) {
+        if ($UserCurrency && $DefaultCurrency->getCode() !== $UserCurrency->getCode()) {
             try {
                 $price = $DefaultCurrency->convert($paymentFee, $UserCurrency);
                 $Price = new QUI\ERP\Money\Price($price, $UserCurrency);
