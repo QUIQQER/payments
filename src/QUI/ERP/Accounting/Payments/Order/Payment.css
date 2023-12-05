@@ -7,6 +7,10 @@
     --_payment-order-listEntry-spacing: var(--payment-order-listEntry-spacing, var(--_order-listEntry-spacing, .5rem));
 }
 
+.quiqqer-order-step-payments-description {
+    margin-bottom: 1rem;
+}
+
 .quiqqer-order-step-payments form {
     margin-top: 1rem;
 }
@@ -16,6 +20,7 @@
     display: grid;
     grid-template-columns: auto max(25%, 150px) 1fr auto;
     grid-template-areas: 'select icon text price';
+    background-color: var(--_payment-order-listEntry-bg);
     gap: var(--_payment-order-listEntry-gap);
     padding: var(--_payment-order-listEntry-padding);
     border-radius: var(--_payment-order-listEntry-radius);
@@ -60,7 +65,8 @@
 }
 
 .quiqqer-order-step-payments-list-entry-text-description {
-    font-size: var(--qui-fs-base, 1rem);
+    font-size: var(--qui-fs-sm, 0.875rem);
+    margin-bottom: 0.25rem;
 }
 
 .quiqqer-order-step-payments-list-entry-text-description > p:last-child {
