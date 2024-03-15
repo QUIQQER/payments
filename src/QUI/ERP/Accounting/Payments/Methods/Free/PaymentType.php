@@ -8,6 +8,7 @@ namespace QUI\ERP\Accounting\Payments\Methods\Free;
 
 use QUI;
 use QUI\CRUD\Factory;
+use QUI\ERP\Order\OrderInterface;
 
 /**
  * Class PaymentType
@@ -19,7 +20,7 @@ use QUI\CRUD\Factory;
 class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     QUI\ERP\Accounting\Payments\Types\PaymentInterface
 {
-    public function __construct($id, Factory $Factory)
+    public function __construct(protected $id, protected Factory $Factory)
     {
     }
 
@@ -138,6 +139,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     }
 
     /**
+     * @param OrderInterface $Order
      * @return string
      */
     public function getOrderInformationText(QUI\ERP\Order\OrderInterface $Order): string

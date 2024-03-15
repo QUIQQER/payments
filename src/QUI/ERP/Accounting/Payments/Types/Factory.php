@@ -29,14 +29,12 @@ class Factory extends QUI\CRUD\Factory
     {
         parent::__construct();
 
-        $self = $this;
-
         $this->Events->addEvent('onCreateBegin', function () {
             Permission::checkPermission('quiqqer.payments.create');
         });
 
         // create new translation var for the area
-        $this->Events->addEvent('onCreateEnd', function () use ($self) {
+        $this->Events->addEvent('onCreateEnd', function () {
             QUI\Translator::publish('quiqqer/payments');
         });
     }
