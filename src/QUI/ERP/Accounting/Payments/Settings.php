@@ -20,9 +20,9 @@ use QUI\Utils\Singleton;
 class Settings extends Singleton
 {
     /**
-     * @var null
+     * @var null|QUI\Config
      */
-    protected $Config = null;
+    protected ?QUI\Config $Config = null;
 
     /**
      * Return the config object
@@ -30,14 +30,14 @@ class Settings extends Singleton
      * @return QUI\Config
      * @throws QUI\Exception
      */
-    protected function getConfig()
+    protected function getConfig(): QUI\Config
     {
         if ($this->Config !== null) {
             return $this->Config;
         }
 
         $Package = QUI::getPackage('quiqqer/payments');
-        $Config  = $Package->getConfig();
+        $Config = $Package->getConfig();
 
         $this->Config = $Config;
 
@@ -50,9 +50,9 @@ class Settings extends Singleton
      * @param string $section
      * @param string $key
      *
-     * @return string
+     * @return bool|string
      */
-    public function get($section, $key)
+    public function get(string $section, string $key): bool|string
     {
         try {
             return $this->getConfig()->get($section, $key);
@@ -70,7 +70,7 @@ class Settings extends Singleton
      * @param string $key
      * @param string $value
      */
-    public function set($section, $key, $value)
+    public function set(string $section, string $key, string $value): void
     {
         // @todo permissions
 
@@ -86,7 +86,7 @@ class Settings extends Singleton
      *
      * @throws QUI\Exception
      */
-    public function save()
+    public function save(): void
     {
         // @todo permissions
 
@@ -98,7 +98,7 @@ class Settings extends Singleton
      *
      * @param $section
      */
-    public function removeSection($section)
+    public function removeSection($section): void
     {
         try {
             $this->getConfig()->del($section);

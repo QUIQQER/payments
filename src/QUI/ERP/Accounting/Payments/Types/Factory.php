@@ -13,6 +13,7 @@ use function array_merge;
 use function class_exists;
 use function count;
 use function is_integer;
+use function is_numeric;
 use function is_string;
 
 /**
@@ -47,7 +48,7 @@ class Factory extends QUI\CRUD\Factory
      * @throws QUI\ERP\Accounting\Payments\Exception
      * @throws QUI\Exception
      */
-    public function createChild($data = [])
+    public function createChild(array $data = []): QUI\CRUD\Child
     {
         if (!isset($data['active']) || !is_integer($data['active'])) {
             $data['active'] = 0;
@@ -76,7 +77,7 @@ class Factory extends QUI\CRUD\Factory
             $data['paymentFee'] = null;
         }
 
-        if ($data['paymentFee'] === '' || \is_numeric($data['paymentFee'])) {
+        if ($data['paymentFee'] === '' || is_numeric($data['paymentFee'])) {
             $data['paymentFee'] = null;
         }
 
@@ -167,7 +168,7 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @return string
      */
-    public function getDataBaseTableName()
+    public function getDataBaseTableName(): string
     {
         return 'payments';
     }
@@ -175,7 +176,7 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @return string
      */
-    public function getChildClass()
+    public function getChildClass(): string
     {
         return Payment::class;
     }
@@ -183,7 +184,7 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @return array
      */
-    public function getChildAttributes()
+    public function getChildAttributes(): array
     {
         return [
             'id',
@@ -215,7 +216,7 @@ class Factory extends QUI\CRUD\Factory
      *
      * @throws QUI\Exception
      */
-    public function getChild($id)
+    public function getChild($id): QUI\CRUD\Child
     {
         /* @var Payment $Payment */
         $Payment = parent::getChild($id);
@@ -227,9 +228,9 @@ class Factory extends QUI\CRUD\Factory
      * Creates a locale
      *
      * @param $var
-     * @param string|array $title
+     * @param array|string $title
      */
-    protected function createPaymentLocale($var, $title)
+    protected function createPaymentLocale($var, array|string $title): void
     {
         $current = QUI::getLocale()->getCurrent();
         $options = [

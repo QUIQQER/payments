@@ -24,22 +24,22 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
     /**
      * @var null|AbstractPayment
      */
-    protected $Payment = null;
+    protected ?AbstractPayment $Payment = null;
 
     /**
      * @param OrderProcessSteps $OrderProcessSteps
-     * @param OrderProcess $Process
+     * @param OrderProcess $OrderProcess
      *
      * @throws \QUI\Exception
      * @throws \QUI\ERP\Order\Exception
      */
-    public function initSteps(OrderProcessSteps $OrderProcessSteps, OrderProcess $Process)
+    public function initSteps(OrderProcessSteps $OrderProcessSteps, OrderProcess $OrderProcess): void
     {
         $orderId = null;
         $Order = null;
 
-        if ($Process->getOrder()) {
-            $Order = $Process->getOrder();
+        if ($OrderProcess->getOrder()) {
+            $Order = $OrderProcess->getOrder();
             $orderId = $Order->getId();
         }
 
@@ -54,12 +54,11 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
 
     /**
      * @param AbstractOrder $Order
-     *
      * @return string
      *
-     * @throws \QUI\ERP\Accounting\Payments\Exception
+     * @throws Exception
      */
-    public function onOrderStart(AbstractOrder $Order)
+    public function onOrderStart(AbstractOrder $Order): string
     {
         if ($Order->isSuccessful()) {
             $this->currentStatus = self::PROCESSING_STATUS_FINISH;
@@ -84,7 +83,7 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
      * @param AbstractOrderingStep|null $Step
      * @return string
      */
-    public function getDisplay(AbstractOrder $Order, $Step = null)
+    public function getDisplay(AbstractOrder $Order, $Step = null): string
     {
         if ($this->Payment === null) {
             return '';

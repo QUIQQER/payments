@@ -8,6 +8,13 @@ namespace QUI\ERP\Accounting\Payments\Gateway;
 
 use QUI;
 use QUI\ERP\Accounting\Payments\Transactions\Factory as Transactions;
+use QUI\ERP\Order\AbstractOrder;
+use QUI\ERP\Order\Order;
+use QUI\ERP\Order\OrderInProcess;
+
+use function http_build_query;
+use function is_array;
+use function json_encode;
 
 /**
  * Class Gateway
@@ -29,32 +36,32 @@ class Gateway extends QUI\Utils\Singleton
     /**
      * Internal Order Object
      *
-     * @var QUI\ERP\Order\Order|QUI\ERP\Order\OrderInProcess
+     * @var AbstractOrder|null
      */
-    protected $Order = null;
+    protected ?AbstractOrder $Order = null;
 
     /**
      * payment gateway status flag
      * 0 = normal gateway
      * 1 = payment request
      *
-     * @var int
+     * @var int|bool
      */
-    protected $gatewayPayment = false;
+    protected int|bool $gatewayPayment = false;
 
     /**
      * Indicates if the Gateway was called as a cancel request
      *
      * @var bool
      */
-    protected $isCancelRequest = false;
+    protected bool $isCancelRequest = false;
 
     /**
      * Indicates if the Gateway was called as a success request
      *
      * @var bool
      */
-    protected $isSuccessRequest = false;
+    protected bool $isSuccessRequest = false;
 
     /**
      * Read the request and look in which step we are
@@ -62,7 +69,7 @@ class Gateway extends QUI\Utils\Singleton
      * @throws QUI\ERP\Order\Exception
      * @throws QUI\Exception
      */
-    public function readRequest()
+    public function readRequest(): void
     {
         QUI::getEvents()->fireEvent('paymentsGatewayReadRequest', [$this]);
 
@@ -101,14 +108,14 @@ class Gateway extends QUI\Utils\Singleton
      *
      * @throws QUI\Exception
      */
-    public function setOrderId($orderId)
+    public function setOrderId(int $orderId): void
     {
         $Handler = QUI\ERP\Order\Handler::getInstance();
 
         /* @var $Order QUI\ERP\Order\Order */
         try {
             $this->Order = $Handler->get($orderId);
-        } catch (QUI\ERP\Order\Exception $Exception) {
+        } catch (QUI\ERP\Order\Exception) {
             try {
                 $this->Order = $Handler->getOrderInProcess($orderId);
             } catch (QUI\ERP\Order\Exception $Exception) {
@@ -123,7 +130,7 @@ class Gateway extends QUI\Utils\Singleton
      *
      * @param mixed $order - could be order id, order hash, Order or OrderInProcess
      */
-    public function setOrder($order)
+    public function setOrder(mixed $order): void
     {
         if ($order instanceof QUI\ERP\Order\OrderInProcess) {
             $this->Order = $order;
@@ -164,9 +171,9 @@ class Gateway extends QUI\Utils\Singleton
     }
 
     /**
-     * @return QUI\ERP\Order\Order|QUI\ERP\Order\OrderInProcess
+     * @return OrderInProcess|Order|null
      */
-    public function getOrder()
+    public function getOrder(): QUI\ERP\Order\OrderInProcess|QUI\ERP\Order\Order|null
     {
         return $this->Order;
     }
@@ -176,7 +183,7 @@ class Gateway extends QUI\Utils\Singleton
      *
      * @throws QUI\ERP\Accounting\Payments\Exception
      */
-    public function executeGatewayPayment()
+    public function executeGatewayPayment(): void
     {
         $Order = $this->getOrder();
         $Payment = $Order->getPayment()->getPaymentType();
@@ -187,7 +194,7 @@ class Gateway extends QUI\Utils\Singleton
             QUI\System\Log::writeException($Exception);
 
             $Order->addHistory(
-                \json_encode([
+                json_encode([
                     'message' => $Exception->getMessage(),
                     'code' => $Exception->getCode()
                 ])
@@ -199,24 +206,24 @@ class Gateway extends QUI\Utils\Singleton
      * Set the gateway to a gateway payment
      * if this flag is active, the gateway thinks that it is executed by a payment
      */
-    public function enableGatewayPayment()
+    public function enableGatewayPayment(): void
     {
         $this->gatewayPayment = true;
     }
 
     /**
      * Set the gateway to a normal gateway request
-     * if this flag is deactive, the gateway thinks that it is executed by a normal request
+     * if this flag is deactivate, the gateway thinks that it is executed by a normal request
      */
-    public function disableGatewayPayment()
+    public function disableGatewayPayment(): void
     {
         $this->gatewayPayment = false;
     }
 
     /**
-     * @return int
+     * @return int|bool
      */
-    public function isGatewayPayment()
+    public function isGatewayPayment(): bool|int
     {
         return $this->gatewayPayment;
     }
@@ -241,15 +248,15 @@ class Gateway extends QUI\Utils\Singleton
         QUI\ERP\Currency\Currency $Currency,
         QUI\ERP\Order\AbstractOrder $Order,
         QUI\ERP\Accounting\Payments\Api\AbstractPayment $Payment,
-        $paymentData = []
-    ) {
+        array $paymentData = []
+    ): QUI\ERP\Accounting\Payments\Transactions\Transaction {
         $paymentComment = QUI::getLocale()->get('quiqqer/payments', 'comment.add.payment', [
             'payment' => $Payment->getTitle(),
             'amount' => $amount,
             'currency' => $Currency->getCode()
         ]);
 
-        $hash = $Order->getHash();
+        $hash = $Order->getUUID();
 
         $Order->addHistory($paymentComment);
 
@@ -272,10 +279,7 @@ class Gateway extends QUI\Utils\Singleton
 
         if ($Order->isPosted()) {
             try {
-                /* @var $Order QUI\ERP\Order\Order */
                 $Order->getInvoice()->addHistory($paymentComment);
-            } catch (QUI\ERP\Accounting\Invoice\Exception $Exception) {
-                QUI\System\Log::writeException($Exception);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
@@ -305,31 +309,30 @@ class Gateway extends QUI\Utils\Singleton
      *
      * @return string
      */
-    public function getGatewayUrl($params = [])
+    public function getGatewayUrl(array $params = []): string
     {
         $host = $this->getHost();
-        //$dir  = URL_OPT_DIR.'quiqqer/payments/bin/gateway.php';
         $dir = URL_DIR . 'PaymentsGateway'; // new url
 
-        if (!\is_array($params)) {
+        if (!is_array($params)) {
             $params = [];
         }
 
         if ($this->getOrder()) {
-            $params['orderHash'] = $this->getOrder()->getHash();
+            $params['orderHash'] = $this->getOrder()->getUUID();
         }
 
-        return $host . $dir . '?' . \http_build_query($params);
+        return $host . $dir . '?' . http_build_query($params);
     }
 
     /**
      * @return string
      */
-    public function getSuccessUrl()
+    public function getSuccessUrl(): string
     {
         return $this->getGatewayUrl([
             'success' => 1,
-            'orderHash' => $this->getOrder()->getHash()
+            'orderHash' => $this->getOrder()->getUUID()
         ]);
     }
 
@@ -338,7 +341,7 @@ class Gateway extends QUI\Utils\Singleton
      *
      * @return string
      */
-    public function getOrderUrl()
+    public function getOrderUrl(): string
     {
         $Project = null;
 
@@ -364,18 +367,18 @@ class Gateway extends QUI\Utils\Singleton
     /**
      * @return string
      */
-    public function getCancelUrl()
+    public function getCancelUrl(): string
     {
         return $this->getGatewayUrl([
             'canceled' => 1,
-            'orderHash' => $this->getOrder()->getHash()
+            'orderHash' => $this->getOrder()->getUUID()
         ]);
     }
 
     /**
      * @return string
      */
-    public function getErrorUrl()
+    public function getErrorUrl(): string
     {
         return $this->getGatewayUrl([
             'error' => 1,
@@ -386,7 +389,7 @@ class Gateway extends QUI\Utils\Singleton
     /**
      * This url is for the payment provider to proceed some payments for the order
      */
-    public function getPaymentProviderUrl()
+    public function getPaymentProviderUrl(): string
     {
         return $this->getGatewayUrl([
             Gateway::URL_PARAM_GATEWAY_PAYMENT => 1
@@ -398,7 +401,7 @@ class Gateway extends QUI\Utils\Singleton
      *
      * @return string
      */
-    protected function getHost()
+    protected function getHost(): string
     {
         $HOST = HOST;
 
@@ -406,7 +409,7 @@ class Gateway extends QUI\Utils\Singleton
             $HOST = QUI::conf('globals', 'httpshost');
         }
 
-        if (isset($_REQUEST['project']) && \strpos($_REQUEST['project'], '{') !== false) {
+        if (isset($_REQUEST['project']) && str_contains($_REQUEST['project'], '{')) {
             try {
                 $Project = QUI::getProjectManager()->decode($_REQUEST['project']);
 
@@ -421,7 +424,7 @@ class Gateway extends QUI\Utils\Singleton
         if (
             isset($_REQUEST['project'])
             && isset($_REQUEST['lang'])
-            && \strpos($_REQUEST['project'], '{') === false
+            && !str_contains($_REQUEST['project'], '{')
         ) {
             try {
                 $Project = QUI::getProjectManager()->getProject(
@@ -451,7 +454,7 @@ class Gateway extends QUI\Utils\Singleton
 
 
         // prüfen ob das aktuelle projekt https hat
-        if ($Project && $Project->getVHost(true, true)) {
+        if ($Project->getVHost(true, true)) {
             $HOST = $Project->getVHost(true, true);
         }
 

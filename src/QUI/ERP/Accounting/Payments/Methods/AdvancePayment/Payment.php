@@ -6,6 +6,7 @@
 
 namespace QUI\ERP\Accounting\Payments\Methods\AdvancePayment;
 
+use Exception;
 use QUI;
 use QUI\ERP\Accounting\Payments\Payments;
 use QUI\ERP\Order\Handler as OrderHandler;
@@ -19,9 +20,9 @@ use QUI\ERP\Order\Handler as OrderHandler;
 class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
 {
     /**
-     * @return array|string
+     * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->getLocale()->get(
             'quiqqer/payments',
@@ -30,9 +31,9 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     }
 
     /**
-     * @return array|string
+     * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->getLocale()->get(
             'quiqqer/payments',
@@ -41,10 +42,10 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     }
 
     /**
-     * @param $hash
+     * @param string $hash
      * @return bool
      */
-    public function isSuccessful($hash)
+    public function isSuccessful(string $hash): bool
     {
         return true;
     }
@@ -59,11 +60,11 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      * @param string $hash - Vorgangsnummer - hash number - procedure number
      * @return bool
      */
-    public function isApproved($hash)
+    public function isApproved(string $hash): bool
     {
         try {
             $Order = OrderHandler::getInstance()->getOrderByHash($hash);
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return false;
         }
@@ -77,7 +78,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      *
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return Payments::getInstance()->getHost() .
             URL_OPT_DIR .
@@ -90,8 +91,9 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      * @param QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
      * @return string
      */
-    public function getInvoiceInformationText($Invoice)
-    {
+    public function getInvoiceInformationText(
+        QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
+    ): string {
         return QUI::getLocale()->get('quiqqer/payments', 'invoice.information.text.advancedPayment');
     }
 }

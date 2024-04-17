@@ -12,6 +12,9 @@ use QUI\ERP\Accounting\Payments\Api\AbstractPaymentProvider;
 use QUI\ERP\Accounting\Payments\Types\Factory;
 use QUI\ERP\Accounting\Payments\Types\Payment;
 
+use QUI\Exception;
+use QUI\Interfaces\Users\User;
+
 use function array_filter;
 use function array_merge;
 use function class_exists;
@@ -40,7 +43,7 @@ class Payments extends QUI\Utils\Singleton
 
         try {
             $providers = QUI\Cache\Manager::get($cacheProvider);
-        } catch (QUI\Cache\Exception $Exception) {
+        } catch (QUI\Cache\Exception) {
             $packages = array_map(function ($package) {
                 return $package['name'];
             }, QUI::getPackageManager()->getInstalled());
@@ -54,7 +57,7 @@ class Payments extends QUI\Utils\Singleton
                     if ($Package->isQuiqqerPackage()) {
                         $providers = array_merge($providers, $Package->getProvider('payment'));
                     }
-                } catch (QUI\Exception $Exception) {
+                } catch (QUI\Exception) {
                 }
             }
 
@@ -92,7 +95,7 @@ class Payments extends QUI\Utils\Singleton
      */
     public function getPaymentTypes(): array
     {
-        $payments  = [];
+        $payments = [];
         $providers = $this->getPaymentProviders();
 
         foreach ($providers as $Provider) {
@@ -145,7 +148,7 @@ class Payments extends QUI\Utils\Singleton
      *
      * @throws Exception
      */
-    public function getPayment($paymentId)
+    public function getPayment(int|string $paymentId): Methods\Free\PaymentType|Payment
     {
         if ((int)$paymentId == Methods\Free\Payment::ID) {
             return new Methods\Free\PaymentType(Methods\Free\Payment::ID, new Factory());
@@ -154,7 +157,7 @@ class Payments extends QUI\Utils\Singleton
         /* @var $Payment Payment */
         try {
             return Factory::getInstance()->getChild($paymentId);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             throw new Exception([
                 'quiqqer/payments',
                 'exception.payment.not.found'
@@ -176,7 +179,7 @@ class Payments extends QUI\Utils\Singleton
 
         try {
             return Factory::getInstance()->getChildren($queryParams);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return [];
         }
     }
@@ -184,10 +187,10 @@ class Payments extends QUI\Utils\Singleton
     /**
      * Return all payments for the user
      *
-     * @param \QUI\Interfaces\Users\User|null $User - optional
+     * @param User|null $User - optional
      * @return array
      */
-    public function getUserPayments(QUI\Interfaces\Users\User $User = null): array
+    public function getUserPayments(User $User = null): array
     {
         if ($User === null) {
             $User = QUI::getUserBySession();
@@ -206,7 +209,7 @@ class Payments extends QUI\Utils\Singleton
     {
         try {
             $Project = QUI::getRewrite()->getProject();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             try {
                 $Project = QUI::getProjectManager()->getStandard();
             } catch (QUI\Exception $Exception) {

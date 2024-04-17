@@ -15,9 +15,9 @@ use QUI\ERP\Order\AbstractOrder;
 class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements RecurringPaymentInterface
 {
     /**
-     * @return array|string
+     * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->getLocale()->get(
             'quiqqer/payments',
@@ -26,9 +26,9 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
     }
 
     /**
-     * @return array|string
+     * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->getLocale()->get(
             'quiqqer/payments',
@@ -40,7 +40,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param string $hash
      * @return bool
      */
-    public function isSuccessful($hash)
+    public function isSuccessful(string $hash): bool
     {
         return true;
     }
@@ -51,7 +51,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      *
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return URL_OPT_DIR . 'quiqqer/payments/bin/payments/Rechnung.jpg';
     }
@@ -96,7 +96,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * This *temporarily* suspends the automated collection of payments until explicitly resumed.
      *
      * @param int|string $subscriptionId
-     * @param string $note (optional) - Suspension note
+     * @param string|null $note (optional) - Suspension note
      * @return void
      */
     public function suspendSubscription($subscriptionId, string $note = null)
@@ -107,10 +107,10 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
     /**
      * Resume a suspended Subscription
      *
-     * This resumes automated collection of payments of a previously supsendes Subscription.
+     * This resumes automated collection of payments of a previously suspended subscription.
      *
      * @param int|string $subscriptionId
-     * @param string $note (optional) - Resume note
+     * @param string|null $note (optional) - Resume note
      * @return void
      */
     public function resumeSubscription($subscriptionId, string $note = null)
@@ -124,7 +124,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param int|string $subscriptionId
      * @return bool
      */
-    public function isSuspended($subscriptionId)
+    public function isSuspended($subscriptionId): bool
     {
         // Payment by invoice cannot be suspended
         return false;
@@ -141,7 +141,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      */
     public function setSubscriptionAsInactive($subscriptionId)
     {
-        // Since payment by invoice is not connected to a external service, there is nothing to set as inactive
+        // Since payment by invoice is not connected to an external service, there is nothing to set as inactive
     }
 
     /**
@@ -150,7 +150,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      *
      * @return bool
      */
-    public function isSubscriptionEditable()
+    public function isSubscriptionEditable(): bool
     {
         return true;
     }
@@ -162,7 +162,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param AbstractOrder $Order
      * @return int|string|false - ID or false of no ID associated
      */
-    public function getSubscriptionIdByOrder(AbstractOrder $Order)
+    public function getSubscriptionIdByOrder(AbstractOrder $Order): bool|int|string
     {
         return false;
     }
@@ -173,7 +173,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param string|int $subscriptionId
      * @return bool
      */
-    public function isSubscriptionActiveAtPaymentProvider($subscriptionId)
+    public function isSubscriptionActiveAtPaymentProvider($subscriptionId): bool
     {
         return true;
     }
@@ -184,7 +184,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param string|int $subscriptionId - Payment provider subscription ID
      * @return bool
      */
-    public function isSubscriptionActiveAtQuiqqer($subscriptionId)
+    public function isSubscriptionActiveAtQuiqqer($subscriptionId): bool
     {
         return true;
     }
@@ -195,7 +195,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param bool $includeInactive (optional) - Include inactive subscriptions [default: false]
      * @return int[]
      */
-    public function getSubscriptionIds($includeInactive = false)
+    public function getSubscriptionIds($includeInactive = false): array
     {
         // There are no external subscription IDs
         return [];
@@ -205,9 +205,9 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * Get global processing ID of a subscription
      *
      * @param string|int $subscriptionId
-     * @return string|false
+     * @return false
      */
-    public function getSubscriptionGlobalProcessingId($subscriptionId)
+    public function getSubscriptionGlobalProcessingId($subscriptionId): bool
     {
         // Since there are no external subscription IDs, nothing can be returned here
         return false;
