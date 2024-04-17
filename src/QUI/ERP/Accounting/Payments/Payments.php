@@ -11,7 +11,6 @@ use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
 use QUI\ERP\Accounting\Payments\Api\AbstractPaymentProvider;
 use QUI\ERP\Accounting\Payments\Types\Factory;
 use QUI\ERP\Accounting\Payments\Types\Payment;
-
 use QUI\Exception;
 use QUI\Interfaces\Users\User;
 
