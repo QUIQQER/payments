@@ -52,9 +52,9 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     }
 
     /**
-     * @return int|string
+     * @return int
      */
-    public function getId(): int|string
+    public function getId(): int
     {
         return -1;
     }

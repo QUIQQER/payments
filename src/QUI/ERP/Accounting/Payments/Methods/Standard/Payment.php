@@ -60,11 +60,12 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * Create a Subscription from a (temporary) Order
      *
      * @param AbstractOrder $Order
-     * @return void
+     * @return string|null
      */
-    public function createSubscription(AbstractOrder $Order)
+    public function createSubscription(AbstractOrder $Order): ?string
     {
         // Payment by invoice does not need to create a subscription with any service
+        return null;
     }
 
     /**
@@ -73,7 +74,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param Invoice $Invoice
      * @return void
      */
-    public function captureSubscription(Invoice $Invoice)
+    public function captureSubscription(Invoice $Invoice): void
     {
         // Invoice payment is manually added
     }
@@ -85,7 +86,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param string $reason (optional) - The reason why the subscription is cancelled
      * @return void
      */
-    public function cancelSubscription($subscriptionId, $reason = '')
+    public function cancelSubscription(int|string $subscriptionId, string $reason = ''): void
     {
         // Payment by invoice does not need to have/cancel a subscription with any service
     }
@@ -99,7 +100,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param string|null $note (optional) - Suspension note
      * @return void
      */
-    public function suspendSubscription($subscriptionId, string $note = null)
+    public function suspendSubscription(int|string $subscriptionId, string $note = null): void
     {
         // Payment by invoice does not need to have/suspend a subscription with any service
     }
@@ -113,7 +114,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param string|null $note (optional) - Resume note
      * @return void
      */
-    public function resumeSubscription($subscriptionId, string $note = null)
+    public function resumeSubscription(int|string $subscriptionId, string $note = null): void
     {
         // Payment by invoice does not need to have/resume a subscription with any service
     }
@@ -124,7 +125,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param int|string $subscriptionId
      * @return bool
      */
-    public function isSuspended($subscriptionId): bool
+    public function isSuspended(int|string $subscriptionId): bool
     {
         // Payment by invoice cannot be suspended
         return false;
@@ -139,7 +140,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param $subscriptionId
      * @return void
      */
-    public function setSubscriptionAsInactive($subscriptionId)
+    public function setSubscriptionAsInactive($subscriptionId): void
     {
         // Since payment by invoice is not connected to an external service, there is nothing to set as inactive
     }
@@ -170,10 +171,10 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
     /**
      * Checks if the subscription is active at the payment provider side
      *
-     * @param string|int $subscriptionId
+     * @param int|string $subscriptionId
      * @return bool
      */
-    public function isSubscriptionActiveAtPaymentProvider($subscriptionId): bool
+    public function isSubscriptionActiveAtPaymentProvider(int|string $subscriptionId): bool
     {
         return true;
     }
@@ -181,10 +182,10 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
     /**
      * Checks if the subscription is active at QUIQQER
      *
-     * @param string|int $subscriptionId - Payment provider subscription ID
+     * @param int|string $subscriptionId - Payment provider subscription ID
      * @return bool
      */
-    public function isSubscriptionActiveAtQuiqqer($subscriptionId): bool
+    public function isSubscriptionActiveAtQuiqqer(int|string $subscriptionId): bool
     {
         return true;
     }
@@ -195,7 +196,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param bool $includeInactive (optional) - Include inactive subscriptions [default: false]
      * @return int[]
      */
-    public function getSubscriptionIds($includeInactive = false): array
+    public function getSubscriptionIds(bool $includeInactive = false): array
     {
         // There are no external subscription IDs
         return [];
@@ -204,10 +205,10 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
     /**
      * Get global processing ID of a subscription
      *
-     * @param string|int $subscriptionId
+     * @param int|string $subscriptionId
      * @return false
      */
-    public function getSubscriptionGlobalProcessingId($subscriptionId): bool
+    public function getSubscriptionGlobalProcessingId(int|string $subscriptionId): bool
     {
         // Since there are no external subscription IDs, nothing can be returned here
         return false;

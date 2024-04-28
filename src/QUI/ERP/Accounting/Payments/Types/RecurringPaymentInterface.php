@@ -16,9 +16,9 @@ interface RecurringPaymentInterface
      * Create a Subscription from a (temporary) Order
      *
      * @param AbstractOrder $Order
-     * @return string
+     * @return string|null
      */
-    public function createSubscription(AbstractOrder $Order): string;
+    public function createSubscription(AbstractOrder $Order): ?string;
 
     /**
      * Capture subscription amount based on an Invoice

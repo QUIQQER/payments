@@ -90,7 +90,7 @@ class Payments extends QUI\Utils\Singleton
     /**
      * Return all available payment methods
      *
-     * @return array
+     * @return AbstractPayment[]
      */
     public function getPaymentTypes(): array
     {
@@ -125,7 +125,6 @@ class Payments extends QUI\Utils\Singleton
     {
         $types = $this->getPaymentTypes();
 
-        /* @var $Payment AbstractPayment */
         foreach ($types as $Payment) {
             if ($Payment->getName() === $paymentHash) {
                 return $Payment;

@@ -194,7 +194,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         try {
             QUI::getEvents()->fireEvent('quiqqerPaymentCanUsedBy', [$this, $User]);
-        } catch (PaymentCanNotBeUsed $Exception) {
+        } catch (PaymentCanNotBeUsed) {
             return false;
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
@@ -317,7 +317,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         try {
             QUI::getEvents()->fireEvent('paymentsCanUsedInOrder', [$this, $Order]);
             QUI::getEvents()->fireEvent('quiqqerPaymentCanUsedInOrder', [$this, $Order]);
-        } catch (PaymentCanNotBeUsed $Exception) {
+        } catch (PaymentCanNotBeUsed) {
             return false;
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
@@ -617,7 +617,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * @param string $icon - image.php?
      */
-    public function setIcon($icon): void
+    public function setIcon(string $icon): void
     {
         if (QUI\Projects\Media\Utils::isMediaUrl($icon)) {
             $this->setAttribute('icon', $icon);

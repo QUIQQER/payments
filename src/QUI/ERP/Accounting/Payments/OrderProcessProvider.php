@@ -40,7 +40,7 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
 
         if ($OrderProcess->getOrder()) {
             $Order = $OrderProcess->getOrder();
-            $orderId = $Order->getId();
+            $orderId = $Order->getUUID();
         }
 
         $OrderProcessSteps->append(
@@ -54,11 +54,11 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
 
     /**
      * @param AbstractOrder $Order
-     * @return string
+     * @return int
      *
      * @throws Exception
      */
-    public function onOrderStart(AbstractOrder $Order): string
+    public function onOrderStart(AbstractOrder $Order): int
     {
         if ($Order->isSuccessful()) {
             $this->currentStatus = self::PROCESSING_STATUS_FINISH;

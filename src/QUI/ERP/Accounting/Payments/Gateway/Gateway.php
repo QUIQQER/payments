@@ -9,8 +9,6 @@ namespace QUI\ERP\Accounting\Payments\Gateway;
 use QUI;
 use QUI\ERP\Accounting\Payments\Transactions\Factory as Transactions;
 use QUI\ERP\Order\AbstractOrder;
-use QUI\ERP\Order\Order;
-use QUI\ERP\Order\OrderInProcess;
 
 use function http_build_query;
 use function is_array;
@@ -104,11 +102,11 @@ class Gateway extends QUI\Utils\Singleton
     /**
      * Set the order id to the gateway
      *
-     * @param integer $orderId
+     * @param integer|string $orderId
      *
      * @throws QUI\Exception
      */
-    public function setOrderId(int $orderId): void
+    public function setOrderId(int|string $orderId): void
     {
         $Handler = QUI\ERP\Order\Handler::getInstance();
 
@@ -171,9 +169,9 @@ class Gateway extends QUI\Utils\Singleton
     }
 
     /**
-     * @return OrderInProcess|Order|null
+     * @return AbstractOrder
      */
-    public function getOrder(): QUI\ERP\Order\OrderInProcess|QUI\ERP\Order\Order|null
+    public function getOrder(): AbstractOrder
     {
         return $this->Order;
     }
@@ -382,7 +380,7 @@ class Gateway extends QUI\Utils\Singleton
     {
         return $this->getGatewayUrl([
             'error' => 1,
-            'orderHash' => $this->getOrder()->getHash()
+            'orderHash' => $this->getOrder()->getUUID()
         ]);
     }
 
@@ -441,7 +439,7 @@ class Gateway extends QUI\Utils\Singleton
         }
 
         if (isset($_SERVER['HTTP_HOST'])) {
-            return 'http://' . $_SERVER['HTTP_HOST'];
+            return 'https://' . $_SERVER['HTTP_HOST'];
         }
 
         try {
@@ -466,7 +464,7 @@ class Gateway extends QUI\Utils\Singleton
      *
      * @return bool
      */
-    public function isCancelRequest()
+    public function isCancelRequest(): bool
     {
         return $this->isCancelRequest;
     }
@@ -476,7 +474,7 @@ class Gateway extends QUI\Utils\Singleton
      *
      * @return bool
      */
-    public function isSuccessRequest()
+    public function isSuccessRequest(): bool
     {
         return $this->isSuccessRequest;
     }
