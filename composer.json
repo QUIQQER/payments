@@ -10,13 +10,13 @@
     {
       "name": "Henning Leutz",
       "email": "leutz@pcsg.de",
-      "homepage": "https:\/\/www.pcsg.de",
+      "homepage": "https://www.pcsg.de",
       "role": "Developer"
     },
     {
       "name": "Moritz Scholz",
       "email": "scholz@pcsg.de",
-      "homepage": "https:\/\/www.pcsg.de",
+      "homepage": "https://www.pcsg.de",
       "role": "Developer"
     }
   ],
@@ -24,14 +24,14 @@
     "email": "support@pcsg.de"
   },
   "require": {
-    "quiqqer\/quiqqer": "^1.0|dev-master|dev-dev",
-    "quiqqer\/areas": "^1.0|dev-master|dev-dev",
-    "quiqqer\/payment-transactions": "^1.0|dev-master|dev-dev"
+    "quiqqer/core": "^2",
+    "quiqqer/areas": "^2",
+    "quiqqer/payment-transactions": "^2"
   },
   "autoload": {
     "psr-4": {
-      "QUI\\ERP\\": "src\/QUI\/ERP",
-      "QUI\\ERP\\Accounting\\Payments\\": "src\/QUI\/ERP\/Accounting\/Payments"
+      "QUI\\ERP\\": "src/QUI/ERP",
+      "QUI\\ERP\\Accounting\\Payments\\": "src/QUI/ERP/Accounting/Payments"
     }
   }
 }
