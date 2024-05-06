@@ -19,7 +19,7 @@ QUI::$Ajax->registerFunction(
 
         $Factory = new Factory();
         $Payment = $Factory->createChild([
-            'payment_type' => \get_class($Type)
+            'payment_type' => get_class($Type)
         ]);
 
         return $Payment->getId();

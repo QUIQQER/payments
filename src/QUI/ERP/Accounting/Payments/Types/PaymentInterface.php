@@ -15,9 +15,9 @@ interface PaymentInterface
     //region general
 
     /**
-     * @return integer
+     * @return integer|string
      */
-    public function getId();
+    public function getId(): int|string;
 
     /**
      * @param null|QUI\Locale $Locale

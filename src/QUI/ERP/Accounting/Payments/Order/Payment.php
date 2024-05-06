@@ -28,7 +28,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
@@ -115,7 +115,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     /**
      * @throws QUI\ERP\Order\Exception
      */
-    public function validate()
+    public function validate(): void
     {
         $Order = $this->getOrder();
         $Payment = $Order->getPayment();
@@ -148,7 +148,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
      * @throws QUI\Permissions\Exception
      * @throws QUI\Exception
      */
-    public function save()
+    public function save(): void
     {
         $payment = false;
 
