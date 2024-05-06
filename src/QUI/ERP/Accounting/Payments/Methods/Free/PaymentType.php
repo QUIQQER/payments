@@ -8,6 +8,8 @@ namespace QUI\ERP\Accounting\Payments\Methods\Free;
 
 use QUI;
 use QUI\CRUD\Factory;
+use QUI\ERP\Order\OrderInterface;
+use QUI\Locale;
 
 /**
  * Class PaymentType
@@ -19,7 +21,7 @@ use QUI\CRUD\Factory;
 class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     QUI\ERP\Accounting\Payments\Types\PaymentInterface
 {
-    public function __construct($id, Factory $Factory)
+    public function __construct(protected int|string $id, protected Factory $Factory)
     {
     }
 
@@ -52,7 +54,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return -1;
     }
@@ -68,8 +70,8 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     }
 
     /**
-     * @param QUI\Locale|null $Locale
-     * @return array|string
+     * @param Locale|null $Locale
+     * @return string
      */
     public function getTitle(QUI\Locale $Locale = null): string
     {
@@ -83,8 +85,8 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     }
 
     /**
-     * @param QUI\Locale|null $Locale
-     * @return array|string
+     * @param Locale|null $Locale
+     * @return string
      */
     public function getWorkingTitle(QUI\Locale $Locale = null): string
     {
@@ -98,8 +100,8 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     }
 
     /**
-     * @param QUI\Locale|null $Locale
-     * @return array|string
+     * @param Locale|null $Locale
+     * @return string
      */
     public function getDescription(QUI\Locale $Locale = null): string
     {
@@ -138,6 +140,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     }
 
     /**
+     * @param OrderInterface $Order
      * @return string
      */
     public function getOrderInformationText(QUI\ERP\Order\OrderInterface $Order): string

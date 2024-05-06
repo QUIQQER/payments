@@ -12,6 +12,7 @@ use QUI\ERP\Accounting\Payments\Types\RecurringPaymentInterface;
 use QUI\ERP\Order\AbstractOrder;
 
 use function get_class;
+use function is_a;
 use function md5;
 
 /**
@@ -37,28 +38,28 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @var array
      */
-    protected $paymentFields = [];
+    protected array $paymentFields = [];
 
     /**
      * default settings
      *
      * @var array
      */
-    protected $defaults = [];
+    protected array $defaults = [];
 
     /**
      * Locale object for the payment
      *
-     * @var QUI\Locale
+     * @var ?QUI\Locale
      */
-    protected $Locale = null;
+    protected ?QUI\Locale $Locale = null;
 
     /**
      * Set the locale object to the payment
      *
      * @param QUI\Locale $Locale
      */
-    public function setLocale(QUI\Locale $Locale)
+    public function setLocale(QUI\Locale $Locale): void
     {
         $this->Locale = $Locale;
     }
@@ -68,7 +69,7 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @return QUI\Locale
      */
-    public function getLocale()
+    public function getLocale(): QUI\Locale
     {
         if ($this->Locale === null) {
             $this->Locale = QUI::getLocale();
@@ -80,7 +81,7 @@ abstract class AbstractPayment implements PaymentsInterface
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return md5(get_class($this));
     }
@@ -98,12 +99,12 @@ abstract class AbstractPayment implements PaymentsInterface
     /**
      * @return string
      */
-    abstract public function getTitle();
+    abstract public function getTitle(): string;
 
     /**
      * @return string
      */
-    abstract public function getDescription();
+    abstract public function getDescription(): string;
 
     /**
      * Is the payment successful?
@@ -115,7 +116,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * @param string $hash - Vorgangsnummer - hash number - procedure number
      * @return bool
      */
-    abstract public function isSuccessful($hash);
+    abstract public function isSuccessful(string $hash): bool;
 
     /**
      * Is the payment approved?
@@ -127,7 +128,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * @param string $hash - Vorgangsnummer - hash number - procedure number
      * @return bool
      */
-    public function isApproved($hash)
+    public function isApproved(string $hash): bool
     {
         return $this->isSuccessful($hash);
     }
@@ -138,7 +139,7 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return URL_OPT_DIR . 'quiqqer/payments/bin/payments/default.png';
     }
@@ -162,7 +163,7 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @return bool
      */
-    public function isGateway()
+    public function isGateway(): bool
     {
         return false;
     }
@@ -174,7 +175,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * @param AbstractOrder $Order
      * @return bool
      */
-    public function isVisible(AbstractOrder $Order)
+    public function isVisible(AbstractOrder $Order): bool
     {
         return true;
     }
@@ -184,7 +185,7 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @return bool
      */
-    public function isUnique()
+    public function isUnique(): bool
     {
         return false;
     }
@@ -192,7 +193,7 @@ abstract class AbstractPayment implements PaymentsInterface
     /**
      * @return bool
      */
-    public function refundSupport()
+    public function refundSupport(): bool
     {
         return false;
     }
@@ -202,9 +203,9 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @return bool
      */
-    final public function supportsRecurringPayments()
+    final public function supportsRecurringPayments(): bool
     {
-        return \is_a($this, RecurringPaymentInterface::class, true);
+        return is_a($this, RecurringPaymentInterface::class, true);
     }
 
     /**
@@ -212,7 +213,7 @@ abstract class AbstractPayment implements PaymentsInterface
      *
      * @return bool
      */
-    public function supportsRecurringPaymentsOnly()
+    public function supportsRecurringPaymentsOnly(): bool
     {
         return false;
     }
@@ -221,18 +222,16 @@ abstract class AbstractPayment implements PaymentsInterface
      * Execute a refund
      *
      * @param QUI\ERP\Accounting\Payments\Transactions\Transaction $Transaction
-     * @param int|float $amount
+     * @param float|int $amount
      * @param string $message
-     * @param false|string $hash - if a new hash will be used
+     * @param bool|string $hash - if a new hash will be used
      */
     public function refund(
         Transaction $Transaction,
-        $amount,
-        $message = '',
-        $hash = false
-    ) {
-        return;
-
+        float|int $amount,
+        string $message = '',
+        bool|string $hash = false
+    ): void {
         // you will find an example for a refund at
         // https://dev.quiqqer.com/quiqqer/payments-gateway/blob/master/src/QUI/ERP/Payments/Example/Payment.php
     }
@@ -243,11 +242,11 @@ abstract class AbstractPayment implements PaymentsInterface
      * @param AbstractOrder $Order
      * @param QUI\ERP\Order\Controls\AbstractOrderingStep|null $Step
      * @return string
-     *
-     * @throws QUI\ERP\Order\ProcessingException
      */
-    public function getGatewayDisplay(AbstractOrder $Order, $Step = null)
-    {
+    public function getGatewayDisplay(
+        AbstractOrder $Order,
+        ?QUI\ERP\Order\Controls\AbstractOrderingStep $Step = null
+    ): string {
         return '';
     }
 
@@ -255,8 +254,6 @@ abstract class AbstractPayment implements PaymentsInterface
      * Execute the request from the payment provider
      *
      * @param QUI\ERP\Accounting\Payments\Gateway\Gateway $Gateway
-     *
-     * @throws QUI\ERP\Accounting\Payments\Exception
      */
     public function executeGatewayPayment(QUI\ERP\Accounting\Payments\Gateway\Gateway $Gateway)
     {
@@ -270,8 +267,9 @@ abstract class AbstractPayment implements PaymentsInterface
      * @param QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
      * @return string
      */
-    public function getInvoiceInformationText($Invoice)
-    {
+    public function getInvoiceInformationText(
+        QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
+    ): string {
         return '';
     }
 

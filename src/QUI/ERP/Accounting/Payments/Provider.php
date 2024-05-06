@@ -6,9 +6,6 @@
 
 namespace QUI\ERP\Accounting\Payments;
 
-use QUI;
-use QUI\ERP\Accounting\Payments\Methods;
-
 /**
  * Class Provider
  *
@@ -19,7 +16,7 @@ class Provider extends Api\AbstractPaymentProvider
     /**
      * @return array
      */
-    public function getPaymentTypes()
+    public function getPaymentTypes(): array
     {
         return [
             Methods\Cash\Payment::class,

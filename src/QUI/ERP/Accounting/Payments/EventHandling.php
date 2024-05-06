@@ -28,16 +28,13 @@ class EventHandling
      * @param Package $Package
      * @param array $params
      */
-    public static function onPackageConfigSave(Package $Package, $params)
+    public static function onPackageConfigSave(Package $Package, array $params): void
     {
         if ($Package->getName() !== 'quiqqer/payments') {
             return;
         }
 
-        if (
-            !isset($params['payments'])
-            || !isset($params['payments']['paymentsJson'])
-        ) {
+        if (!isset($params['payments']) || !isset($params['payments']['paymentsJson'])) {
             return;
         }
 
@@ -80,7 +77,7 @@ class EventHandling
      * @param $code
      * @param $url
      */
-    public static function onErrorHeaderShow($code, $url)
+    public static function onErrorHeaderShow($code, $url): void
     {
         if ($code !== 404) {
             return;
@@ -101,7 +98,7 @@ class EventHandling
      * @param Package $Package
      * @throws QUI\Exception
      */
-    public static function onPackageInstallAfter(Package $Package)
+    public static function onPackageInstallAfter(Package $Package): void
     {
         if ($Package->getName() != 'quiqqer/payments') {
             return;
@@ -200,7 +197,7 @@ class EventHandling
      * @param OrderInterface $Order
      * @throws QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed
      */
-    public static function onPaymentsCanUsedInOrder(Payment $Payment, OrderInterface $Order)
+    public static function onPaymentsCanUsedInOrder(Payment $Payment, OrderInterface $Order): void
     {
         /**
          * @todo In the future there may be other packages that check if payment types
@@ -234,7 +231,7 @@ class EventHandling
         $Basket,
         QUI\ERP\Order\AbstractOrder $Order,
         QUI\ERP\Products\Product\ProductList $Products
-    ) {
+    ): void {
         $Payment = $Order->getPayment();
 
         if (!$Payment) {
@@ -276,7 +273,7 @@ class EventHandling
         }
     }
 
-    public static function onUpdateEnd()
+    public static function onUpdateEnd(): void
     {
         QUI\Cache\Manager::clear('package/quiqqer/payments/provider');
     }
