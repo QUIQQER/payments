@@ -25,6 +25,7 @@
   },
   "require": {
     "quiqqer/core": "^2",
+    "quiqqer/erp": "^3.2",
     "quiqqer/areas": "^2",
     "quiqqer/payment-transactions": "^2"
   },
