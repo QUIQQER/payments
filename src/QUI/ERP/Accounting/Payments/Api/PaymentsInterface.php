@@ -15,15 +15,15 @@ interface PaymentsInterface
     /**
      * @return mixed
      */
-    public function getName();
+    public function getName(): mixed;
 
     /**
      * @return string
      */
-    public function getTitle();
+    public function getTitle(): string;
 
     /**
      * @return string
      */
-    public function getDescription();
+    public function getDescription(): string;
 }

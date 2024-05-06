@@ -5,7 +5,6 @@
  */
 
 use QUI\ERP\Accounting\Payments\Payments;
-use QUI\ERP\Accounting\Payments\Types\Payment;
 
 /**
  * Return all active payments
@@ -15,9 +14,8 @@ use QUI\ERP\Accounting\Payments\Types\Payment;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_payments_ajax_backend_getPaymentTypes',
     function () {
-        return \array_map(function ($Payment) {
-            /* @var $Payment Payment */
-            return $Payment->toArray(QUI::getLocale());
+        return array_map(function ($Payment) {
+            return $Payment->toArray();
         }, Payments::getInstance()->getPaymentTypes());
     },
     false,

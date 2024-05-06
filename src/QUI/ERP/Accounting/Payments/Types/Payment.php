@@ -14,6 +14,7 @@ use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\BankAccounts\Handler as BankAccountsHandler;
 use QUI\ERP\Currency\Currency;
 use QUI\Exception;
+use QUI\Locale;
 use QUI\Permissions\Permission;
 use QUI\Translator;
 
@@ -193,7 +194,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         try {
             QUI::getEvents()->fireEvent('quiqqerPaymentCanUsedBy', [$this, $User]);
-        } catch (PaymentCanNotBeUsed $Exception) {
+        } catch (PaymentCanNotBeUsed) {
             return false;
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
@@ -256,6 +257,9 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         // user checking
         foreach ($discountUsers as $uid) {
+            if ($User->getUUID() == $uid) {
+                return true;
+            }
             if ($User->getId() == $uid) {
                 return true;
             }
@@ -267,6 +271,10 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         /* @var $Group QUI\Groups\Group */
         foreach ($discountGroups as $gid) {
             foreach ($groupsOfUser as $Group) {
+                if ($Group->getUUID() == $gid) {
+                    return true;
+                }
+
                 if ($Group->getId() == $gid) {
                     return true;
                 }
@@ -309,7 +317,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         try {
             QUI::getEvents()->fireEvent('paymentsCanUsedInOrder', [$this, $Order]);
             QUI::getEvents()->fireEvent('quiqqerPaymentCanUsedInOrder', [$this, $Order]);
-        } catch (PaymentCanNotBeUsed $Exception) {
+        } catch (PaymentCanNotBeUsed) {
             return false;
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
@@ -325,7 +333,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @throws QUI\ExceptionStack|QUI\Exception
      */
-    public function activate()
+    public function activate(): void
     {
         $this->setAttribute('active', 1);
         $this->update();
@@ -347,7 +355,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @throws QUI\ExceptionStack|QUI\Exception
      */
-    public function deactivate()
+    public function deactivate(): void
     {
         $this->setAttribute('active', 0);
         $this->update();
@@ -359,8 +367,8 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Return the payment title
      *
-     * @param null|QUI\Locale $Locale
-     * @return array|string
+     * @param null|Locale $Locale
+     * @return string
      */
     public function getTitle(QUI\Locale $Locale = null): string
     {
@@ -377,8 +385,8 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Return the payment description
      *
-     * @param null|QUI\Locale $Locale
-     * @return array|string
+     * @param null|Locale $Locale
+     * @return string
      */
     public function getDescription(QUI\Locale $Locale = null): string
     {
@@ -395,8 +403,8 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Return the payment working title
      *
-     * @param QUI\Locale|null $Locale
-     * @return array|string
+     * @param Locale|null $Locale
+     * @return string
      */
     public function getWorkingTitle(QUI\Locale $Locale = null): string
     {
@@ -519,7 +527,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
                 if ($isInAllowedCurrencies($Currency)) {
                     $result[] = $Currency;
                 }
-            } catch (QUI\Exception $exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -559,7 +567,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @param array $titles
      */
-    public function setTitle(array $titles)
+    public function setTitle(array $titles): void
     {
         $this->setPaymentLocale(
             'payment.' . $this->getId() . '.title',
@@ -572,7 +580,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @param array $descriptions
      */
-    public function setDescription(array $descriptions)
+    public function setDescription(array $descriptions): void
     {
         $this->setPaymentLocale(
             'payment.' . $this->getId() . '.description',
@@ -585,7 +593,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @param array $orderInformation
      */
-    public function setOrderInformation(array $orderInformation)
+    public function setOrderInformation(array $orderInformation): void
     {
         $this->setPaymentLocale(
             'payment.' . $this->getId() . '.orderInformation',
@@ -598,7 +606,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @param array $titles
      */
-    public function setWorkingTitle(array $titles)
+    public function setWorkingTitle(array $titles): void
     {
         $this->setPaymentLocale(
             'payment.' . $this->getId() . '.workingTitle',
@@ -609,7 +617,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * @param string $icon - image.php?
      */
-    public function setIcon($icon)
+    public function setIcon(string $icon): void
     {
         if (QUI\Projects\Media\Utils::isMediaUrl($icon)) {
             $this->setAttribute('icon', $icon);
@@ -622,7 +630,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * @param string $var
      * @param array $title
      */
-    protected function setPaymentLocale($var, $title)
+    protected function setPaymentLocale(string $var, array $title): void
     {
         $data = [
             'datatype' => 'php,js',
@@ -682,7 +690,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @param array $titles
      */
-    public function setPaymentFeeTitle(array $titles)
+    public function setPaymentFeeTitle(array $titles): void
     {
         $this->setPaymentLocale(
             'payment.' . $this->getId() . '.paymentFeeTitle',
@@ -693,7 +701,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Clears the payment fee
      */
-    public function clearPaymentFee()
+    public function clearPaymentFee(): void
     {
         $this->setAttribute('paymentFee', false);
     }
@@ -701,9 +709,9 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Set the payment fee title
      *
-     * @param string|float $paymentFee
+     * @param float|string $paymentFee
      */
-    public function setPaymentFee($paymentFee)
+    public function setPaymentFee(float|string $paymentFee): void
     {
         if (is_string($paymentFee)) {
             $paymentFee = floatval($paymentFee);
@@ -737,7 +745,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @return float|int
      */
-    public function getPaymentFee()
+    public function getPaymentFee(): float|int
     {
         $paymentFee = $this->getAttribute('paymentFee');
 
@@ -754,7 +762,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * @param null|QUI\Locale $Locale
      * @return array|string
      */
-    public function getPaymentFeeTitle(QUI\Locale $Locale = null)
+    public function getPaymentFeeTitle(QUI\Locale $Locale = null): array|string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -829,7 +837,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             try {
                 $price = $DefaultCurrency->convert($paymentFee, $UserCurrency);
                 $Price = new QUI\ERP\Money\Price($price, $UserCurrency);
-            } catch (Exception $exception) {
+            } catch (Exception) {
                 $Price = new QUI\ERP\Money\Price($paymentFee, $DefaultCurrency);
             }
         } else {

@@ -6,6 +6,7 @@
 
 namespace QUI\ERP\Accounting\Payments\Methods\Free;
 
+use Exception;
 use QUI;
 use QUI\ERP\Accounting\Payments\Payments;
 
@@ -22,9 +23,9 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     const ID = -1;
 
     /**
-     * @return array|string
+     * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->getLocale()->get(
             'quiqqer/payments',
@@ -33,9 +34,9 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     }
 
     /**
-     * @return array|string
+     * @return string
      */
-    public function getWorkingTitle()
+    public function getWorkingTitle(): string
     {
         return $this->getLocale()->get(
             'quiqqer/payments',
@@ -44,9 +45,9 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     }
 
     /**
-     * @return array|string
+     * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->getLocale()->get(
             'quiqqer/payments',
@@ -57,7 +58,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     /**
      * @return bool
      */
-    public function isGateway()
+    public function isGateway(): bool
     {
         return false;
     }
@@ -66,16 +67,16 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      * @param string $hash
      * @return bool
      */
-    public function isSuccessful($hash)
+    public function isSuccessful(string $hash): bool
     {
         try {
             $Order = QUI\ERP\Order\Handler::getInstance()->getOrderByHash($hash);
             $Calculation = $Order->getPriceCalculation();
 
-            if ($Calculation->getSum() === 0) {
+            if ($Calculation->getSum()->value() === 0) {
                 return true;
             }
-        } catch (\Exception $Exception) {
+        } catch (Exception) {
         }
 
         return false;
@@ -84,7 +85,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     /**
      * @return bool
      */
-    public function refundSupport()
+    public function refundSupport(): bool
     {
         return false;
     }
@@ -95,7 +96,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      *
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return Payments::getInstance()->getHost() .
             URL_OPT_DIR .
