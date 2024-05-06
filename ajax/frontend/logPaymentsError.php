@@ -28,7 +28,7 @@ QUI::$Ajax->registerFunction(
         $error .= "Error message: $errMsg\n";
         $error .= "Error code: $errCode\n";
         $error .= "\n";
-        $error .= "Username: {$User->getName()} (#{$User->getId()})\n";
+        $error .= "Username: {$User->getName()} (#{$User->getUUID()})\n";
         $error .= "\n================================\n";
 
         QUI\System\Log::addError($error, [], 'payments_errors');
