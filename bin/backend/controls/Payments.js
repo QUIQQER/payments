@@ -191,7 +191,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                 buttons    : [
                     {
                         name     : 'add',
-                        text     : QUILocale.get('quiqqer/quiqqer', 'add'),
+                        text     : QUILocale.get('quiqqer/core', 'add'),
                         textimage: 'fa fa-plus',
                         events   : {
                             onClick: this.$openCreateDialog
@@ -202,7 +202,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     },
                     {
                         name     : 'edit',
-                        text     : QUILocale.get('quiqqer/quiqqer', 'edit'),
+                        text     : QUILocale.get('quiqqer/core', 'edit'),
                         textimage: 'fa fa-edit',
                         disabled : true,
                         events   : {
