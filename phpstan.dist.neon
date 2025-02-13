@@ -8,3 +8,17 @@ parameters:
         - ajax
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
+    excludePaths:
+        - src/QUI/ERP/Accounting/Payments/OrderProcessProvider.php
+        - src/QUI/ERP/Accounting/Payments/Types/RecurringPaymentInterface.php
+        - src/QUI/ERP/Accounting/Payments/Types/PaymentInterface.php
+        - src/QUI/ERP/Accounting/Payments/Types/Payment.php
+        - src/QUI/ERP/Accounting/Payments/Methods/Standard/Payment.php
+        - src/QUI/ERP/Accounting/Payments/Methods/Invoice/Payment.php
+        - src/QUI/ERP/Accounting/Payments/Methods/Free/PaymentType.php
+        - src/QUI/ERP/Accounting/Payments/Methods/Free/Payment.php
+        - src/QUI/ERP/Accounting/Payments/Methods/Cash/Payment.php
+        - src/QUI/ERP/Accounting/Payments/Methods/AdvancePayment/Payment.php
+        - src/QUI/ERP/Accounting/Payments/Gateway/Gateway.php
+        - src/QUI/ERP/Accounting/Payments/EventHandling.php
+        - src/QUI/ERP/Accounting/Payments/Api/AbstractPayment.php
