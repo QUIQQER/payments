@@ -370,7 +370,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * @param null|Locale $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string
+    public function getTitle(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -388,7 +388,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * @param null|Locale $Locale
      * @return string
      */
-    public function getDescription(QUI\Locale $Locale = null): string
+    public function getDescription(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -406,7 +406,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * @param Locale|null $Locale
      * @return string
      */
-    public function getWorkingTitle(QUI\Locale $Locale = null): string
+    public function getWorkingTitle(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -453,9 +453,16 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         $Config = QUI::getPackage('quiqqer/erp')->getConfig();
         $defaultBankAccount = BankAccountsHandler::getDefaultBankAccount();
+        $orderId = '';
+
+        if (method_exists($Order, 'getIdPrefix')) {
+            $orderId = $Order->getIdPrefix();
+        }
+
+        $orderId .= $Order->getId();
 
         return $Locale->get('quiqqer/payments', 'payment.' . $id . '.orderInformation', [
-            'orderId' => $Order->getIdPrefix() . $Order->getId(),
+            'orderId' => $orderId,
             'shipping' => $shipping,
             'paidDate' => $paidDate,
             'paid' => $Currency->format($paid),
@@ -708,17 +715,11 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
     /**
      * Set the payment fee title
-     *
-     * @param float|string $paymentFee
      */
-    public function setPaymentFee(float|string $paymentFee): void
+    public function setPaymentFee(float | string $paymentFee): void
     {
         if (is_string($paymentFee)) {
             $paymentFee = floatval($paymentFee);
-        }
-
-        if (!is_float($paymentFee) && !is_double($paymentFee)) {
-            return;
         }
 
         $this->setAttribute('paymentFee', $paymentFee);
@@ -745,7 +746,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      *
      * @return float|int
      */
-    public function getPaymentFee(): float|int
+    public function getPaymentFee(): float | int
     {
         $paymentFee = $this->getAttribute('paymentFee');
 
@@ -762,7 +763,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * @param null|QUI\Locale $Locale
      * @return array|string
      */
-    public function getPaymentFeeTitle(QUI\Locale $Locale = null): array|string
+    public function getPaymentFeeTitle(null | QUI\Locale $Locale = null): array | string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -776,7 +777,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
     public function toPriceFactor(
         $Locale = null,
-        QUI\ERP\Order\AbstractOrder $Order = null
+        null | QUI\ERP\Order\AbstractOrder $Order = null
     ): QUI\ERP\Products\Utils\PriceFactor {
         $Currency = QUI\ERP\Defaults::getCurrency();
 

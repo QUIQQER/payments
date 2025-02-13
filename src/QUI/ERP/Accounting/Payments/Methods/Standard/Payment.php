@@ -86,7 +86,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param string $reason (optional) - The reason why the subscription is cancelled
      * @return void
      */
-    public function cancelSubscription(int|string $subscriptionId, string $reason = ''): void
+    public function cancelSubscription(int | string $subscriptionId, string $reason = ''): void
     {
         // Payment by invoice does not need to have/cancel a subscription with any service
     }
@@ -100,7 +100,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param string|null $note (optional) - Suspension note
      * @return void
      */
-    public function suspendSubscription(int|string $subscriptionId, string $note = null): void
+    public function suspendSubscription(int | string $subscriptionId, null | string $note = null): void
     {
         // Payment by invoice does not need to have/suspend a subscription with any service
     }
@@ -114,7 +114,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param string|null $note (optional) - Resume note
      * @return void
      */
-    public function resumeSubscription(int|string $subscriptionId, string $note = null): void
+    public function resumeSubscription(int | string $subscriptionId, null | string $note = null): void
     {
         // Payment by invoice does not need to have/resume a subscription with any service
     }
@@ -125,7 +125,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param int|string $subscriptionId
      * @return bool
      */
-    public function isSuspended(int|string $subscriptionId): bool
+    public function isSuspended(int | string $subscriptionId): bool
     {
         // Payment by invoice cannot be suspended
         return false;
@@ -163,7 +163,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param AbstractOrder $Order
      * @return int|string|false - ID or false of no ID associated
      */
-    public function getSubscriptionIdByOrder(AbstractOrder $Order): bool|int|string
+    public function getSubscriptionIdByOrder(AbstractOrder $Order): bool | int | string
     {
         return false;
     }
@@ -174,7 +174,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param int|string $subscriptionId
      * @return bool
      */
-    public function isSubscriptionActiveAtPaymentProvider(int|string $subscriptionId): bool
+    public function isSubscriptionActiveAtPaymentProvider(int | string $subscriptionId): bool
     {
         return true;
     }
@@ -185,7 +185,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param int|string $subscriptionId - Payment provider subscription ID
      * @return bool
      */
-    public function isSubscriptionActiveAtQuiqqer(int|string $subscriptionId): bool
+    public function isSubscriptionActiveAtQuiqqer(int | string $subscriptionId): bool
     {
         return true;
     }
@@ -208,7 +208,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
      * @param int|string $subscriptionId
      * @return false
      */
-    public function getSubscriptionGlobalProcessingId(int|string $subscriptionId): bool
+    public function getSubscriptionGlobalProcessingId(int | string $subscriptionId): bool
     {
         // Since there are no external subscription IDs, nothing can be returned here
         return false;
