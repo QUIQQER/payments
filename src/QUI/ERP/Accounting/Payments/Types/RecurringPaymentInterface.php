@@ -37,7 +37,7 @@ interface RecurringPaymentInterface
      * @param string $reason (optional) - The reason why the subscription is cancelled
      * @return void
      */
-    public function cancelSubscription(int|string $subscriptionId, string $reason = ''): void;
+    public function cancelSubscription(int | string $subscriptionId, string $reason = ''): void;
 
     /**
      * Suspend a Subscription
@@ -48,7 +48,7 @@ interface RecurringPaymentInterface
      * @param string|null $note (optional) - Suspension note
      * @return void
      */
-    public function suspendSubscription(int|string $subscriptionId, string $note = null): void;
+    public function suspendSubscription(int | string $subscriptionId, null | string $note = null): void;
 
     /**
      * Resume a suspended Subscription
@@ -59,7 +59,7 @@ interface RecurringPaymentInterface
      * @param string|null $note (optional) - Resume note
      * @return void
      */
-    public function resumeSubscription(int|string $subscriptionId, string $note = null): void;
+    public function resumeSubscription(int | string $subscriptionId, null | string $note = null): void;
 
     /**
      * Checks if a subscription is currently suspended
@@ -67,7 +67,7 @@ interface RecurringPaymentInterface
      * @param int|string $subscriptionId
      * @return bool
      */
-    public function isSuspended(int|string $subscriptionId): bool;
+    public function isSuspended(int | string $subscriptionId): bool;
 
     /**
      * Sets a subscription as inactive (on the side of this QUIQQER system only!)
@@ -78,7 +78,7 @@ interface RecurringPaymentInterface
      * @param int|string $subscriptionId
      * @return void
      */
-    public function setSubscriptionAsInactive(int|string $subscriptionId): void;
+    public function setSubscriptionAsInactive(int | string $subscriptionId): void;
 
     /**
      * Can the Subscription of this payment method be edited
@@ -95,7 +95,7 @@ interface RecurringPaymentInterface
      * @param AbstractOrder $Order
      * @return int|string|false - ID or false of no ID associated
      */
-    public function getSubscriptionIdByOrder(AbstractOrder $Order): bool|int|string;
+    public function getSubscriptionIdByOrder(AbstractOrder $Order): bool | int | string;
 
     /**
      * Checks if the subscription is active at the payment provider side
@@ -103,7 +103,7 @@ interface RecurringPaymentInterface
      * @param int|string $subscriptionId
      * @return bool
      */
-    public function isSubscriptionActiveAtPaymentProvider(int|string $subscriptionId): bool;
+    public function isSubscriptionActiveAtPaymentProvider(int | string $subscriptionId): bool;
 
     /**
      * Checks if the subscription is active at QUIQQER
@@ -111,7 +111,7 @@ interface RecurringPaymentInterface
      * @param int|string $subscriptionId - Payment provider subscription ID
      * @return bool
      */
-    public function isSubscriptionActiveAtQuiqqer(int|string $subscriptionId): bool;
+    public function isSubscriptionActiveAtQuiqqer(int | string $subscriptionId): bool;
 
     /**
      * Get IDs of all subscriptions
@@ -127,5 +127,5 @@ interface RecurringPaymentInterface
      * @param int|string $subscriptionId
      * @return string|false
      */
-    public function getSubscriptionGlobalProcessingId(int|string $subscriptionId): bool|string;
+    public function getSubscriptionGlobalProcessingId(int | string $subscriptionId): bool | string;
 }

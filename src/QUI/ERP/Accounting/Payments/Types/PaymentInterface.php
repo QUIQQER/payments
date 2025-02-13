@@ -17,25 +17,25 @@ interface PaymentInterface
     /**
      * @return integer|string
      */
-    public function getId(): int|string;
+    public function getId(): int | string;
 
     /**
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string;
+    public function getTitle(null | QUI\Locale $Locale = null): string;
 
     /**
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getDescription(QUI\Locale $Locale = null): string;
+    public function getDescription(null | QUI\Locale $Locale = null): string;
 
     /**
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getWorkingTitle(QUI\Locale $Locale = null): string;
+    public function getWorkingTitle(null | QUI\Locale $Locale = null): string;
 
     //endregion
 

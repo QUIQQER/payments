@@ -41,14 +41,10 @@ class Factory extends QUI\CRUD\Factory
     }
 
     /**
-     * @param array $data
-     *
-     * @return Payment
-     *
      * @throws QUI\ERP\Accounting\Payments\Exception
      * @throws QUI\Exception
      */
-    public function createChild(array $data = []): QUI\CRUD\Child
+    public function createChild(array $data = []): Payment
     {
         if (!isset($data['active']) || !is_integer($data['active'])) {
             $data['active'] = 0;
@@ -127,7 +123,6 @@ class Factory extends QUI\CRUD\Factory
         $PaymentLocale->setCurrent($paymentLocaleCurrent);
         $PaymentMethod->setLocale($PaymentLocale);
 
-        /* @var $NewChild Payment */
         $NewChild = parent::createChild($data);
 
         $this->createPaymentLocale('payment.' . $NewChild->getId() . '.title', $title);
@@ -162,7 +157,11 @@ class Factory extends QUI\CRUD\Factory
 
         QUI::getEvents()->fireEvent('paymentsCreateEnd', [$NewChild]);
 
-        return $NewChild;
+        if ($NewChild instanceof Payment) {
+            return $NewChild;
+        }
+
+        throw new QUI\Exception('Payment could not be created');
     }
 
     /**
@@ -216,12 +215,15 @@ class Factory extends QUI\CRUD\Factory
      *
      * @throws QUI\Exception
      */
-    public function getChild($id): QUI\CRUD\Child
+    public function getChild($id): Payment
     {
-        /* @var Payment $Payment */
         $Payment = parent::getChild($id);
 
-        return $Payment;
+        if ($Payment instanceof Payment) {
+            return $Payment;
+        }
+
+        throw new QUI\Exception('Payment not found');
     }
 
     /**
@@ -230,7 +232,7 @@ class Factory extends QUI\CRUD\Factory
      * @param $var
      * @param array|string $title
      */
-    protected function createPaymentLocale($var, array|string $title): void
+    protected function createPaymentLocale($var, array | string $title): void
     {
         $current = QUI::getLocale()->getCurrent();
         $options = [
