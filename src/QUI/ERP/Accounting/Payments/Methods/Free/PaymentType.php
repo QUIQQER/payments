@@ -21,7 +21,7 @@ use QUI\Locale;
 class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     QUI\ERP\Accounting\Payments\Types\PaymentInterface
 {
-    public function __construct(protected int|string $id, protected Factory $Factory)
+    public function __construct(protected int | string $id, protected Factory $Factory)
     {
     }
 
@@ -73,7 +73,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
      * @param Locale|null $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string
+    public function getTitle(null | QUI\Locale $Locale = null): string
     {
         $PaymentType = $this->getPaymentType();
 
@@ -88,7 +88,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
      * @param Locale|null $Locale
      * @return string
      */
-    public function getWorkingTitle(QUI\Locale $Locale = null): string
+    public function getWorkingTitle(null | QUI\Locale $Locale = null): string
     {
         $PaymentType = $this->getPaymentType();
 
@@ -103,7 +103,7 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
      * @param Locale|null $Locale
      * @return string
      */
-    public function getDescription(QUI\Locale $Locale = null): string
+    public function getDescription(null | QUI\Locale $Locale = null): string
     {
         $PaymentType = $this->getPaymentType();
 

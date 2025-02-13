@@ -52,7 +52,7 @@ class Settings extends Singleton
      *
      * @return bool|string
      */
-    public function get(string $section, string $key): bool|string
+    public function get(string $section, string $key): bool | string
     {
         try {
             return $this->getConfig()->get($section, $key);
@@ -68,9 +68,9 @@ class Settings extends Singleton
      *
      * @param string $section
      * @param string $key
-     * @param string $value
+     * @param float|int|string $value
      */
-    public function set(string $section, string $key, string $value): void
+    public function set(string $section, string $key, float | int | string $value): void
     {
         // @todo permissions
 

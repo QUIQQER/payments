@@ -146,7 +146,7 @@ class Payments extends QUI\Utils\Singleton
      *
      * @throws Exception
      */
-    public function getPayment(int|string $paymentId): Methods\Free\PaymentType|Payment
+    public function getPayment(int | string $paymentId): Methods\Free\PaymentType | Payment
     {
         if ((int)$paymentId == Methods\Free\Payment::ID) {
             return new Methods\Free\PaymentType(Methods\Free\Payment::ID, new Factory());
@@ -188,7 +188,7 @@ class Payments extends QUI\Utils\Singleton
      * @param User|null $User - optional
      * @return array
      */
-    public function getUserPayments(User $User = null): array
+    public function getUserPayments(null | User $User = null): array
     {
         if ($User === null) {
             $User = QUI::getUserBySession();

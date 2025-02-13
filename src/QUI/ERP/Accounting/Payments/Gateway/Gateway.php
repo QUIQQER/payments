@@ -45,7 +45,7 @@ class Gateway extends QUI\Utils\Singleton
      *
      * @var int|bool
      */
-    protected int|bool $gatewayPayment = false;
+    protected int | bool $gatewayPayment = false;
 
     /**
      * Indicates if the Gateway was called as a cancel request
@@ -106,7 +106,7 @@ class Gateway extends QUI\Utils\Singleton
      *
      * @throws QUI\Exception
      */
-    public function setOrderId(int|string $orderId): void
+    public function setOrderId(int | string $orderId): void
     {
         $Handler = QUI\ERP\Order\Handler::getInstance();
 
@@ -168,10 +168,7 @@ class Gateway extends QUI\Utils\Singleton
         }
     }
 
-    /**
-     * @return AbstractOrder
-     */
-    public function getOrder(): AbstractOrder
+    public function getOrder(): null | AbstractOrder
     {
         return $this->Order;
     }
@@ -221,7 +218,7 @@ class Gateway extends QUI\Utils\Singleton
     /**
      * @return int|bool
      */
-    public function isGatewayPayment(): bool|int
+    public function isGatewayPayment(): bool | int
     {
         return $this->gatewayPayment;
     }
@@ -316,9 +313,8 @@ class Gateway extends QUI\Utils\Singleton
             $params = [];
         }
 
-        if ($this->getOrder()) {
-            $params['orderHash'] = $this->getOrder()->getUUID();
-        }
+
+        $params['orderHash'] = $this->getOrder()?->getUUID();
 
         return $host . $dir . '?' . http_build_query($params);
     }
