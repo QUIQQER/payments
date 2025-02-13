@@ -8,6 +8,8 @@ parameters:
         - ajax
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
+
+        # exclude paths können raus wenn das phpstan mit optionalen pakete geht
     excludePaths:
         - src/QUI/ERP/Accounting/Payments/OrderProcessProvider.php
         - src/QUI/ERP/Accounting/Payments/Types/RecurringPaymentInterface.php
@@ -22,3 +24,4 @@ parameters:
         - src/QUI/ERP/Accounting/Payments/Gateway/Gateway.php
         - src/QUI/ERP/Accounting/Payments/EventHandling.php
         - src/QUI/ERP/Accounting/Payments/Api/AbstractPayment.php
+        - src/QUI/ERP/Accounting/Payments/Order/Payment.php
