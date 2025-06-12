@@ -22,6 +22,11 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      */
     const ID = -1;
 
+    public function getTypeCode(): QUI\ERP\Enums\Payments\EN16931
+    {
+        return QUI\ERP\Enums\Payments\EN16931::MUTUALLY_DEFINED;
+    }
+
     /**
      * @return string
      */
