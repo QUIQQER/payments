@@ -19,6 +19,11 @@ use QUI\ERP\Order\Handler as OrderHandler;
  */
 class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
 {
+    public function getTypeCode(): QUI\ERP\Enums\Payments\EN16931
+    {
+        return QUI\ERP\Enums\Payments\EN16931::DEBIT_CARD;
+    }
+
     /**
      * @return string
      */

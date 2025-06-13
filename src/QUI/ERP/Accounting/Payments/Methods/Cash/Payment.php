@@ -16,6 +16,11 @@ use QUI\ERP\Accounting\Payments\Payments;
  */
 class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
 {
+    public function getTypeCode(): QUI\ERP\Enums\Payments\EN16931
+    {
+        return QUI\ERP\Enums\Payments\EN16931::CASH;
+    }
+
     /**
      * @return string
      */
@@ -83,7 +88,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
      * @return string
      */
     public function getInvoiceInformationText(
-        QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
+        QUI\ERP\Accounting\Invoice\Invoice | QUI\ERP\Accounting\Invoice\InvoiceTemporary | QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
     ): string {
         return QUI::getLocale()->get('quiqqer/payments', 'invoice.information.text.cache');
     }
