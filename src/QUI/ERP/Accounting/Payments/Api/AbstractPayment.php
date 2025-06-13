@@ -97,6 +97,14 @@ abstract class AbstractPayment implements PaymentsInterface
     }
 
     /**
+     * @return QUI\ERP\Enums\Payments\EN16931
+     */
+    public function getTypeCode(): QUI\ERP\Enums\Payments\EN16931
+    {
+        return QUI\ERP\Enums\Payments\EN16931::NOT_DEFINED;
+    }
+
+    /**
      * @return string
      */
     abstract public function getTitle(): string;
@@ -154,7 +162,8 @@ abstract class AbstractPayment implements PaymentsInterface
         return [
             'name' => $this->getName(),
             'title' => $this->getTitle(),
-            'description' => $this->getDescription()
+            'description' => $this->getDescription(),
+            'typeCode' => $this->getTypeCode()
         ];
     }
 
@@ -228,9 +237,9 @@ abstract class AbstractPayment implements PaymentsInterface
      */
     public function refund(
         Transaction $Transaction,
-        float|int $amount,
+        float | int $amount,
         string $message = '',
-        bool|string $hash = false
+        bool | string $hash = false
     ): void {
         // you will find an example for a refund at
         // https://dev.quiqqer.com/quiqqer/payments-gateway/blob/master/src/QUI/ERP/Payments/Example/Payment.php
@@ -268,7 +277,7 @@ abstract class AbstractPayment implements PaymentsInterface
      * @return string
      */
     public function getInvoiceInformationText(
-        QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
+        QUI\ERP\Accounting\Invoice\Invoice | QUI\ERP\Accounting\Invoice\InvoiceTemporary | QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
     ): string {
         return '';
     }

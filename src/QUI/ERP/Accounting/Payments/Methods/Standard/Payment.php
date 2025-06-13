@@ -14,6 +14,11 @@ use QUI\ERP\Order\AbstractOrder;
  */
 class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements RecurringPaymentInterface
 {
+    public function getTypeCode(): QUI\ERP\Enums\Payments\EN16931
+    {
+        return QUI\ERP\Enums\Payments\EN16931::CREDIT_TRANSFER;
+    }
+
     /**
      * @return string
      */
