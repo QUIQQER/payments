@@ -15,8 +15,6 @@ use QUI\Locale;
  * Class PaymentType
  * - This class is a placeholder / helper class for the free payment
  * - if an order has no value of goods, this payment will be used
- *
- * @package QUI\ERP\Accounting\Payments\Methods\Free\PaymentType
  */
 class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
     QUI\ERP\Accounting\Payments\Types\PaymentInterface
@@ -34,10 +32,13 @@ class PaymentType extends QUI\ERP\Accounting\Payments\Types\Payment implements
         $Locale = QUI::getLocale();
 
         return [
+            'id' => QUI\ERP\Accounting\Payments\Methods\Free\Payment::ID,
             'title' => $Locale->get($lg, 'payment.free.title'),
             'description' => $Locale->get($lg, 'payment.free.description'),
             'workingTitle' => $Locale->get($lg, 'payment.free.workingTitle'),
-            'paymentType' => false,
+            'paymentType' => PaymentType::class,
+            'payment_type' => PaymentType::class,
+            'payment_code' => QUI\ERP\Accounting\Payments\Methods\Free\Payment::ID,
             'icon' => ''
         ];
     }
