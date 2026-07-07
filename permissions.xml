@@ -1,11 +1,20 @@
 <permissions>
     <permission name="quiqqer.payments.create" type="bool">
-        <defaultvalue>1</defaultvalue>
+        <defaultvalue>0</defaultvalue>
+        <rootPermission>1</rootPermission>
+        <everyonePermission>0</everyonePermission>
+        <guestPermission>0</guestPermission>
     </permission>
     <permission name="quiqqer.payments.edit" type="bool">
-        <defaultvalue>1</defaultvalue>
+        <defaultvalue>0</defaultvalue>
+        <rootPermission>1</rootPermission>
+        <everyonePermission>0</everyonePermission>
+        <guestPermission>0</guestPermission>
     </permission>
     <permission name="quiqqer.payments.delete" type="bool">
-        <defaultvalue>1</defaultvalue>
+        <defaultvalue>0</defaultvalue>
+        <rootPermission>1</rootPermission>
+        <everyonePermission>0</everyonePermission>
+        <guestPermission>0</guestPermission>
     </permission>
 </permissions>

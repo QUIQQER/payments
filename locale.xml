@@ -8,7 +8,7 @@
 
         <locale name="package.description">
             <de><![CDATA[
-            QUIQQER Payments erweitert QUIQQER und das QUIQQER ERP System um eine einheitliche Bezahlmethoden API.
+            QUIQQER Payments erweitert QUIQQER und das QUIQQER ERP System um eine einheitliche Zahlungsmethoden API.
             Zusätzlich bringt es schon Barzahlung, Zahlung per Rechnung und Vorkasse als Zahlungsmethode mit.
             ]]></de>
             <en><![CDATA[
@@ -120,39 +120,39 @@
         </locale>
 
         <locale name="permission.quiqqer.payments._header">
-            <de><![CDATA[Zahlungsweisen]]></de>
+            <de><![CDATA[Zahlungsarten]]></de>
             <en><![CDATA[Payment types]]></en>
         </locale>
         <locale name="permission.quiqqer.payments.delete">
-            <de><![CDATA[Darf Zahlungsweisen löschen]]></de>
+            <de><![CDATA[Darf Zahlungsarten löschen]]></de>
             <en><![CDATA[Can delete payment type]]></en>
         </locale>
         <locale name="permission.quiqqer.payments.edit">
-            <de><![CDATA[Darf Zahlungsweisen editieren]]></de>
+            <de><![CDATA[Darf Zahlungsarten editieren]]></de>
             <en><![CDATA[Can edit payment type]]></en>
         </locale>
         <locale name="permission.quiqqer.payments.create">
-            <de><![CDATA[Darf Zahlungsweisen anlegen]]></de>
+            <de><![CDATA[Darf Zahlungsarten anlegen]]></de>
             <en><![CDATA[Can create payment type]]></en>
         </locale>
     </groups>
 
     <groups name="quiqqer/payments" datatype="php">
         <locale name="new.payment.paceholder">
-            <de><![CDATA[Neue Bezahlmethode]]></de>
+            <de><![CDATA[Neue Zahlungsart]]></de>
             <en><![CDATA[New payment type]]></en>
         </locale>
         <locale name="exception.payment.not.found">
-            <de><![CDATA[Die Bezahlmethode [payment] wurde nicht gefunden.]]></de>
+            <de><![CDATA[Die Zahlungsart [payment] wurde nicht gefunden.]]></de>
             <en><![CDATA[The payment type [payment] was not found.]]></en>
         </locale>
         <locale name="exception.payment.type.not.found">
-            <de><![CDATA[Die Bezahlmethode [paymentType] wurde nicht gefunden.]]></de>
-            <en><![CDATA[The payment type [paymentType] was not found.]]></en>
+            <de><![CDATA[Die Zahlungsmethode [paymentType] wurde nicht gefunden.]]></de>
+            <en><![CDATA[The payment method [paymentType] was not found.]]></en>
         </locale>
         <locale name="exception.payment.type.not.abstractPayment">
-            <de><![CDATA[Die Bezahlmethode [paymentType] ist nicht von AbstractPayment.]]></de>
-            <en><![CDATA[The payment type [paymentType] is not from AbstractPayment.]]></en>
+            <de><![CDATA[Die Zahlungsmethode [paymentType] ist nicht von AbstractPayment.]]></de>
+            <en><![CDATA[The payment method [paymentType] is not from AbstractPayment.]]></en>
         </locale>
         <locale name="message.payment.saved.successfully">
             <de><![CDATA[Die Zahlungsart [payment] wurde erfolgreich gespeichert.]]></de>
@@ -177,12 +177,12 @@
             Die Zahlungsart konnte nicht angelegt werden. Es ist ein Fehler bei der Zahlungsmethode aufgetreteten.
             ]]></de>
             <en><![CDATA[
-            The payment method could not be created. There is an error in the payment method occurred.
+            The payment type could not be created. An error occurred in the payment method.
             ]]></en>
         </locale>
         <locale name="exception.create.unique.payment.already.exists">
-            <de><![CDATA[Dieses Bezahlmethode können Sie nur einmal anlegen.]]></de>
-            <en><![CDATA[You can only create this payment method once.]]></en>
+            <de><![CDATA[Diese Zahlungsmethode können Sie nur einmal als Zahlungsart anlegen.]]></de>
+            <en><![CDATA[You can only create this payment method once as a payment type.]]></en>
         </locale>
 
         <locale name="text.invoice.information.for.invoicePayment.paid" html="true">
@@ -238,7 +238,7 @@
         </locale>
         <locale name="currency.settings.listUnsupportedPayment.text">
             <de><![CDATA[Nicht unterstützte Zahlungsarten anzeigen:]]></de>
-            <en><![CDATA[Show unsupported payment methods:]]></en>
+            <en><![CDATA[Show unsupported payment types:]]></en>
         </locale>
         <locale name="currency.settings.listUnsupportedPayment.description">
             <de><![CDATA[
@@ -338,8 +338,8 @@
             <en><![CDATA[Custom Icon]]></en>
         </locale>
         <locale name="payment.edit.template.customIcon.description" html="true">
-            <de><![CDATA[Legen Sie ein eigenes Bild für die Bezahlweise fest.]]></de>
-            <en><![CDATA[Define your own image for the payment method.]]></en>
+            <de><![CDATA[Legen Sie ein eigenes Bild für die Zahlungsart fest.]]></de>
+            <en><![CDATA[Define your own image for the payment type.]]></en>
         </locale>
 
         <locale name="payment.edit.template.paymentFee.header">
@@ -405,7 +405,7 @@ Beispiel: Nachnahmegebühr: 10,00 €
 
         <locale name="window.create.paymentType">
             <de><![CDATA[Welche Zahlungsmethode soll Ihre Zahlungsart verwenden?]]></de>
-            <en><![CDATA[What payment type should your Payment type use?]]></en>
+            <en><![CDATA[Which payment method should your payment type use?]]></en>
         </locale>
 
         <locale name="window.search.title">
@@ -431,7 +431,7 @@ Beispiel: Nachnahmegebühr: 10,00 €
         </locale>
         <locale name="grid.payments.type">
             <de><![CDATA[Zahlungsmethode]]></de>
-            <en><![CDATA[Payment type]]></en>
+            <en><![CDATA[Payment method]]></en>
         </locale>
 
         <locale name="order.change.to.supported.payment.title">
@@ -444,12 +444,12 @@ Beispiel: Nachnahmegebühr: 10,00 €
         </locale>
         <locale name="order.change.to.supported.payment.information">
             <de><![CDATA[
-            In deiner Bestellung wird eine andere Währung verwendet, die von dieser Zahlungsweise unterstützt wird.
+            In deiner Bestellung wird eine andere Währung verwendet, die von dieser Zahlungsart unterstützt wird.
             Um diese Option zu nutzen, müsste die Währung deiner Bestellung angepasst werden.
             Wenn du diese Änderung vornehmen möchtest, wähle bitte eine Währung aus den unten aufgeführten Optionen.
             ]]></de>
             <en><![CDATA[
-            Your order uses a different currency that is supported by this payment method.
+            Your order uses a different currency that is supported by this payment type.
             To use this option, the currency of your order would need to be adjusted.
             If you would like to make this change, please select a currency from the options below.
             ]]></en>
