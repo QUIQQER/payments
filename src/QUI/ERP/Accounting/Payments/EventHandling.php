@@ -277,7 +277,7 @@ class EventHandling
 
         $Order->getArticles()->calc();
 
-        if (method_exists($Order, 'save')) {
+        if (is_callable([$Order, 'save'])) {
             $Order->save();
         }
     }

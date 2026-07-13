@@ -139,7 +139,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
             try {
                 $Order->setPayment($paymentList[0]->getId());
 
-                if (method_exists($Order, 'save')) {
+                if (is_callable([$Order, 'save'])) {
                     $Order->save();
                 }
             } catch (QUI\Exception $Exception) {
@@ -201,7 +201,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $Order->setPayment($Payment->getId());
 
-        if (method_exists($Order, 'save')) {
+        if (is_callable([$Order, 'save'])) {
             $Order->save();
         }
     }

@@ -4,6 +4,10 @@ namespace QUI\ERP\Accounting\Invoice;
 
 class Invoice
 {
+    public function addHistory(string $message): void
+    {
+    }
+
     public function getAttribute(string $key): mixed
     {
         return null;

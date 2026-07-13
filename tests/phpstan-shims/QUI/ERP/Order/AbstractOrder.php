@@ -63,6 +63,11 @@ abstract class AbstractOrder implements OrderInterface
         return false;
     }
 
+    public function isPaid(): bool
+    {
+        return false;
+    }
+
     public function isSuccessful(): bool
     {
         return false;
