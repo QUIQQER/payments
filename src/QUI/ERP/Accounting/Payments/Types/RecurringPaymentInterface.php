@@ -117,7 +117,7 @@ interface RecurringPaymentInterface
      * Get IDs of all subscriptions
      *
      * @param bool $includeInactive (optional) - Include inactive subscriptions [default: false]
-     * @return int[]
+     * @return array<int|string>
      */
     public function getSubscriptionIds(bool $includeInactive = false): array;
 
