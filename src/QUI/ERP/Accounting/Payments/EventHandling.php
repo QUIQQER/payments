@@ -277,9 +277,7 @@ class EventHandling
 
         $Order->getArticles()->calc();
 
-        if (is_callable([$Order, 'save'])) {
-            $Order->save();
-        }
+        self::saveOrder($Order);
     }
 
     public static function onUpdateEnd(): void
@@ -292,5 +290,12 @@ class EventHandling
         $value = $Locale->getByLang($language, 'quiqqer/payments', $variable);
 
         return is_string($value) ? $value : '';
+    }
+
+    private static function saveOrder(object $order): void
+    {
+        if (method_exists($order, 'save')) {
+            $order->save();
+        }
     }
 }

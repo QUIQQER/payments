@@ -139,9 +139,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
             try {
                 $Order->setPayment($paymentList[0]->getId());
 
-                if (is_callable([$Order, 'save'])) {
-                    $Order->save();
-                }
+                $this->saveOrder($Order);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addDebug($Exception->getMessage());
             }
@@ -201,9 +199,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $Order->setPayment($Payment->getId());
 
-        if (is_callable([$Order, 'save'])) {
-            $Order->save();
-        }
+        $this->saveOrder($Order);
     }
 
     /**
@@ -245,5 +241,12 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         }
 
         return $payments;
+    }
+
+    private function saveOrder(object $order): void
+    {
+        if (method_exists($order, 'save')) {
+            $order->save();
+        }
     }
 }
