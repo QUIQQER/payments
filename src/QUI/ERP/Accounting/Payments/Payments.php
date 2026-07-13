@@ -27,14 +27,14 @@ use function trim;
 class Payments extends QUI\Utils\Singleton
 {
     /**
-     * @var array
+     * @var array<string, AbstractPayment>
      */
     protected array $payments = [];
 
     /**
      * Return all available payment provider
      *
-     * @return array
+     * @return list<AbstractPaymentProvider>
      */
     public function getPaymentProviders(): array
     {
@@ -117,7 +117,7 @@ class Payments extends QUI\Utils\Singleton
     }
 
     /**
-     * @param $paymentHash
+     * @param string $paymentHash
      * @return AbstractPayment
      * @throws Exception
      */
@@ -154,7 +154,7 @@ class Payments extends QUI\Utils\Singleton
 
         /* @var $Payment Payment */
         try {
-            return Factory::getInstance()->getChild($paymentId);
+            return Factory::getInstance()->getChild((int)$paymentId);
         } catch (QUI\Exception) {
             throw new Exception([
                 'quiqqer/payments',
@@ -166,8 +166,8 @@ class Payments extends QUI\Utils\Singleton
     /**
      * Return all active payments
      *
-     * @param array $queryParams
-     * @return array
+     * @param array<string, mixed> $queryParams
+     * @return list<Payment>
      */
     public function getPayments(array $queryParams = []): array
     {
@@ -176,7 +176,12 @@ class Payments extends QUI\Utils\Singleton
         }
 
         try {
-            return Factory::getInstance()->getChildren($queryParams);
+            $children = Factory::getInstance()->getChildren($queryParams);
+
+            return array_values(array_filter(
+                $children,
+                static fn(QUI\CRUD\Child $Child): bool => $Child instanceof Payment
+            ));
         } catch (QUI\Exception) {
             return [];
         }
@@ -186,7 +191,7 @@ class Payments extends QUI\Utils\Singleton
      * Return all payments for the user
      *
      * @param User|null $User - optional
-     * @return array
+     * @return list<Payment>
      */
     public function getUserPayments(null | User $User = null): array
     {
@@ -194,10 +199,10 @@ class Payments extends QUI\Utils\Singleton
             $User = QUI::getUserBySession();
         }
 
-        return array_filter($this->getPayments(), function ($Payment) use ($User) {
+        return array_values(array_filter($this->getPayments(), function ($Payment) use ($User) {
             /* @var $Payment Payment */
             return $Payment->canUsedBy($User);
-        });
+        }));
     }
 
     /**
@@ -217,7 +222,16 @@ class Payments extends QUI\Utils\Singleton
             }
         }
 
+        if ($Project === null) {
+            return '';
+        }
+
         $host = $Project->getVHost(true, true);
+
+        if (!is_string($host)) {
+            return '';
+        }
+
         return trim($host, '/');
     }
 }

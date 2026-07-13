@@ -40,7 +40,7 @@ interface PaymentInterface
     //endregion
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array;
 

@@ -14,7 +14,7 @@ abstract class AbstractPaymentProvider
 {
     /**
      * Return the payment types of the provider
-     * @return array
+     * @return list<class-string>
      */
     abstract public function getPaymentTypes(): array;
 }

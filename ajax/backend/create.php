@@ -12,7 +12,7 @@ use QUI\ERP\Accounting\Payments\Types\Factory;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_payments_ajax_backend_create',
     function ($paymentType) {
         $Type = Payments::getInstance()->getPaymentType($paymentType);

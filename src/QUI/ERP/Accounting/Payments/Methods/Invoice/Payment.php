@@ -6,12 +6,12 @@ use QUI;
 use QUI\ERP\Accounting\Invoice\Invoice;
 use QUI\ERP\Accounting\Invoice\InvoiceTemporary;
 use QUI\ERP\Accounting\Invoice\InvoiceView;
-use QUI\ERP\Accounting\Invoice\Utils\Invoice as InvoiceUtils;
 use QUI\ERP\Accounting\Payments\Types\RecurringPaymentInterface;
 use QUI\ERP\Exception;
 use QUI\ERP\Order\AbstractOrder;
 
 use function date;
+use function strtotime;
 
 /**
  * Class Payment
@@ -84,7 +84,23 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
             );
         }
 
-        $timeForPayment = InvoiceUtils::getInvoiceTimeForPaymentDate($Invoice);
+        if ($Invoice instanceof InvoiceView) {
+            $Invoice = $Invoice->getInvoice();
+        }
+
+        $timeForPayment = $Invoice->getAttribute('time_for_payment');
+
+        if ($Invoice instanceof InvoiceTemporary) {
+            $timeForPayment = (int)$timeForPayment;
+
+            if ($timeForPayment >= 0) {
+                $timeForPayment = strtotime('+' . $timeForPayment . ' day');
+            }
+        } else {
+            $timeForPayment = strtotime((string)$timeForPayment);
+        }
+
+        $timeForPayment = (int)$timeForPayment;
 
         // today
         if (date('Y-m-d', $timeForPayment) === date('Y-m-d')) {
@@ -95,7 +111,7 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment implements
         }
 
         // format time for payment
-        $Locale = $Invoice->getCustomer()->getLocale();
+        $Locale = $Invoice->getCustomer()?->getLocale() ?? QUI::getLocale();
         $Formatter = $Locale->getDateFormatter();
 
         return QUI::getLocale()->get(

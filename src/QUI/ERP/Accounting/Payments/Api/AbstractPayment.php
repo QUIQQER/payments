@@ -36,14 +36,14 @@ abstract class AbstractPayment implements PaymentsInterface
     /**
      * payment fields - extra fields for the payment / accounting
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $paymentFields = [];
 
     /**
      * default settings
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $defaults = [];
 
@@ -155,7 +155,7 @@ abstract class AbstractPayment implements PaymentsInterface
     /**
      * Return the payment as an array
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -263,8 +263,9 @@ abstract class AbstractPayment implements PaymentsInterface
      * Execute the request from the payment provider
      *
      * @param QUI\ERP\Accounting\Payments\Gateway\Gateway $Gateway
+     * @return void
      */
-    public function executeGatewayPayment(QUI\ERP\Accounting\Payments\Gateway\Gateway $Gateway)
+    public function executeGatewayPayment(QUI\ERP\Accounting\Payments\Gateway\Gateway $Gateway): void
     {
     }
 

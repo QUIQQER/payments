@@ -39,6 +39,10 @@ class Settings extends Singleton
         $Package = QUI::getPackage('quiqqer/payments');
         $Config = $Package->getConfig();
 
+        if ($Config === null) {
+            throw new QUI\Exception('Payments configuration is not available.');
+        }
+
         $this->Config = $Config;
 
         return $this->Config;
@@ -96,7 +100,7 @@ class Settings extends Singleton
     /**
      * Remove a section
      *
-     * @param $section
+     * @param string $section
      */
     public function removeSection($section): void
     {

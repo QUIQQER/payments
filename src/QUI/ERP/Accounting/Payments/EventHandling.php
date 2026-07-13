@@ -16,6 +16,7 @@ use function array_flip;
 use function array_map;
 use function json_decode;
 use function method_exists;
+use function is_string;
 
 /**
  * Class EventHandling
@@ -26,7 +27,7 @@ class EventHandling
 {
     /**
      * @param Package $Package
-     * @param array $params
+     * @param array<string, mixed> $params
      */
     public static function onPackageConfigSave(Package $Package, array $params): void
     {
@@ -74,8 +75,8 @@ class EventHandling
     /**
      * Called as an event when an error code/header is shown/returned
      *
-     * @param $code
-     * @param $url
+     * @param int|string $code
+     * @param string $url
      */
     public static function onErrorHeaderShow($code, $url): void
     {
@@ -123,18 +124,18 @@ class EventHandling
             ]);
 
             $Payment->setTitle([
-                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.advanced.payment.title'),
-                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.advanced.payment.title')
+                'de' => self::getLocaleText($Locale, 'de', 'payment.advanced.payment.title'),
+                'en' => self::getLocaleText($Locale, 'en', 'payment.advanced.payment.title')
             ]);
 
             $Payment->setDescription([
-                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.advanced.payment.description'),
-                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.advanced.payment.description')
+                'de' => self::getLocaleText($Locale, 'de', 'payment.advanced.payment.description'),
+                'en' => self::getLocaleText($Locale, 'en', 'payment.advanced.payment.description')
             ]);
 
             $Payment->setWorkingTitle([
-                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.advanced.payment.workingTitle'),
-                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.advanced.payment.workingTitle')
+                'de' => self::getLocaleText($Locale, 'de', 'payment.advanced.payment.workingTitle'),
+                'en' => self::getLocaleText($Locale, 'en', 'payment.advanced.payment.workingTitle')
             ]);
 
             $Payment->activate();
@@ -146,18 +147,18 @@ class EventHandling
             ]);
 
             $Payment->setTitle([
-                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.cash.title'),
-                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.cash.title')
+                'de' => self::getLocaleText($Locale, 'de', 'payment.cash.title'),
+                'en' => self::getLocaleText($Locale, 'en', 'payment.cash.title')
             ]);
 
             $Payment->setDescription([
-                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.cash.description'),
-                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.cash.description')
+                'de' => self::getLocaleText($Locale, 'de', 'payment.cash.description'),
+                'en' => self::getLocaleText($Locale, 'en', 'payment.cash.description')
             ]);
 
             $Payment->setWorkingTitle([
-                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.cash.workingTitle'),
-                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.cash.workingTitle')
+                'de' => self::getLocaleText($Locale, 'de', 'payment.cash.workingTitle'),
+                'en' => self::getLocaleText($Locale, 'en', 'payment.cash.workingTitle')
             ]);
 
             $Payment->activate();
@@ -169,18 +170,18 @@ class EventHandling
             ]);
 
             $Payment->setTitle([
-                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.invoice.title'),
-                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.invoice.title')
+                'de' => self::getLocaleText($Locale, 'de', 'payment.invoice.title'),
+                'en' => self::getLocaleText($Locale, 'en', 'payment.invoice.title')
             ]);
 
             $Payment->setDescription([
-                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.invoice.description'),
-                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.invoice.description')
+                'de' => self::getLocaleText($Locale, 'de', 'payment.invoice.description'),
+                'en' => self::getLocaleText($Locale, 'en', 'payment.invoice.description')
             ]);
 
             $Payment->setWorkingTitle([
-                'de' => $Locale->getByLang('de', 'quiqqer/payments', 'payment.invoice.workingTitle'),
-                'en' => $Locale->getByLang('en', 'quiqqer/payments', 'payment.invoice.workingTitle')
+                'de' => self::getLocaleText($Locale, 'de', 'payment.invoice.workingTitle'),
+                'en' => self::getLocaleText($Locale, 'en', 'payment.invoice.workingTitle')
             ]);
 
             $Payment->activate();
@@ -227,6 +228,9 @@ class EventHandling
         }
     }
 
+    /**
+     * @param QUI\ERP\Order\Basket\Basket|QUI\ERP\Order\Basket\BasketOrder $Basket
+     */
     public static function onQuiqqerOrderBasketToOrderEnd(
         $Basket,
         QUI\ERP\Order\AbstractOrder $Order,
@@ -258,6 +262,11 @@ class EventHandling
         */
 
         $PriceFactors = $Products->getPriceFactors();
+
+        if ($PriceFactors === null) {
+            return;
+        }
+
         $PriceFactors->addToEnd($PriceFactor);
 
         try {
@@ -268,13 +277,25 @@ class EventHandling
 
         $Order->getArticles()->calc();
 
-        if (method_exists($Order, 'save')) {
-            $Order->save();
-        }
+        self::saveOrder($Order);
     }
 
     public static function onUpdateEnd(): void
     {
         QUI\Cache\Manager::clear('package/quiqqer/payments/provider');
+    }
+
+    private static function getLocaleText(QUI\Locale $Locale, string $language, string $variable): string
+    {
+        $value = $Locale->getByLang($language, 'quiqqer/payments', $variable);
+
+        return is_string($value) ? $value : '';
+    }
+
+    private static function saveOrder(object $order): void
+    {
+        if (method_exists($order, 'save')) {
+            $order->save();
+        }
     }
 }

@@ -9,7 +9,7 @@
 
 use QUI\Utils\Security\Orthos;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_log_ajax_logPaymentsError',
     function (
         $errMsg,

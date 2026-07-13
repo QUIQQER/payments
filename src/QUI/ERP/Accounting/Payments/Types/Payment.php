@@ -73,7 +73,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Return the payment as an array
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -82,7 +82,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         $attributes = $this->getAttributes();
         $Locale = QUI::getLocale();
-        $availableLanguages = QUI\Translator::getAvailableLanguages();
+        $availableLanguages = QUI\Translator::getAvailableLanguages() ?? [];
 
         foreach ($availableLanguages as $language) {
             $attributes['title'][$language] = $Locale->getByLang(
@@ -298,7 +298,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         if (!empty($currencies)) {
             try {
                 $Config = QUI::getPackage('quiqqer/payments')->getConfig();
-                $listUnsupportedPayment = !!$Config->getValue('payments', 'listUnsupportedPayment');
+                $listUnsupportedPayment = (bool)$Config?->getValue('payments', 'listUnsupportedPayment');
 
                 if ($listUnsupportedPayment === false) {
                     $currencies = explode(',', $currencies);
@@ -470,7 +470,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             'bankName' => $defaultBankAccount ? $defaultBankAccount['name'] : '',
             'bankIban' => $defaultBankAccount ? $defaultBankAccount['iban'] : '',
             'bankBic' => $defaultBankAccount ? $defaultBankAccount['bic'] : '',
-            'company' => $Config->get('company', 'name') ?: ''
+            'company' => $Config?->get('company', 'name') ?: ''
         ]);
     }
 
@@ -572,7 +572,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Set the title
      *
-     * @param array $titles
+     * @param array<string, string> $titles
      */
     public function setTitle(array $titles): void
     {
@@ -585,7 +585,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Set the description
      *
-     * @param array $descriptions
+     * @param array<string, string> $descriptions
      */
     public function setDescription(array $descriptions): void
     {
@@ -598,7 +598,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Set the order information text
      *
-     * @param array $orderInformation
+     * @param array<string, string> $orderInformation
      */
     public function setOrderInformation(array $orderInformation): void
     {
@@ -611,7 +611,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Set the working title
      *
-     * @param array $titles
+     * @param array<string, string> $titles
      */
     public function setWorkingTitle(array $titles): void
     {
@@ -635,7 +635,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * Creates a locale
      *
      * @param string $var
-     * @param array $title
+     * @param array<string, string> $title
      */
     protected function setPaymentLocale(string $var, array $title): void
     {
@@ -657,7 +657,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
             if (QUI::getLocale()->isLocaleString($str)) {
                 $parts = $Locale->getPartsOfLocaleString($str);
 
-                if (count($parts) === 2) {
+                if (isset($parts[0], $parts[1])) {
                     $data[$language] = $Locale->getByLang($language, $parts[0], $parts[1]);
                     $data[$language . '_edit'] = $Locale->getByLang($language, $parts[0], $parts[1]);
                 } else {
@@ -695,7 +695,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
     /**
      * Set the payment fee title
      *
-     * @param array $titles
+     * @param array<string, string> $titles
      */
     public function setPaymentFeeTitle(array $titles): void
     {
@@ -761,7 +761,7 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
      * Return the payment fee title / text
      *
      * @param null|QUI\Locale $Locale
-     * @return array|string
+     * @return array<string, mixed>|string
      */
     public function getPaymentFeeTitle(null | QUI\Locale $Locale = null): array | string
     {
@@ -775,6 +775,9 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         );
     }
 
+    /**
+     * @param QUI\Locale|null $Locale
+     */
     public function toPriceFactor(
         $Locale = null,
         null | QUI\ERP\Order\AbstractOrder $Order = null
@@ -812,18 +815,19 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
         $Order = $this->getAttribute('Order');
         $isNetto = false;
 
-        if ($Order instanceof QUI\ERP\Order\AbstractOrder) {
-            $Customer = $Order->getCustomer();
-            $isNetto = $Customer->isNetto();
+        if (!$Order instanceof QUI\ERP\Order\AbstractOrder) {
+            return '';
         }
+
+        $Customer = $Order->getCustomer();
+        $isNetto = $Customer?->isNetto() ?? false;
 
         // display is incl vat
         $Calc = $Order->getPriceCalculation();
         $vatArray = $Calc->getVat();
         $VatEntry = reset($vatArray);
 
-        /* @var QUI\ERP\Accounting\CalculationVatValue $VatEntry */
-        $vat = $VatEntry->getVat();
+        $vat = $VatEntry === false ? 0 : $VatEntry->getVat();
 
         if (!$isNetto && $vat) {
             $paymentFee = $paymentFee + ($paymentFee * ($vat / 100));
@@ -836,7 +840,13 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
         if ($UserCurrency && $DefaultCurrency->getCode() !== $UserCurrency->getCode()) {
             try {
-                $price = $DefaultCurrency->convert($paymentFee, $UserCurrency);
+                $convertedPrice = $DefaultCurrency->convert($paymentFee, $UserCurrency);
+
+                if (!is_numeric($convertedPrice)) {
+                    throw new Exception('The converted payment fee is not numeric.');
+                }
+
+                $price = (float)$convertedPrice;
                 $Price = new QUI\ERP\Money\Price($price, $UserCurrency);
             } catch (Exception) {
                 $Price = new QUI\ERP\Money\Price($paymentFee, $DefaultCurrency);

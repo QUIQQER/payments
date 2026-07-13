@@ -11,7 +11,6 @@ use QUI\ERP\Accounting\Payments\Transactions\Factory as Transactions;
 use QUI\ERP\Order\AbstractOrder;
 
 use function http_build_query;
-use function is_array;
 use function json_encode;
 
 /**
@@ -181,6 +180,11 @@ class Gateway extends QUI\Utils\Singleton
     public function executeGatewayPayment(): void
     {
         $Order = $this->getOrder();
+
+        if ($Order === null || $Order->getPayment() === null) {
+            throw new QUI\ERP\Accounting\Payments\Exception('No payment order is available.');
+        }
+
         $Payment = $Order->getPayment()->getPaymentType();
 
         try {
@@ -188,12 +192,12 @@ class Gateway extends QUI\Utils\Singleton
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
-            $Order->addHistory(
-                json_encode([
-                    'message' => $Exception->getMessage(),
-                    'code' => $Exception->getCode()
-                ])
-            );
+            $history = json_encode([
+                'message' => $Exception->getMessage(),
+                'code' => $Exception->getCode()
+            ]);
+
+            $Order->addHistory($history === false ? $Exception->getMessage() : $history);
         }
     }
 
@@ -232,7 +236,7 @@ class Gateway extends QUI\Utils\Singleton
      * @param QUI\ERP\Currency\Currency $Currency
      * @param QUI\ERP\Order\AbstractOrder $Order
      * @param QUI\ERP\Accounting\Payments\Api\AbstractPayment $Payment
-     * @param array $paymentData
+     * @param array<string, mixed> $paymentData
      *
      * @return QUI\ERP\Accounting\Payments\Transactions\Transaction
      *
@@ -284,9 +288,9 @@ class Gateway extends QUI\Utils\Singleton
     }
 
     /**
-     *
+     * @return void
      */
-    public function paymentError()
+    public function paymentError(): void
     {
     }
 
@@ -298,7 +302,7 @@ class Gateway extends QUI\Utils\Singleton
      * Return the gateway url
      * - you can send params to the gateway with $params
      *
-     * @param array $params
+     * @param array<string, mixed> $params
      *
      * $params[ Gateway::USER_REDIRECTED ] = 1
      *
@@ -308,11 +312,6 @@ class Gateway extends QUI\Utils\Singleton
     {
         $host = $this->getHost();
         $dir = URL_DIR . 'PaymentsGateway'; // new url
-
-        if (!is_array($params)) {
-            $params = [];
-        }
-
 
         $params['orderHash'] = $this->getOrder()?->getUUID();
 
@@ -325,8 +324,7 @@ class Gateway extends QUI\Utils\Singleton
     public function getSuccessUrl(): string
     {
         return $this->getGatewayUrl([
-            'success' => 1,
-            'orderHash' => $this->getOrder()->getUUID()
+            'success' => 1
         ]);
     }
 
@@ -355,7 +353,13 @@ class Gateway extends QUI\Utils\Singleton
             }
         }
 
-        return QUI\ERP\Order\Utils\Utils::getOrderUrl($Project, $this->getOrder());
+        $Order = $this->getOrder();
+
+        if ($Project === null || $Order === null) {
+            return '';
+        }
+
+        return QUI\ERP\Order\Utils\Utils::getOrderUrl($Project, $Order);
     }
 
     /**
@@ -364,8 +368,7 @@ class Gateway extends QUI\Utils\Singleton
     public function getCancelUrl(): string
     {
         return $this->getGatewayUrl([
-            'canceled' => 1,
-            'orderHash' => $this->getOrder()->getUUID()
+            'canceled' => 1
         ]);
     }
 
@@ -375,8 +378,7 @@ class Gateway extends QUI\Utils\Singleton
     public function getErrorUrl(): string
     {
         return $this->getGatewayUrl([
-            'error' => 1,
-            'orderHash' => $this->getOrder()->getUUID()
+            'error' => 1
         ]);
     }
 
@@ -407,8 +409,10 @@ class Gateway extends QUI\Utils\Singleton
             try {
                 $Project = QUI::getProjectManager()->decode($_REQUEST['project']);
 
-                if ($Project->getVHost(true, true)) {
-                    return $Project->getVHost(true, true);
+                $host = $Project->getVHost(true, true);
+
+                if (is_string($host) && $host !== '') {
+                    return $host;
                 }
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
@@ -426,8 +430,10 @@ class Gateway extends QUI\Utils\Singleton
                     $_REQUEST['lang']
                 );
 
-                if ($Project->getVHost(true, true)) {
-                    return $Project->getVHost(true, true);
+                $host = $Project->getVHost(true, true);
+
+                if (is_string($host) && $host !== '') {
+                    return $host;
                 }
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
@@ -447,9 +453,15 @@ class Gateway extends QUI\Utils\Singleton
         }
 
 
+        if ($Project === null) {
+            return $HOST;
+        }
+
         // prüfen ob das aktuelle projekt https hat
-        if ($Project->getVHost(true, true)) {
-            $HOST = $Project->getVHost(true, true);
+        $host = $Project->getVHost(true, true);
+
+        if (is_string($host) && $host !== '') {
+            $HOST = $host;
         }
 
         return $HOST;
