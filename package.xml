@@ -23,16 +23,16 @@
         </provider>
 
         <support>
-            <email><![CDATA[support@pcsg.de]]></email>
+            <email><![CDATA[info@quiqqer.com]]></email>
             <forum><![CDATA[https://community.quiqqer.com]]></forum>
             <source><![CDATA[https://dev.quiqqer.com/quiqqer/payments]]></source>
-            <issues><![CDATA[https://dev.quiqqer.com/quiqqer/payments/issues]]></issues>
+            <issues><![CDATA[https://dev.quiqqer.com/quiqqer/payments/-/issues]]></issues>
             <wiki><![CDATA[https://dev.quiqqer.com/quiqqer/payments/wikis/home]]></wiki>
         </support>
 
         <copyright>
             <name><![CDATA[PCSG - Computer & Internet Service OHG]]></name>
-            <license><![CDATA[GPL-3.0+]]></license>
+            <license><![CDATA[GPL-3.0-or-later]]></license>
             <license><![CDATA[PCSG QEL-1.0]]></license>
         </copyright>
     </package>
