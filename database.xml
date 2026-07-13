@@ -3,28 +3,29 @@
 
     <global>
         <table name="payments">
-            <field type="INT(11) NOT NULL">id</field>
-            <field type="INT(1) NOT NULL DEFAULT 0">active</field>
-            <field type="VARCHAR(255) NOT NULL">payment_type</field>
-            <field type="VARCHAR(255) NOT NULL">icon</field>
-            <field type="text NULL">date_from</field>
-            <field type="text NULL">date_until</field>
-            <field type="INT(10) NULL DEFAULT 0">purchase_quantity_from</field>
-            <field type="INT(10) NULL DEFAULT 0">purchase_quantity_until</field>
-            <field type="text NULL">purchase_value_from</field>
-            <field type="text NULL">purchase_value_until</field>
+            <field type="integer" autoincrement="true" primary="true">id</field>
+            <field type="boolean" default="0">active</field>
+            <field type="string" length="255">payment_type</field>
+            <field type="string" length="255">icon</field>
+            <field type="text" nullable="true" default="null">date_from</field>
+            <field type="text" nullable="true" default="null">date_until</field>
+            <field type="integer" nullable="true" default="0">purchase_quantity_from</field>
+            <field type="integer" nullable="true" default="0">purchase_quantity_until</field>
+            <field type="text" nullable="true" default="null">purchase_value_from</field>
+            <field type="text" nullable="true" default="null">purchase_value_until</field>
 
-            <field type="INT(4) NULL">priority</field>
-            <field type="DOUBLE NULL">paymentFee</field>
+            <field type="integer" nullable="true" default="null">priority</field>
+            <field type="float" nullable="true" default="null">paymentFee</field>
 
-            <field type="text NULL">areas</field>
-            <field type="text NULL">articles</field>
-            <field type="text NULL">categories</field>
-            <field type="text NULL">user_groups</field>
-            <field type="text NULL">currencies</field>
+            <field type="text" nullable="true" default="null">areas</field>
+            <field type="text" nullable="true" default="null">articles</field>
+            <field type="text" nullable="true" default="null">categories</field>
+            <field type="text" nullable="true" default="null">user_groups</field>
+            <field type="text" nullable="true" default="null">currencies</field>
 
-            <primary>id</primary>
-            <auto_increment>id</auto_increment>
+            <index>active</index>
+            <index>payment_type</index>
+            <index>priority</index>
         </table>
     </global>
 
