@@ -2,27 +2,16 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 5
+    level: 8
+    phpVersion:
+        min: 80200
+        max: 80509
     paths:
         - src
         - ajax
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
+    scanFiles:
+        - tests/phpstan-shims/ShippingEntry.php
 
-    # exclude paths können raus wenn das phpstan mit optionalen pakete geht
-    excludePaths:
-        analyse:
-            - src/QUI/ERP/Accounting/Payments/OrderProcessProvider.php
-            - src/QUI/ERP/Accounting/Payments/Types/RecurringPaymentInterface.php
-            - src/QUI/ERP/Accounting/Payments/Types/PaymentInterface.php
-            - src/QUI/ERP/Accounting/Payments/Types/Payment.php
-            - src/QUI/ERP/Accounting/Payments/Methods/Standard/Payment.php
-            - src/QUI/ERP/Accounting/Payments/Methods/Invoice/Payment.php
-            - src/QUI/ERP/Accounting/Payments/Methods/Free/PaymentType.php
-            - src/QUI/ERP/Accounting/Payments/Methods/Free/Payment.php
-            - src/QUI/ERP/Accounting/Payments/Methods/Cash/Payment.php
-            - src/QUI/ERP/Accounting/Payments/Methods/AdvancePayment/Payment.php
-            - src/QUI/ERP/Accounting/Payments/Gateway/Gateway.php
-            - src/QUI/ERP/Accounting/Payments/EventHandling.php
-            - src/QUI/ERP/Accounting/Payments/Api/AbstractPayment.php
-            - src/QUI/ERP/Accounting/Payments/Order/Payment.php
+    tipsOfTheDay: false
