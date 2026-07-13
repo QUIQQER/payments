@@ -11,7 +11,7 @@ use QUI\ERP\Accounting\Payments\Payments;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_payments_ajax_backend_getPaymentTypes',
     function () {
         return array_map(function ($Payment) {

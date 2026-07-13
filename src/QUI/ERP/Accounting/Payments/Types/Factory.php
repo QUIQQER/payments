@@ -7,12 +7,14 @@
 namespace QUI\ERP\Accounting\Payments\Types;
 
 use QUI;
+use QUI\ERP\Accounting\Payments\Api\AbstractPayment;
 use QUI\Permissions\Permission;
 
 use function array_merge;
 use function class_exists;
 use function count;
 use function is_integer;
+use function is_a;
 use function is_numeric;
 use function is_string;
 
@@ -62,7 +64,12 @@ class Factory extends QUI\CRUD\Factory
             $data['priority'] = 0;
         }
 
-        if (!isset($data['payment_type']) || !class_exists($data['payment_type'])) {
+        if (
+            !isset($data['payment_type'])
+            || !is_string($data['payment_type'])
+            || !class_exists($data['payment_type'])
+            || !is_a($data['payment_type'], AbstractPayment::class, true)
+        ) {
             throw new QUI\ERP\Accounting\Payments\Exception([
                 'quiqqer/payments',
                 'exception.create.payment.class.not.found'
@@ -103,7 +110,7 @@ class Factory extends QUI\CRUD\Factory
 
         $PaymentLocale = $PaymentMethod->getLocale();
         $paymentLocaleCurrent = $PaymentLocale->getCurrent();
-        $languages = QUI\Translator::getAvailableLanguages();
+        $languages = QUI\Translator::getAvailableLanguages() ?? [];
         $title = [];
 
         foreach ($languages as $lang) {
@@ -153,7 +160,7 @@ class Factory extends QUI\CRUD\Factory
 
         // Set new payment method as changeable
         $Settings = QUI\ERP\Accounting\Payments\Settings::getInstance();
-        $Settings->set('paymentChangeable', $NewChild->getId(), "1");
+        $Settings->set('paymentChangeable', (string)$NewChild->getId(), '1');
 
         QUI::getEvents()->fireEvent('paymentsCreateEnd', [$NewChild]);
 
@@ -181,7 +188,7 @@ class Factory extends QUI\CRUD\Factory
     }
 
     /**
-     * @return array
+     * @return list<string>
      */
     public function getChildAttributes(): array
     {
@@ -229,8 +236,8 @@ class Factory extends QUI\CRUD\Factory
     /**
      * Creates a locale
      *
-     * @param $var
-     * @param array|string $title
+     * @param string $var
+     * @param array<string, string>|string $title
      */
     protected function createPaymentLocale($var, array | string $title): void
     {
@@ -243,7 +250,11 @@ class Factory extends QUI\CRUD\Factory
         if (is_string($title)) {
             if (QUI::getLocale()->isLocaleString($title)) {
                 $parts = QUI::getLocale()->getPartsOfLocaleString($title);
-                $languages = QUI\Translator::getAvailableLanguages();
+                $languages = QUI\Translator::getAvailableLanguages() ?? [];
+
+                if (!isset($parts[0], $parts[1])) {
+                    return;
+                }
 
                 foreach ($languages as $language) {
                     $options[$language] = QUI::getLocale()->getByLang(

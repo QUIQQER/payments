@@ -12,7 +12,7 @@ use QUI\ERP\Accounting\Payments\Types\Factory;
  * @param integer $paymentId - Payment ID
  * @param array $data - Payment Data
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_payments_ajax_backend_update',
     function ($paymentId, $data) {
         $Payments = new Factory();

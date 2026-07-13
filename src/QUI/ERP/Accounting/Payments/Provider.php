@@ -14,7 +14,7 @@ namespace QUI\ERP\Accounting\Payments;
 class Provider extends Api\AbstractPaymentProvider
 {
     /**
-     * @return array
+     * @return list<class-string>
      */
     public function getPaymentTypes(): array
     {

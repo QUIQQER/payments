@@ -65,7 +65,13 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
             return $this->currentStatus;
         }
 
-        $this->Payment = $Order->getPayment()->getPaymentType();
+        $Payment = $Order->getPayment();
+
+        if ($Payment === null) {
+            throw new Exception('No payment is assigned to the order.');
+        }
+
+        $this->Payment = $Payment->getPaymentType();
 
         if ($this->Payment->isGateway()) {
             $this->currentStatus = self::PROCESSING_STATUS_PROCESSING;

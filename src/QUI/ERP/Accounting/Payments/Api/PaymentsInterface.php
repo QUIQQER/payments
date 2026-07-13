@@ -13,9 +13,9 @@ namespace QUI\ERP\Accounting\Payments\Api;
 interface PaymentsInterface
 {
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName(): mixed;
+    public function getName(): string;
 
     /**
      * @return string

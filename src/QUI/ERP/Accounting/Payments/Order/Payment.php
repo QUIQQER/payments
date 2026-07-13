@@ -26,7 +26,7 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     /**
      * Payment constructor.
      *
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -63,6 +63,11 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $User = QUI::getUserBySession();
 
         $Order = $this->getOrder();
+
+        if ($Order === null) {
+            throw new QUI\Exception('No order is available for the payment step.');
+        }
+
         $Order->recalculate();
 
         $Currency = $Order->getCurrency();
@@ -94,6 +99,10 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     {
         $Order = $this->getOrder();
 
+        if ($Order === null) {
+            return false;
+        }
+
         // currencies
         $currencies = $Payment->getAttribute('currencies');
 
@@ -118,6 +127,11 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     public function validate(): void
     {
         $Order = $this->getOrder();
+
+        if ($Order === null) {
+            throw new QUI\ERP\Order\Exception('No order is available for the payment step.');
+        }
+
         $Payment = $Order->getPayment();
         $paymentList = $this->getPaymentList();
 
@@ -168,6 +182,11 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         }
 
         $Order = $this->getOrder();
+
+        if ($Order === null) {
+            return;
+        }
+
         $User = QUI::getUserBySession();
 
         try {
@@ -195,6 +214,11 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
     protected function getPaymentList(): array
     {
         $Order = $this->getOrder();
+
+        if ($Order === null) {
+            return [];
+        }
+
         $Articles = $Order->getArticles();
         $User = QUI::getUserBySession();
 
