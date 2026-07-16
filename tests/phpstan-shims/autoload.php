@@ -12,4 +12,4 @@ spl_autoload_register(static function (string $class): void {
     if (is_file($file)) {
         require_once $file;
     }
-});
+}, true, true);
