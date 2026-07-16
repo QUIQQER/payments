@@ -262,11 +262,6 @@ class EventHandling
         */
 
         $PriceFactors = $Products->getPriceFactors();
-
-        if ($PriceFactors === null) {
-            return;
-        }
-
         $PriceFactors->addToEnd($PriceFactor);
 
         try {
