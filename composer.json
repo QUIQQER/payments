@@ -22,9 +22,10 @@
   },
   "require": {
     "php": "^8.2",
-    "quiqqer/core": "^2",
+    "quiqqer/core": "^2.25.1",
     "quiqqer/erp": "^3.12 || ^4.0.1",
     "quiqqer/areas": "^2",
+    "quiqqer/products": "^2.8.2",
     "quiqqer/payment-transactions": "^2"
   },
   "autoload": {
