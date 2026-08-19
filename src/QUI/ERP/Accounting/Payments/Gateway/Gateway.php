@@ -344,11 +344,9 @@ class Gateway extends QUI\Utils\Singleton
         }
 
         if ($Project === null) {
-            try {
-                $Project = QUI::getProjectManager()->getStandard();
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeException($Exception);
+            $Project = self::getStandardProject();
 
+            if ($Project === null) {
                 return '';
             }
         }
@@ -390,6 +388,17 @@ class Gateway extends QUI\Utils\Singleton
         return $this->getGatewayUrl([
             Gateway::URL_PARAM_GATEWAY_PAYMENT => 1
         ]);
+    }
+
+    private static function getStandardProject(): ?QUI\Projects\Project
+    {
+        try {
+            return QUI::getProjectManager()->getStandard();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return null;
+        }
     }
 
     /**

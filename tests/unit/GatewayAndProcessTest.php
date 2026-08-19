@@ -178,6 +178,36 @@ class GatewayAndProcessTest extends TestCase
         self::assertIsString($host);
     }
 
+    public function testOrderUrlFallsBackToStandardProject(): void
+    {
+        $originalRewrite = \QUI::$Rewrite;
+        $originalStandard = \QUI\Projects\Manager::$Standard;
+        $UrlProperty = new ReflectionProperty(\QUI\ERP\Order\Utils\Utils::class, 'url');
+        $originalUrl = $UrlProperty->getValue();
+        $Rewrite = $this->createMock(\QUI\Rewrite::class);
+        $Rewrite->expects(self::once())->method('getProject')->willReturn(null);
+        $Project = $this->createMock(\QUI\Projects\Project::class);
+        $Project->expects(self::once())
+            ->method('getSites')
+            ->with([
+                'where' => ['type' => 'quiqqer/order:types/orderingProcess'],
+                'limit' => 1
+            ])
+            ->willReturn([]);
+        \QUI::$Rewrite = $Rewrite;
+        \QUI\Projects\Manager::$Standard = $Project;
+        $UrlProperty->setValue(null, null);
+        $this->Gateway->setOrder($this->createMock(OrderInProcess::class));
+
+        try {
+            self::assertSame('', $this->Gateway->getOrderUrl());
+        } finally {
+            \QUI::$Rewrite = $originalRewrite;
+            \QUI\Projects\Manager::$Standard = $originalStandard;
+            $UrlProperty->setValue(null, $originalUrl);
+        }
+    }
+
     public function testGatewayHostFallsBackAfterInvalidProjectSelectors(): void
     {
         unset($_SERVER['HTTP_HOST']);
