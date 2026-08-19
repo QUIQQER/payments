@@ -28,7 +28,7 @@ use QUI\ERP\Order\AbstractOrder;
 class PaymentMethodsTest extends TestCase
 {
     /**
-     * @return iterable<string, array{class-string<AbstractPayment>, EN16931, bool, bool, bool, string}>
+     * @return iterable<string, array{class-string<AbstractPayment>, EN16931, bool, bool, string}>
      */
     public static function paymentMethodProvider(): iterable
     {
@@ -37,17 +37,15 @@ class PaymentMethodsTest extends TestCase
             EN16931::DEBIT_CARD,
             false,
             false,
-            false,
             'Vorkasse.png'
         ];
-        yield 'cash' => [Cash\Payment::class, EN16931::CASH, false, true, true, 'Bar.jpg'];
-        yield 'cash on delivery' => [CashOnDelivery\Payment::class, EN16931::CASH, false, true, true, 'Bar.jpg'];
+        yield 'cash' => [Cash\Payment::class, EN16931::CASH, false, true, 'Bar.jpg'];
+        yield 'cash on delivery' => [CashOnDelivery\Payment::class, EN16931::CASH, false, true, 'Bar.jpg'];
         yield 'invoice' => [
             InvoicePayment\Payment::class,
             EN16931::CREDIT_TRANSFER,
             false,
             false,
-            true,
             'Rechnung.jpg'
         ];
         yield 'standard' => [
@@ -55,9 +53,20 @@ class PaymentMethodsTest extends TestCase
             EN16931::CREDIT_TRANSFER,
             false,
             false,
-            true,
             'Rechnung.jpg'
         ];
+    }
+
+    /**
+     * @return iterable<string, array{class-string<AbstractPayment>, bool}>
+     */
+    public static function paymentApprovalProvider(): iterable
+    {
+        yield 'advance payment' => [AdvancePayment\Payment::class, false];
+        yield 'cash' => [Cash\Payment::class, true];
+        yield 'cash on delivery' => [CashOnDelivery\Payment::class, true];
+        yield 'invoice' => [InvoicePayment\Payment::class, true];
+        yield 'standard' => [Standard\Payment::class, true];
     }
 
     #[DataProvider('paymentMethodProvider')]
@@ -66,7 +75,6 @@ class PaymentMethodsTest extends TestCase
         EN16931 $expectedTypeCode,
         bool $expectedGateway,
         bool $expectedRefundSupport,
-        bool $expectedApproval,
         string $iconSuffix
     ): void {
         $Payment = new $paymentClass();
@@ -78,11 +86,25 @@ class PaymentMethodsTest extends TestCase
         self::assertSame($expectedGateway, $Payment->isGateway());
         self::assertSame($expectedRefundSupport, $Payment->refundSupport());
         self::assertTrue($Payment->isSuccessful('irrelevant-for-offline-methods'));
-        self::assertSame($expectedApproval, $Payment->isApproved('irrelevant-for-offline-methods'));
         self::assertStringEndsWith($iconSuffix, $Payment->getIcon());
         self::assertSame($Payment->getTitle(), $data['title']);
         self::assertSame($Payment->getDescription(), $data['description']);
         self::assertSame($expectedTypeCode, $data['typeCode']);
+    }
+
+    #[DataProvider('paymentApprovalProvider')]
+    public function testBuiltInPaymentApprovalMatchesOfflineSemantics(
+        string $paymentClass,
+        bool $expectedApproval
+    ): void {
+        if ($paymentClass === AdvancePayment\Payment::class) {
+            $this->requireOrderPackage();
+        }
+
+        self::assertSame(
+            $expectedApproval,
+            (new $paymentClass())->isApproved('irrelevant-for-offline-methods')
+        );
     }
 
     public function testProviderAdvertisesAllStandardPaymentImplementations(): void
