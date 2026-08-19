@@ -355,7 +355,7 @@ class Gateway extends QUI\Utils\Singleton
 
         $Order = $this->getOrder();
 
-        if ($Project === null || $Order === null) {
+        if ($Order === null) {
             return '';
         }
 
@@ -411,7 +411,7 @@ class Gateway extends QUI\Utils\Singleton
 
                 $host = $Project->getVHost(true, true);
 
-                if (is_string($host) && $host !== '') {
+                if ($host !== '') {
                     return $host;
                 }
             } catch (QUI\Exception $Exception) {
@@ -432,7 +432,7 @@ class Gateway extends QUI\Utils\Singleton
 
                 $host = $Project->getVHost(true, true);
 
-                if (is_string($host) && $host !== '') {
+                if ($host !== '') {
                     return $host;
                 }
             } catch (QUI\Exception $Exception) {
@@ -460,7 +460,7 @@ class Gateway extends QUI\Utils\Singleton
         // prüfen ob das aktuelle projekt https hat
         $host = $Project->getVHost(true, true);
 
-        if (is_string($host) && $host !== '') {
+        if ($host !== '') {
             $HOST = $host;
         }
 

@@ -284,7 +284,7 @@ class EventHandling
     {
         $value = $Locale->getByLang($language, 'quiqqer/payments', $variable);
 
-        return is_string($value) ? $value : '';
+        return $value;
     }
 
     private static function saveOrder(object $order): void
