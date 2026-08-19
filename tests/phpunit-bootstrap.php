@@ -10,3 +10,9 @@ if (!defined('QUIQQER_AJAX')) {
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 require_once __DIR__ . '/Fixtures/SqlitePaymentTestCase.php';
+require_once __DIR__ . '/Fixtures/TestPaymentMethod.php';
+require_once __DIR__ . '/Fixtures/UniqueTestPaymentMethod.php';
+require_once __DIR__ . '/Fixtures/RecurringOnlyPaymentMethod.php';
+require_once __DIR__ . '/Fixtures/RecordingPaymentFactory.php';
+require_once __DIR__ . '/Fixtures/RecordingPayment.php';
+require_once __DIR__ . '/Fixtures/TestablePaymentStep.php';
