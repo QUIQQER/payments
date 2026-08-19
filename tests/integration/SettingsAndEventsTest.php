@@ -195,6 +195,8 @@ class SettingsAndEventsTest extends SqlitePaymentTestCase
 
     public function testBasketConversionAddsPaymentFeeAndRecalculatesTotals(): void
     {
+        $this->requireOrderPackage();
+
         $PriceFactor = $this->createMock(PriceFactor::class);
         $Payment = $this->createMock(Payment::class);
         $Payment->method('hasPaymentFee')->willReturn(true);
@@ -221,6 +223,8 @@ class SettingsAndEventsTest extends SqlitePaymentTestCase
 
     public function testBasketConversionWithoutPaymentOrFeeHasNoSideEffects(): void
     {
+        $this->requireOrderPackage();
+
         $Products = $this->createMock(ProductList::class);
         $Products->expects(self::never())->method('recalculation');
         $OrderWithoutPayment = $this->createMock(AbstractOrder::class);
@@ -246,6 +250,8 @@ class SettingsAndEventsTest extends SqlitePaymentTestCase
 
     public function testBasketConversionContinuesAfterProductRecalculationFailure(): void
     {
+        $this->requireOrderPackage();
+
         $PriceFactor = $this->createMock(PriceFactor::class);
         $Payment = $this->createMock(Payment::class);
         $Payment->method('hasPaymentFee')->willReturn(true);
@@ -272,6 +278,8 @@ class SettingsAndEventsTest extends SqlitePaymentTestCase
 
     public function testRecurringOnlyPaymentIsRejectedWithoutPlansPackageDecisionMaker(): void
     {
+        $this->requireOrderPackage();
+
         $originalPackageManager = QUI::$PackageManager;
         $PackageManager = $this->createMock(QUI\Package\Manager::class);
         $PackageManager->method('isInstalled')->with('quiqqer/erp-plans')->willReturn(false);
@@ -291,6 +299,8 @@ class SettingsAndEventsTest extends SqlitePaymentTestCase
 
     public function testRecurringPaymentCheckToleratesInvalidPaymentImplementation(): void
     {
+        $this->requireOrderPackage();
+
         $originalPackageManager = QUI::$PackageManager;
         $PackageManager = $this->createMock(QUI\Package\Manager::class);
         $PackageManager->method('isInstalled')->with('quiqqer/erp-plans')->willReturn(false);
@@ -312,6 +322,8 @@ class SettingsAndEventsTest extends SqlitePaymentTestCase
 
     public function testRecurringPaymentCheckDefersToInstalledPlansPackage(): void
     {
+        $this->requireOrderPackage();
+
         $originalPackageManager = QUI::$PackageManager;
         $PackageManager = $this->createMock(QUI\Package\Manager::class);
         $PackageManager->method('isInstalled')->with('quiqqer/erp-plans')->willReturn(true);
@@ -331,6 +343,8 @@ class SettingsAndEventsTest extends SqlitePaymentTestCase
 
     public function testRecurringPaymentCheckAcceptsNonRecurringPayment(): void
     {
+        $this->requireOrderPackage();
+
         $originalPackageManager = QUI::$PackageManager;
         $PackageManager = $this->createMock(QUI\Package\Manager::class);
         $PackageManager->method('isInstalled')->with('quiqqer/erp-plans')->willReturn(false);
@@ -431,5 +445,12 @@ class SettingsAndEventsTest extends SqlitePaymentTestCase
     private function injectConfig(QUI\Config $Config): void
     {
         (new ReflectionProperty(Settings::class, 'Config'))->setValue($this->Settings, $Config);
+    }
+
+    private function requireOrderPackage(): void
+    {
+        if (!interface_exists(QUI\ERP\Order\OrderInterface::class)) {
+            self::markTestSkipped('Optional dependency quiqqer/order is not installed.');
+        }
     }
 }

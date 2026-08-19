@@ -21,6 +21,10 @@ class OrderPaymentTest extends SqlitePaymentTestCase
 
     protected function setUp(): void
     {
+        if (!class_exists(QUI\ERP\Order\Controls\AbstractOrderingStep::class)) {
+            self::markTestSkipped('Optional dependency quiqqer/order is not installed.');
+        }
+
         parent::setUp();
 
         $this->originalRequest = $_REQUEST;

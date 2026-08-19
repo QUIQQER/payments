@@ -16,6 +16,10 @@ class GatewayPurchaseTest extends SqlitePaymentTestCase
 {
     protected function setUp(): void
     {
+        if (!class_exists(AbstractOrder::class)) {
+            self::markTestSkipped('Optional dependency quiqqer/order is not installed.');
+        }
+
         parent::setUp();
 
         Update::importDatabase(OPT_DIR . 'quiqqer/payment-transactions/database.xml');

@@ -196,6 +196,8 @@ class PaymentBehaviorDatabaseTest extends SqlitePaymentTestCase
 
     public function testOrderEligibilityHonoursConfiguredCurrencies(): void
     {
+        $this->requireOrderPackage();
+
         $Currency = $this->createMock(Currency::class);
         $Currency->method('getCode')->willReturn('EUR');
         $Order = $this->createMock(OrderInterface::class);
@@ -230,6 +232,8 @@ class PaymentBehaviorDatabaseTest extends SqlitePaymentTestCase
 
     public function testOrderEligibilityHonoursRuntimePaymentRejectionEvent(): void
     {
+        $this->requireOrderPackage();
+
         $Order = $this->createMock(OrderInterface::class);
         $Payment = $this->loadPayment($this->insertPayment(['active' => 1]));
         $rejectPayment = static function (): void {
@@ -273,6 +277,8 @@ class PaymentBehaviorDatabaseTest extends SqlitePaymentTestCase
 
     public function testOrderEligibilityHandlesRuntimeServiceFailure(): void
     {
+        $this->requireOrderPackage();
+
         $Order = $this->createMock(OrderInterface::class);
         $Payment = $this->loadPayment($this->insertPayment(['active' => 1]));
         $failPaymentCheck = static function (): void {
@@ -386,6 +392,8 @@ class PaymentBehaviorDatabaseTest extends SqlitePaymentTestCase
 
     public function testPaymentFeeCreatesPriceFactorAndGrossDisplay(): void
     {
+        $this->requireOrderPackage();
+
         $Payment = $this->loadPayment($this->insertPayment(['paymentFee' => 12.5]));
         $Currency = CurrencyHandler::getCurrency('EUR');
         $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
@@ -410,6 +418,8 @@ class PaymentBehaviorDatabaseTest extends SqlitePaymentTestCase
 
     public function testOrderInformationBuildsCompleteTemplatePayload(): void
     {
+        $this->requireOrderPackage();
+
         $Payment = $this->loadPayment($this->insertPayment());
         $Currency = CurrencyHandler::getCurrency('EUR');
         $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
@@ -451,6 +461,8 @@ class PaymentBehaviorDatabaseTest extends SqlitePaymentTestCase
 
     public function testPaymentFeeDisplayMarksHighPrecisionGrossAmountAsApproximate(): void
     {
+        $this->requireOrderPackage();
+
         $Payment = $this->loadPayment($this->insertPayment(['paymentFee' => 1.123456]));
         $Currency = CurrencyHandler::getCurrency('EUR');
         $Customer = $this->createMock(QUI\ERP\User::class);
@@ -509,5 +521,12 @@ class PaymentBehaviorDatabaseTest extends SqlitePaymentTestCase
     private function staticProperty(string $class, string $property): ReflectionProperty
     {
         return new ReflectionProperty($class, $property);
+    }
+
+    private function requireOrderPackage(): void
+    {
+        if (!interface_exists(OrderInterface::class)) {
+            self::markTestSkipped('Optional dependency quiqqer/order is not installed.');
+        }
     }
 }

@@ -97,6 +97,8 @@ class PaymentMethodsTest extends TestCase
 
     public function testAbstractPaymentDefaultsFormAStableExtensionContract(): void
     {
+        $this->requireOrderPackage();
+
         $Payment = new TestPaymentMethod();
         $Order = $this->createMock(AbstractOrder::class);
 
@@ -120,6 +122,9 @@ class PaymentMethodsTest extends TestCase
 
     public function testRecurringOfflineMethodsUseNoExternalSubscriptionState(): void
     {
+        $this->requireOrderPackage();
+        $this->requireInvoicePackage();
+
         $Order = $this->createMock(AbstractOrder::class);
         $Invoice = $this->createMock(Invoice::class);
 
@@ -145,6 +150,8 @@ class PaymentMethodsTest extends TestCase
 
     public function testFreePaymentTypeExposesACompleteAlwaysUsableSelection(): void
     {
+        $this->requireOrderPackage();
+
         $Payment = new Free\PaymentType(Free\Payment::ID, new Factory());
         $User = $this->createMock(QUI\Interfaces\Users\User::class);
         $Order = $this->createMock(QUI\ERP\Order\OrderInterface::class);
@@ -165,6 +172,8 @@ class PaymentMethodsTest extends TestCase
 
     public function testFreePaymentRejectsUnknownOrNonFreeOrders(): void
     {
+        $this->requireOrderPackage();
+
         $Payment = new Free\Payment();
 
         self::assertFalse($Payment->isSuccessful('non-existent-order'));
@@ -175,6 +184,9 @@ class PaymentMethodsTest extends TestCase
 
     public function testDefaultGatewayHooksReturnNoPresentationOrInvoiceText(): void
     {
+        $this->requireOrderPackage();
+        $this->requireInvoicePackage();
+
         $Payment = new TestPaymentMethod();
         $Order = $this->createMock(AbstractOrder::class);
         $Invoice = $this->createMock(Invoice::class);
@@ -187,6 +199,8 @@ class PaymentMethodsTest extends TestCase
 
     public function testInvoicePaymentSelectsPaidImmediateAndDatedInformation(): void
     {
+        $this->requireInvoicePackage();
+
         $Payment = new InvoicePayment\Payment();
         $PaidInvoice = $this->createMock(Invoice::class);
         $PaidInvoice->method('isPaid')->willReturn(true);
@@ -291,6 +305,20 @@ class PaymentMethodsTest extends TestCase
             } else {
                 QUI\Cache\Manager::clear($cacheKey);
             }
+        }
+    }
+
+    private function requireOrderPackage(): void
+    {
+        if (!class_exists(AbstractOrder::class)) {
+            self::markTestSkipped('Optional dependency quiqqer/order is not installed.');
+        }
+    }
+
+    private function requireInvoicePackage(): void
+    {
+        if (!class_exists(Invoice::class)) {
+            self::markTestSkipped('Optional dependency quiqqer/invoice is not installed.');
         }
     }
 }

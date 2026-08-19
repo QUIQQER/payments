@@ -59,6 +59,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testGatewayAcceptsBothPersistentAndInProcessOrders(): void
     {
+        $this->requireOrderPackage();
+
         $FinalOrder = $this->createMock(Order::class);
         $this->Gateway->setOrder($FinalOrder);
         self::assertSame($FinalOrder, $this->Gateway->getOrder());
@@ -78,6 +80,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testGatewayDelegatesExecutionToOrderPaymentType(): void
     {
+        $this->requireOrderPackage();
+
         $PaymentType = $this->createMock(AbstractPayment::class);
         $PaymentType->expects(self::once())
             ->method('executeGatewayPayment')
@@ -93,6 +97,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testGatewayRecordsPaymentExecutionExceptionsInOrderHistory(): void
     {
+        $this->requireOrderPackage();
+
         $PaymentType = $this->createMock(AbstractPayment::class);
         $PaymentType->method('executeGatewayPayment')
             ->willThrowException(new \QUI\Exception('Provider declined payment', 409));
@@ -130,6 +136,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testGatewayUrlsPreservePurposeOrderAndCallerParameters(): void
     {
+        $this->requireOrderPackage();
+
         $_SERVER['HTTP_HOST'] = 'payments.example.test';
         $Order = $this->createMock(AbstractOrder::class);
         $Order->method('getUUID')->willReturn('order-uuid');
@@ -158,6 +166,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testReadRequestPreservesExplicitlyAssignedOrder(): void
     {
+        $this->requireOrderPackage();
+
         $Order = $this->createMock(Order::class);
         $this->Gateway->setOrder($Order);
         $_REQUEST['orderHash'] = 'must-not-replace-explicit-order';
@@ -180,6 +190,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testOrderUrlFallsBackToStandardProject(): void
     {
+        $this->requireOrderPackage();
+
         $originalRewrite = \QUI::$Rewrite;
         $originalStandard = \QUI\Projects\Manager::$Standard;
         $UrlProperty = new ReflectionProperty(\QUI\ERP\Order\Utils\Utils::class, 'url');
@@ -225,6 +237,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testOrderProcessFinishesAlreadySuccessfulOrder(): void
     {
+        $this->requireOrderPackage();
+
         $Order = $this->createMock(AbstractOrder::class);
         $Order->method('isSuccessful')->willReturn(1);
 
@@ -236,6 +250,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testOrderProcessAppendsPaymentStepWithCurrentOrderContext(): void
     {
+        $this->requireOrderPackage();
+
         $Order = $this->createMock(AbstractOrder::class);
         $Order->method('getUUID')->willReturn('process-order');
         $Process = $this->createMock(OrderProcess::class);
@@ -254,6 +270,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testOrderProcessRequiresPaymentForUnfinishedOrder(): void
     {
+        $this->requireOrderPackage();
+
         $Order = $this->createMock(AbstractOrder::class);
         $Order->method('isSuccessful')->willReturn(0);
         $Order->method('getPayment')->willReturn(null);
@@ -266,6 +284,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testOrderProcessDistinguishesGatewayFromOfflinePayments(): void
     {
+        $this->requireOrderPackage();
+
         self::assertSame(
             AbstractOrderProcessProvider::PROCESSING_STATUS_PROCESSING,
             $this->startOrderWithGatewayFlag(true)
@@ -278,6 +298,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testOrderProcessRendersPaymentGatewayDisplay(): void
     {
+        $this->requireOrderPackage();
+
         $PaymentType = $this->createMock(AbstractPayment::class);
         $PaymentType->method('isGateway')->willReturn(true);
         $PaymentType->method('getGatewayDisplay')->willReturn('<form>gateway</form>');
@@ -295,6 +317,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testOrderProcessReturnsEmptyDisplayBeforePaymentInitialization(): void
     {
+        $this->requireOrderPackage();
+
         $Order = $this->createMock(AbstractOrder::class);
 
         self::assertSame('', (new OrderProcessProvider())->getDisplay($Order));
@@ -302,6 +326,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testOrderProcessTurnsExpectedProcessingFailureIntoVisibleMessage(): void
     {
+        $this->requireOrderPackage();
+
         $PaymentType = $this->createMock(AbstractPayment::class);
         $PaymentType->method('isGateway')->willReturn(true);
         $PaymentType->method('getGatewayDisplay')
@@ -322,6 +348,8 @@ class GatewayAndProcessTest extends TestCase
 
     public function testOrderProcessHidesUnexpectedGatewayFailureBehindGenericMessage(): void
     {
+        $this->requireOrderPackage();
+
         $PaymentType = $this->createMock(AbstractPayment::class);
         $PaymentType->method('isGateway')->willReturn(true);
         $PaymentType->method('getGatewayDisplay')
@@ -352,6 +380,13 @@ class GatewayAndProcessTest extends TestCase
         $Order->method('getPayment')->willReturn($Payment);
 
         return (new OrderProcessProvider())->onOrderStart($Order);
+    }
+
+    private function requireOrderPackage(): void
+    {
+        if (!class_exists(AbstractOrder::class)) {
+            self::markTestSkipped('Optional dependency quiqqer/order is not installed.');
+        }
     }
 
     private function setGatewayProperty(string $property, mixed $value): void
