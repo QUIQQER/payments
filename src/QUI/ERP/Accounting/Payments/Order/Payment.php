@@ -190,8 +190,11 @@ class Payment extends QUI\ERP\Order\Controls\AbstractOrderingStep
         try {
             $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
             $Payment = $Payments->getPayment($payment);
-            $Payment->canUsedBy($User);
-        } catch (QUI\ERP\Accounting\Payments\Exception $Exception) {
+
+            if (!$Payment->canUsedBy($User)) {
+                return;
+            }
+        } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
 
             return;

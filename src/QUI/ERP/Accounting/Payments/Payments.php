@@ -228,10 +228,6 @@ class Payments extends QUI\Utils\Singleton
 
         $host = $Project->getVHost(true, true);
 
-        if (!is_string($host)) {
-            return '';
-        }
-
         return trim($host, '/');
     }
 }

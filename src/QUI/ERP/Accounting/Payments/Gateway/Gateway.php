@@ -344,18 +344,16 @@ class Gateway extends QUI\Utils\Singleton
         }
 
         if ($Project === null) {
-            try {
-                $Project = QUI::getProjectManager()->getStandard();
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeException($Exception);
+            $Project = self::getStandardProject();
 
+            if ($Project === null) {
                 return '';
             }
         }
 
         $Order = $this->getOrder();
 
-        if ($Project === null || $Order === null) {
+        if ($Order === null) {
             return '';
         }
 
@@ -392,6 +390,17 @@ class Gateway extends QUI\Utils\Singleton
         ]);
     }
 
+    private static function getStandardProject(): ?QUI\Projects\Project
+    {
+        try {
+            return QUI::getProjectManager()->getStandard();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return null;
+        }
+    }
+
     /**
      * Return the gateway host
      *
@@ -411,7 +420,7 @@ class Gateway extends QUI\Utils\Singleton
 
                 $host = $Project->getVHost(true, true);
 
-                if (is_string($host) && $host !== '') {
+                if ($host !== '') {
                     return $host;
                 }
             } catch (QUI\Exception $Exception) {
@@ -432,7 +441,7 @@ class Gateway extends QUI\Utils\Singleton
 
                 $host = $Project->getVHost(true, true);
 
-                if (is_string($host) && $host !== '') {
+                if ($host !== '') {
                     return $host;
                 }
             } catch (QUI\Exception $Exception) {
@@ -460,7 +469,7 @@ class Gateway extends QUI\Utils\Singleton
         // prüfen ob das aktuelle projekt https hat
         $host = $Project->getVHost(true, true);
 
-        if (is_string($host) && $host !== '') {
+        if ($host !== '') {
             $HOST = $host;
         }
 

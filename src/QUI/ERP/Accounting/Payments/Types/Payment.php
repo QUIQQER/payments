@@ -60,11 +60,11 @@ class Payment extends QUI\CRUD\Child implements PaymentInterface
 
             $paymentFee = $this->getAttribute('paymentFee');
 
-            if ($paymentFee && !is_float($paymentFee) && !is_double($paymentFee)) {
+            if ($paymentFee && !is_float($paymentFee)) {
                 $paymentFee = QUI\ERP\Money\Price::validatePrice($paymentFee);
 
                 $this->setAttribute('paymentFee', $paymentFee);
-            } else {
+            } elseif (!$paymentFee) {
                 $this->setAttribute('paymentFee', null);
             }
         });

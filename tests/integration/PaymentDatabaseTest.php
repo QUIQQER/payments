@@ -4,57 +4,14 @@ declare(strict_types=1);
 
 namespace QUI\ERP\Accounting\Payments\Tests\Integration;
 
-use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\TestCase;
-use QUI;
 use QUI\ERP\Accounting\Payments\Methods\Standard\Payment as StandardPayment;
 use QUI\ERP\Accounting\Payments\Payments;
+use QUI\ERP\Accounting\Payments\Tests\Fixtures\SqlitePaymentTestCase;
 use QUI\ERP\Accounting\Payments\Types\Factory;
-use QUI\Interfaces\Users\User;
-use QUI\Permissions\Permission;
-use ReflectionProperty;
-use Throwable;
 
-class PaymentDatabaseTest extends TestCase
+class PaymentDatabaseTest extends SqlitePaymentTestCase
 {
     private const PREFIX = 'phpunit_payments_';
-
-    private ?User $previousPermissionUser = null;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        try {
-            $this->connection()
-                ->createQueryBuilder()
-                ->select('id')
-                ->from($this->table())
-                ->setMaxResults(1)
-                ->executeQuery()
-                ->free();
-        } catch (Throwable $Throwable) {
-            self::markTestSkipped('Payments table is not available: ' . $Throwable->getMessage());
-        }
-
-        $PermissionUser = new ReflectionProperty(Permission::class, 'User');
-        $PermissionUser->setAccessible(true);
-        $this->previousPermissionUser = $PermissionUser->getValue();
-        Permission::setUser(QUI::getUsers()->getSystemUser());
-
-        $this->cleanupFixtures();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->cleanupFixtures();
-
-        $PermissionUser = new ReflectionProperty(Permission::class, 'User');
-        $PermissionUser->setAccessible(true);
-        $PermissionUser->setValue(null, $this->previousPermissionUser);
-
-        parent::tearDown();
-    }
 
     public function testPaymentCanBeLoadedActivatedDeactivatedAndDeleted(): void
     {
@@ -95,18 +52,18 @@ class PaymentDatabaseTest extends TestCase
     {
         $icon = self::PREFIX . $suffix;
 
-        $this->connection()->insert($this->table(), [
+        $this->connection->insert($this->paymentTable(), [
             'active' => 0,
             'payment_type' => StandardPayment::class,
             'icon' => $icon,
             'priority' => $priority
         ]);
 
-        $QueryBuilder = $this->connection()->createQueryBuilder();
+        $QueryBuilder = $this->connection->createQueryBuilder();
 
         return (int)$QueryBuilder
             ->select('id')
-            ->from($this->table())
+            ->from($this->paymentTable())
             ->where($QueryBuilder->expr()->eq('icon', ':icon'))
             ->setParameter('icon', $icon)
             ->executeQuery()
@@ -115,11 +72,11 @@ class PaymentDatabaseTest extends TestCase
 
     private function countFixture(string $suffix): int
     {
-        $QueryBuilder = $this->connection()->createQueryBuilder();
+        $QueryBuilder = $this->connection->createQueryBuilder();
 
         return (int)$QueryBuilder
             ->select('COUNT(*)')
-            ->from($this->table())
+            ->from($this->paymentTable())
             ->where($QueryBuilder->expr()->eq('icon', ':icon'))
             ->setParameter('icon', self::PREFIX . $suffix)
             ->executeQuery()
@@ -128,21 +85,11 @@ class PaymentDatabaseTest extends TestCase
 
     private function cleanupFixtures(): void
     {
-        $QueryBuilder = $this->connection()->createQueryBuilder();
+        $QueryBuilder = $this->connection->createQueryBuilder();
         $QueryBuilder
-            ->delete($this->table())
+            ->delete($this->paymentTable())
             ->where($QueryBuilder->expr()->like('icon', ':prefix'))
             ->setParameter('prefix', self::PREFIX . '%')
             ->executeStatement();
-    }
-
-    private function connection(): Connection
-    {
-        return QUI::getDataBaseConnection();
-    }
-
-    private function table(): string
-    {
-        return QUI::getDBTableName('payments');
     }
 }
