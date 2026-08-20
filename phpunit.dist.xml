@@ -8,4 +8,11 @@
             <directory>tests/integration</directory>
         </testsuite>
     </testsuites>
+    <source>
+        <include>
+            <directory suffix=".php">src</directory>
+            <directory suffix=".php">ajax</directory>
+        </include>
+    </source>
+    <coverage includeUncoveredFiles="true"/>
 </phpunit>

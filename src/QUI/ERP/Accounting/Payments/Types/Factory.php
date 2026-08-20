@@ -80,7 +80,7 @@ class Factory extends QUI\CRUD\Factory
             $data['paymentFee'] = null;
         }
 
-        if ($data['paymentFee'] === '' || is_numeric($data['paymentFee'])) {
+        if ($data['paymentFee'] === '' || !is_numeric($data['paymentFee'])) {
             $data['paymentFee'] = null;
         }
 
