@@ -13,9 +13,13 @@ use QUI\ERP\Accounting\Payments\Methods\AdvancePayment;
 use QUI\ERP\Accounting\Payments\Methods\Cash;
 use QUI\ERP\Accounting\Payments\Methods\Invoice;
 use QUI\ERP\Accounting\Payments\Methods\Standard;
+use QUI\ERP\Accounting\Payments\Payments;
 use QUI\ERP\Accounting\Payments\Settings;
+use QUI\ERP\Accounting\Payments\Tests\Fixtures\InstallPaymentProvider;
+use QUI\ERP\Accounting\Payments\Tests\Fixtures\RecordingPaymentFactory;
 use QUI\ERP\Accounting\Payments\Tests\Fixtures\RecurringOnlyPaymentMethod;
 use QUI\ERP\Accounting\Payments\Tests\Fixtures\SqlitePaymentTestCase;
+use QUI\ERP\Accounting\Payments\Tests\Fixtures\TestablePayments;
 use QUI\ERP\Accounting\Payments\Types\Payment;
 use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Products\Product\ProductList;
@@ -414,6 +418,44 @@ class SettingsAndEventsTest extends SqlitePaymentTestCase
 
         self::assertSame(3, (int)$this->connection->fetchOne(
             'SELECT COUNT(*) FROM ' . $this->paymentTable()
+        ));
+    }
+
+    public function testInstallEventCreatesDeclaredProviderPaymentsDisabledAndOnlyOnce(): void
+    {
+        $Package = $this->createMock(Package::class);
+        $Package->method('getName')->willReturn('quiqqer/payment-test');
+        $Package->method('getProvider')
+            ->with('payment')
+            ->willReturn([InstallPaymentProvider::class]);
+
+        $Instances = new ReflectionProperty(QUI\Utils\Singleton::class, 'instances');
+        $instances = $Instances->getValue();
+        $hadPaymentsInstance = isset($instances[Payments::class]);
+        $previousPaymentsInstance = $instances[Payments::class] ?? null;
+        $instances[Payments::class] = new TestablePayments(new RecordingPaymentFactory());
+        $Instances->setValue(null, $instances);
+
+        try {
+            EventHandling::onPackageInstallAfter($Package);
+            EventHandling::onPackageInstallAfter($Package);
+        } finally {
+            $instances = $Instances->getValue();
+
+            if ($hadPaymentsInstance) {
+                $instances[Payments::class] = $previousPaymentsInstance;
+            } else {
+                unset($instances[Payments::class]);
+            }
+
+            $Instances->setValue(null, $instances);
+        }
+
+        self::assertSame(2, (int)$this->connection->fetchOne(
+            'SELECT COUNT(*) FROM ' . $this->paymentTable()
+        ));
+        self::assertSame(0, (int)$this->connection->fetchOne(
+            'SELECT COUNT(*) FROM ' . $this->paymentTable() . ' WHERE active = 1'
         ));
     }
 

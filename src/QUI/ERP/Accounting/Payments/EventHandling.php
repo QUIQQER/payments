@@ -7,6 +7,7 @@
 namespace QUI\ERP\Accounting\Payments;
 
 use QUI;
+use QUI\ERP\Accounting\Payments\Api\AbstractPaymentProvider;
 use QUI\ERP\Accounting\Payments\Types\Factory;
 use QUI\ERP\Accounting\Payments\Types\Payment;
 use QUI\ERP\Order\OrderInterface;
@@ -14,9 +15,10 @@ use QUI\Package\Package;
 
 use function array_flip;
 use function array_map;
+use function class_exists;
+use function is_string;
 use function json_decode;
 use function method_exists;
-use function is_string;
 
 /**
  * Class EventHandling
@@ -101,10 +103,20 @@ class EventHandling
      */
     public static function onPackageInstallAfter(Package $Package): void
     {
-        if ($Package->getName() != 'quiqqer/payments') {
-            return;
+        if ($Package->getName() === 'quiqqer/payments') {
+            self::createStandardPaymentTypes();
         }
 
+        self::createProviderPaymentsOnInstall($Package);
+    }
+
+    /**
+     * Create the standard payment types of quiqqer/payments.
+     *
+     * @throws QUI\Exception
+     */
+    private static function createStandardPaymentTypes(): void
+    {
         // create the standard payment types
         $Locale = QUI::getLocale();
         $Factory = new Factory();
@@ -185,6 +197,27 @@ class EventHandling
             ]);
 
             $Payment->activate();
+        }
+    }
+
+    private static function createProviderPaymentsOnInstall(Package $Package): void
+    {
+        foreach ($Package->getProvider('payment') as $providerClass) {
+            if (!is_string($providerClass) || !class_exists($providerClass)) {
+                continue;
+            }
+
+            try {
+                $Provider = new $providerClass();
+
+                if (!$Provider instanceof AbstractPaymentProvider) {
+                    continue;
+                }
+
+                Payments::getInstance()->createPaymentsOnInstall($Provider);
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
         }
     }
 

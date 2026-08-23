@@ -15,6 +15,7 @@ use function class_exists;
 use function count;
 use function is_integer;
 use function is_a;
+use function is_array;
 use function is_numeric;
 use function is_string;
 
@@ -112,6 +113,7 @@ class Factory extends QUI\CRUD\Factory
         $paymentLocaleCurrent = $PaymentLocale->getCurrent();
         $languages = QUI\Translator::getAvailableLanguages() ?? [];
         $title = [];
+        $description = [];
 
         foreach ($languages as $lang) {
             $PaymentLocale->setCurrent($lang);
@@ -124,33 +126,49 @@ class Factory extends QUI\CRUD\Factory
             }
 
             $title[$lang] = $titleString;
+
+            $descriptionString = $PaymentMethod->getDescription();
+
+            if ($PaymentLocale->isLocaleString($descriptionString)) {
+                $descriptionString = '&nbsp;';
+            }
+
+            $description[$lang] = $descriptionString;
         }
 
         // Reset payment locale
         $PaymentLocale->setCurrent($paymentLocaleCurrent);
         $PaymentMethod->setLocale($PaymentLocale);
 
+        $workingTitle = $title;
+        $orderInformation = $PaymentMethod instanceof QUI\ERP\Accounting\Payments\Methods\AdvancePayment\Payment
+            ? '[quiqqer/payments] advanced.payment.default.text'
+            : '&nbsp;';
+
+        $title = $this->normalizePaymentLocaleDefinition($data['title'] ?? null, $title);
+        $workingTitle = $this->normalizePaymentLocaleDefinition($data['workingTitle'] ?? null, $title);
+        $description = $this->normalizePaymentLocaleDefinition($data['description'] ?? null, $description);
+        $orderInformation = $this->normalizePaymentLocaleDefinition(
+            $data['orderInformation'] ?? null,
+            $orderInformation
+        );
+
+        unset($data['title'], $data['workingTitle'], $data['description'], $data['orderInformation']);
+
         $NewChild = parent::createChild($data);
 
         $this->createPaymentLocale('payment.' . $NewChild->getId() . '.title', $title);
-        $this->createPaymentLocale('payment.' . $NewChild->getId() . '.workingTitle', $title);
+        $this->createPaymentLocale('payment.' . $NewChild->getId() . '.workingTitle', $workingTitle);
 
         $this->createPaymentLocale(
             'payment.' . $NewChild->getId() . '.description',
-            '&nbsp;'
+            $description
         );
 
-        if ($PaymentMethod instanceof QUI\ERP\Accounting\Payments\Methods\AdvancePayment\Payment) {
-            $this->createPaymentLocale(
-                'payment.' . $NewChild->getId() . '.orderInformation',
-                '[quiqqer/payments] advanced.payment.default.text'
-            );
-        } else {
-            $this->createPaymentLocale(
-                'payment.' . $NewChild->getId() . '.orderInformation',
-                '&nbsp;'
-            );
-        }
+        $this->createPaymentLocale(
+            'payment.' . $NewChild->getId() . '.orderInformation',
+            $orderInformation
+        );
 
         try {
             QUI\Translator::publish('quiqqer/payments');
@@ -275,5 +293,31 @@ class Factory extends QUI\CRUD\Factory
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());
         }
+    }
+
+    /**
+     * @param mixed $definition
+     * @param array<string, string>|string $default
+     * @return array<string, string>|string
+     */
+    private function normalizePaymentLocaleDefinition(mixed $definition, array | string $default): array | string
+    {
+        if (is_string($definition)) {
+            return $definition;
+        }
+
+        if (!is_array($definition)) {
+            return $default;
+        }
+
+        $result = [];
+
+        foreach ($definition as $language => $value) {
+            if (is_string($language) && is_string($value)) {
+                $result[$language] = $value;
+            }
+        }
+
+        return empty($result) ? $default : $result;
     }
 }
