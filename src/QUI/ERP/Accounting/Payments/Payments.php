@@ -15,8 +15,13 @@ use QUI\Exception;
 use QUI\Interfaces\Users\User;
 
 use function array_filter;
+use function array_flip;
+use function array_intersect_key;
 use function array_merge;
 use function class_exists;
+use function in_array;
+use function is_array;
+use function is_string;
 use function trim;
 
 /**
@@ -114,6 +119,110 @@ class Payments extends QUI\Utils\Singleton
         }
 
         return $payments;
+    }
+
+    /**
+     * Create the payment types declared by a provider for package installation.
+     *
+     * Existing payment types are left untouched. Newly created payments are always disabled.
+     *
+     * @param AbstractPaymentProvider $Provider
+     * @return list<Payment>
+     *
+     * @throws QUI\ERP\Accounting\Payments\Exception
+     * @throws QUI\Exception
+     */
+    public function createPaymentsOnInstall(AbstractPaymentProvider $Provider): array
+    {
+        $paymentTypes = $Provider->getPaymentTypes();
+        $paymentTypesToCreate = $Provider->getPaymentTypesToCreateOnInstall();
+
+        if (empty($paymentTypesToCreate)) {
+            return [];
+        }
+
+        $Factory = $this->getPaymentFactory();
+        $existingTypes = [];
+
+        foreach ($Factory->getChildren() as $Payment) {
+            $paymentType = $Payment->getAttribute('payment_type');
+
+            if (is_string($paymentType) && $paymentType !== '') {
+                $existingTypes[$paymentType] = true;
+            }
+        }
+
+        $createdPayments = [];
+
+        $allowedDefinitionKeys = array_flip(array_merge(
+            $Factory->getChildAttributes(),
+            ['title', 'workingTitle', 'description', 'orderInformation']
+        ));
+        unset($allowedDefinitionKeys['id']);
+
+        foreach ($paymentTypesToCreate as $paymentDefinition) {
+            $normalizedDefinition = $this->normalizePaymentInstallDefinition(
+                $paymentDefinition,
+                $allowedDefinitionKeys
+            );
+
+            if ($normalizedDefinition === null) {
+                continue;
+            }
+
+            [$paymentType, $definition] = $normalizedDefinition;
+
+            if (
+                !in_array($paymentType, $paymentTypes, true)
+                || isset($existingTypes[$paymentType])
+            ) {
+                continue;
+            }
+
+            $definition['payment_type'] = $paymentType;
+            $definition['active'] = 0;
+
+            $createdPayments[] = $Factory->createChild($definition);
+
+            $existingTypes[$paymentType] = true;
+        }
+
+        return $createdPayments;
+    }
+
+    /**
+     * @return Factory
+     */
+    protected function getPaymentFactory(): Factory
+    {
+        return Factory::getInstance();
+    }
+
+    /**
+     * @param mixed $paymentDefinition
+     * @param array<string, int> $allowedDefinitionKeys
+     * @return array{string, array<string, mixed>}|null
+     */
+    private function normalizePaymentInstallDefinition(
+        mixed $paymentDefinition,
+        array $allowedDefinitionKeys
+    ): ?array {
+        if (is_string($paymentDefinition)) {
+            return [$paymentDefinition, []];
+        }
+
+        if (!is_array($paymentDefinition)) {
+            return null;
+        }
+
+        $definition = array_intersect_key($paymentDefinition, $allowedDefinitionKeys);
+        $paymentType = $definition['payment_type'] ?? null;
+
+        if (!is_string($paymentType)) {
+            return null;
+        }
+
+        return [$paymentType, $definition];
     }
 
     /**
