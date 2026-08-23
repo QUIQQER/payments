@@ -22,11 +22,13 @@ class GatewayPurchaseTest extends SqlitePaymentTestCase
 
         parent::setUp();
 
-        Update::importDatabase(OPT_DIR . 'quiqqer/payment-transactions/database.xml');
-        Update::importDatabase(OPT_DIR . 'quiqqer/order/database.xml');
+        if ($this->ownsTestConnection()) {
+            Update::importDatabase(OPT_DIR . 'quiqqer/payment-transactions/database.xml');
+            Update::importDatabase(OPT_DIR . 'quiqqer/order/database.xml');
+        }
     }
 
-    public function testPurchaseCreatesTransactionAndOrderHistoryOnSqlite(): void
+    public function testPurchaseCreatesTransactionAndOrderHistory(): void
     {
         $Currency = new Currency([
             'currency' => 'EUR',
