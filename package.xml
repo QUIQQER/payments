@@ -9,6 +9,43 @@
             <locale group="quiqqer/payments" var="package.description"/>
         </description>
 
+        <capabilities schemaVersion="1">
+            <capability id="payments.payment-method-management">
+                <title>Payment Method Management</title>
+                <description>
+                    Registers provider-backed types and lets administrators localize, activate and prioritize payment methods, assign fees and constrain availability.
+                </description>
+            </capability>
+
+            <capability id="payments.checkout-payment-selection">
+                <title>Checkout Payment Selection</title>
+                <description>
+                    Adds payment selection to order workflows, filters unavailable methods, supports currency switching and handles zero-value orders as free.
+                </description>
+            </capability>
+
+            <capability id="payments.gateway-processing">
+                <title>Payment Gateway Processing</title>
+                <description>
+                    Provides provider-neutral gateway displays, callback routing and success, cancellation or error detection for external payment flows.
+                </description>
+            </capability>
+
+            <capability id="payments.recurring-payments">
+                <title>Recurring Payment Support</title>
+                <description>
+                    Defines a provider-neutral lifecycle for creating, capturing, cancelling, suspending and resuming recurring payment subscriptions.
+                </description>
+            </capability>
+
+            <capability id="payments.built-in-payment-methods">
+                <title>Built-in Payment Methods</title>
+                <description>
+                    Provides cash, invoice, advance and standard payment methods and provisions the common methods during package installation.
+                </description>
+            </capability>
+        </capabilities>
+
         <image src="URL_OPT_DIR/quiqqer/payments/bin/images/Logo.jpg"/>
 
         <preview>
