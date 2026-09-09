@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locales>
+    <groups name="quiqqer/payments" datatype="php,js">
+        <locale name="package.title">
+<de><![CDATA[QUIQQER - Shop - Payments]]></de>
+        </locale>
+
+        <locale name="package.description">
+<de><![CDATA[
+            QUIQQER Payments erweitert QUIQQER und das QUIQQER ERP System um eine einheitliche Zahlungsmethoden API.
+            Zusätzlich bringt es schon Barzahlung, Zahlung per Rechnung und Vorkasse als Zahlungsmethode mit.
+            ]]></de>
+        </locale>
+
+<!-- Settings -->
+        <locale name="window.erp.title">
+<de><![CDATA[Shop]]></de>
+        </locale>
+        <locale name="window.erp.payments.title">
+<de><![CDATA[Zahlungsarten]]></de>
+        </locale>
+        <locale name="payments.settings.title">
+<de><![CDATA[Zahlungsarten]]></de>
+        </locale>
+
+
+        <locale name="payment.cash.title">
+<de><![CDATA[Barzahlung]]></de>
+        </locale>
+        <locale name="payment.cash.workingTitle">
+<de><![CDATA[Barzahlung]]></de>
+        </locale>
+        <locale name="payment.cash.description">
+<de><![CDATA[]]></de>
+        </locale>
+
+        <locale name="payment.standard.title">
+<de><![CDATA[Standard Bezahlung]]></de>
+        </locale>
+        <locale name="payment.standard.workingTitle">
+<de><![CDATA[Einfache standard Bezahlung]]></de>
+        </locale>
+        <locale name="payment.standard.description">
+<de><![CDATA[]]></de>
+        </locale>
+
+        <locale name="payment.cashOnDelivery.title">
+<de><![CDATA[Bezahlung per Nachnahme]]></de>
+        </locale>
+        <locale name="payment.cashOnDelivery.workingTitle">
+<de><![CDATA[Bezahlung per Nachnahme]]></de>
+        </locale>
+        <locale name="payment.cashOnDelivery.description">
+<de><![CDATA[]]></de>
+        </locale>
+
+        <locale name="payment.invoice.title">
+<de><![CDATA[Zahlung per Rechnung]]></de>
+        </locale>
+        <locale name="payment.invoice.workingTitle">
+<de><![CDATA[Zahlung per Rechnung]]></de>
+        </locale>
+        <locale name="payment.invoice.description">
+<de><![CDATA[]]></de>
+        </locale>
+
+        <locale name="payment.advanced.payment.title">
+<de><![CDATA[Vorkasse]]></de>
+        </locale>
+        <locale name="payment.advanced.payment.workingTitle">
+<de><![CDATA[Vorkasse]]></de>
+        </locale>
+        <locale name="payment.advanced.payment.description">
+<de><![CDATA[]]></de>
+        </locale>
+
+        <locale name="menu.erp.title">
+<de><![CDATA[Shop]]></de>
+        </locale>
+        <locale name="menu.erp.payments.title">
+<de><![CDATA[Zahlungsarten]]></de>
+        </locale>
+
+        <locale name="payment.free.title">
+<de><![CDATA[Kostenlos]]></de>
+        </locale>
+        <locale name="payment.free.workingTitle">
+<de><![CDATA[Kostenlos]]></de>
+        </locale>
+        <locale name="payment.free.description" html="true">
+<de><![CDATA[]]></de>
+        </locale>
+
+        <locale name="permission.quiqqer.payments._header">
+<de><![CDATA[Zahlungsarten]]></de>
+        </locale>
+        <locale name="permission.quiqqer.payments.delete">
+<de><![CDATA[Darf Zahlungsarten löschen]]></de>
+        </locale>
+        <locale name="permission.quiqqer.payments.edit">
+<de><![CDATA[Darf Zahlungsarten editieren]]></de>
+        </locale>
+        <locale name="permission.quiqqer.payments.create">
+<de><![CDATA[Darf Zahlungsarten anlegen]]></de>
+        </locale>
+    </groups>
+
+    <groups name="quiqqer/payments" datatype="php">
+        <locale name="new.payment.paceholder">
+<de><![CDATA[Neue Zahlungsart]]></de>
+        </locale>
+        <locale name="exception.payment.not.found">
+<de><![CDATA[Die Zahlungsart [payment] wurde nicht gefunden.]]></de>
+        </locale>
+        <locale name="exception.payment.type.not.found">
+<de><![CDATA[Die Zahlungsmethode [paymentType] wurde nicht gefunden.]]></de>
+        </locale>
+        <locale name="exception.payment.type.not.abstractPayment">
+<de><![CDATA[Die Zahlungsmethode [paymentType] ist nicht von AbstractPayment abgeleitet.]]></de>
+        </locale>
+        <locale name="message.payment.saved.successfully">
+<de><![CDATA[Die Zahlungsart [payment] wurde erfolgreich gespeichert.]]></de>
+        </locale>
+        <locale name="message.payment.activate.successfully">
+<de><![CDATA[Die Zahlungsart [payment] wurde erfolgreich aktiviert.]]></de>
+        </locale>
+        <locale name="message.payment.deactivate.successfully">
+<de><![CDATA[Die Zahlungsart [payment] wurde erfolgreich deaktiviert.]]></de>
+        </locale>
+
+        <locale name="comment.add.payment">
+<de><![CDATA[Bezahlung per [payment] in Höhe von [amount] [currency] erhalten.]]></de>
+        </locale>
+
+        <locale name="exception.create.payment.class.not.found">
+<de><![CDATA[
+            Die Zahlungsart konnte nicht angelegt werden. Es ist ein Fehler bei der Zahlungsmethode aufgetreten.
+            ]]></de>
+        </locale>
+        <locale name="exception.create.unique.payment.already.exists">
+<de><![CDATA[Diese Zahlungsmethode können Sie nur einmal als Zahlungsart anlegen.]]></de>
+        </locale>
+
+        <locale name="text.invoice.information.for.invoicePayment.paid" html="true">
+<de><![CDATA[&nbsp;]]></de>
+        </locale>
+        <locale name="text.invoice.information.for.invoicePayment.pay.now" html="true">
+<de><![CDATA[Bitte überweisen Sie den Rechnungsbetrag auf das unten angegebene Konto.]]></de>
+        </locale>
+        <locale name="text.invoice.information.for.invoicePayment.pay.date" html="true">
+<de><![CDATA[Bitte überweisen Sie den Rechnungsbetrag bis zum [date] auf das unten angegebene Konto.]]></de>
+        </locale>
+        <locale name="advanced.payment.default.text" html="true">
+<de><![CDATA[
+            <p><strong>Zahlungsinformationen</strong></p>
+
+            <p>Bitte überweisen Sie den Betrag in Höhe von [toPay] mit der Angabe der Bestellnummer <strong>[orderId]</strong> auf folgendes Konto:</p>
+
+            <p>Name der Bank: [bankName]</p>
+            <p>Begünstigter: <strong>[company]</strong><br />
+            </p><p>IBAN: <strong>[bankIban]</strong><br />
+            BIC: [bankBic]</p>
+            ]]></de>
+        </locale>
+
+        <locale name="invoice.information.text.cache">
+<de><![CDATA[Betrag bar erhalten]]></de>
+        </locale>
+        <locale name="invoice.information.text.advancedPayment">
+<de><![CDATA[Betrag per Vorkasse erhalten]]></de>
+        </locale>
+        <locale name="ordering.step.title.Payment.supportedCurrencies">
+<de><![CDATA[Unterstützte Währungen:]]></de>
+        </locale>
+        <locale name="currency.settings.title">
+<de><![CDATA[Zahlungen:]]></de>
+        </locale>
+        <locale name="currency.settings.listUnsupportedPayment.text">
+<de><![CDATA[Nicht unterstützte Zahlungsarten anzeigen:]]></de>
+        </locale>
+        <locale name="currency.settings.listUnsupportedPayment.description">
+<de><![CDATA[
+            Auch wenn im Bestellprozess Zahlungsoptionen angeboten werden, die aktuell nicht zur Bestellung passen,
+            erhalten Kunden dennoch die Möglichkeit, diese anzuzeigen. Über eine eingebaute Funktion können sie
+            die Währung anpassen, um ihre bevorzugte Zahlungsoption zu nutzen.
+            ]]></de>
+        </locale>
+
+        <locale name="payment.plus">
+<de><![CDATA[zzgl.]]></de>
+        </locale>
+    </groups>
+
+    <groups name="quiqqer/payments" datatype="js">
+        <locale name="payment.edit.template.title">
+<de><![CDATA[Titel]]></de>
+        </locale>
+        <locale name="payment.edit.template.id">
+<de><![CDATA[ID]]></de>
+        </locale>
+        <locale name="payment.edit.template.type">
+<de><![CDATA[Zahlungsmethode]]></de>
+        </locale>
+        <locale name="payment.edit.template.usage">
+<de><![CDATA[Nutzung definieren]]></de>
+        </locale>
+        <locale name="payment.edit.template.usage.from">
+<de><![CDATA[Nutzbar von]]></de>
+        </locale>
+        <locale name="payment.edit.template.usage.to">
+<de><![CDATA[Nutzbar bis]]></de>
+        </locale>
+        <locale name="payment.edit.template.shopping.amount.of">
+<de><![CDATA[Einkaufsmenge von]]></de>
+        </locale>
+        <locale name="payment.edit.template.shopping.amount.to">
+<de><![CDATA[Einkaufsmenge bis]]></de>
+        </locale>
+        <locale name="payment.edit.template.purchase.value.of">
+<de><![CDATA[Einkaufswert von]]></de>
+        </locale>
+        <locale name="payment.edit.template.purchase.value.to">
+<de><![CDATA[Einkaufswert bis]]></de>
+        </locale>
+        <locale name="payment.edit.template.assignment">
+<de><![CDATA[Zuweisung]]></de>
+        </locale>
+        <locale name="payment.edit.template.areas">
+<de><![CDATA[Zonen]]></de>
+        </locale>
+        <locale name="payment.edit.template.calculationPriority">
+<de><![CDATA[Priorität]]></de>
+        </locale>
+
+        <locale name="payment.edit.template.assignment.product">
+<de><![CDATA[Produkt]]></de>
+        </locale>
+        <locale name="payment.edit.template.assignment.category">
+<de><![CDATA[Kategorie]]></de>
+        </locale>
+        <locale name="payment.edit.template.assignment.user">
+<de><![CDATA[Benutzer]]></de>
+        </locale>
+        <locale name="payment.edit.template.assignment.combine">
+<de><![CDATA[Kombinierbar mit]]></de>
+        </locale>
+        <locale name="payment.edit.template.assignment.currency">
+<de><![CDATA[Währungen]]></de>
+        </locale>
+        <locale name="payment.edit.template.customIcon">
+<de><![CDATA[Benutzerdefiniertes Bild]]></de>
+        </locale>
+        <locale name="payment.edit.template.customIcon.description" html="true">
+<de><![CDATA[Legen Sie ein eigenes Bild für die Zahlungsart fest.]]></de>
+        </locale>
+
+        <locale name="payment.edit.template.paymentFee.header">
+<de><![CDATA[Zahlungsgebühr (optional)]]></de>
+        </locale>
+        <locale name="payment.edit.template.paymentFee.amount">
+<de><![CDATA[Betrag Zahlungsgebühr]]></de>
+        </locale>
+        <locale name="payment.edit.template.paymentFee.title">
+<de><![CDATA[Name]]></de>
+        </locale>
+        <locale name="payment.edit.template.paymentFee.title.help">
+<de><![CDATA[
+Name welcher in der Zusammenfassung einer Rechnung oder Bestellung angezeigt werden soll.
+Beispiel: Nachnahmegebühr: 10,00 €
+            ]]></de>
+        </locale>
+
+        <locale name="window.delete.title">
+<de><![CDATA[Zahlungsart löschen]]></de>
+        </locale>
+        <locale name="window.delete.text">
+<de><![CDATA[Zahlungsart [payment] wirklich löschen?]]></de>
+        </locale>
+        <locale name="window.delete.information" html="true">
+<de><![CDATA[Möchten Sie die Zahlungsart wirklich löschen?<br /><br />Die Zahlungsart kann nicht wiederhergestellt werden. Beachten Sie, dass eventuell Bestellungen nicht mehr richtig ausgeführt werden können.]]></de>
+        </locale>
+
+        <locale name="window.create.title">
+<de><![CDATA[Zahlungsart erstellen]]></de>
+        </locale>
+        <locale name="window.create.text">
+<de><![CDATA[Eine neue Zahlungsart erstellen]]></de>
+        </locale>
+        <locale name="window.create.information" html="true">
+<de><![CDATA[
+            Die neu erstellte Zahlungsart ist inaktiv und wird nach dem Erstellen sofort geöffnet.
+            ]]></de>
+        </locale>
+
+        <locale name="window.create.paymentType">
+<de><![CDATA[Welche Zahlungsmethode soll Ihre Zahlungsart verwenden?]]></de>
+        </locale>
+
+        <locale name="window.search.title">
+<de><![CDATA[Eine Zahlungsart suchen]]></de>
+        </locale>
+        <locale name="control.select.search.placeholder">
+<de><![CDATA[Eine Zahlungsart suchen]]></de>
+        </locale>
+        <locale name="payment.type.panel.title">
+<de><![CDATA[Zahlungsart: ---]]></de>
+        </locale>
+        <locale name="payment.type.panel.title.payment">
+<de><![CDATA[Zahlungsart: [paymentType]]]></de>
+        </locale>
+
+        <locale name="panel.payment.order.information">
+<de><![CDATA[Bestellinformationstext]]></de>
+        </locale>
+        <locale name="grid.payments.type">
+<de><![CDATA[Zahlungsmethode]]></de>
+        </locale>
+
+        <locale name="order.change.to.supported.payment.title">
+<de><![CDATA[Währungswechsel durchführen?]]></de>
+        </locale>
+        <locale name="order.change.to.supported.payment.text">
+<de><![CDATA[Währungswechsel durchführen?]]></de>
+        </locale>
+        <locale name="order.change.to.supported.payment.information">
+<de><![CDATA[Die aktuelle Währung deiner Bestellung wird von dieser Zahlungsart nicht unterstützt. Um diese Option zu nutzen, muss die Währung deiner Bestellung angepasst werden. Wenn du diese Änderung vornehmen möchtest, wähle bitte eine Währung aus den unten aufgeführten Optionen.]]></de>
+        </locale>
+        <locale name="order.change.to.supported.payment.btnCancel">
+<de><![CDATA[Abbrechen]]></de>
+        </locale>
+        <locale name="order.change.to.supported.payment.btnSubmit">
+<de><![CDATA[Währung wechseln]]></de>
+        </locale>
+
+        <locale name="order.change.currency.title">
+<de><![CDATA[Währungswechsel durchführen?]]></de>
+        </locale>
+        <locale name="order.change.currency.text">
+<de><![CDATA[Währungswechsel durchführen?]]></de>
+        </locale>
+        <locale name="order.change.currency.information">
+<de><![CDATA[
+            Du kannst die Währung deiner Bestellung auf eine der unten aufgelisteten Optionen ändern.
+            Bitte beachte, dass nur eine Änderung der Währung möglich ist.
+            ]]></de>
+        </locale>
+        <locale name="order.change.currency.btnCancel">
+<de><![CDATA[Abbrechen]]></de>
+        </locale>
+        <locale name="order.change.currency.btnSubmit">
+<de><![CDATA[Währung wechseln]]></de>
+        </locale>
+
+
+    </groups>
+
+</locales>
