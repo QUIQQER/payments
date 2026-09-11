@@ -211,7 +211,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     },
                     {
                         name     : 'delete',
-                        text     : QUILocale.get('quiqqer/system', 'delete'),
+                        text     : QUILocale.get('quiqqer/core', 'delete'),
                         textimage: 'fa fa-trash',
                         disabled : true,
                         events   : {
@@ -221,32 +221,32 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                 ],
                 columnModel: [
                     {
-                        header   : QUILocale.get('quiqqer/system', 'priority'),
+                        header   : QUILocale.get('quiqqer/core', 'priority'),
                         dataIndex: 'priority',
                         dataType : 'number',
                         width    : 50
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'status'),
+                        header   : QUILocale.get('quiqqer/core', 'status'),
                         dataIndex: 'status',
                         dataType : 'button',
                         width    : 60,
                         className: 'grid-align-center'
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        header   : QUILocale.get('quiqqer/core', 'title'),
                         dataIndex: 'title',
                         dataType : 'string',
                         width    : 200
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'workingtitle'),
+                        header   : QUILocale.get('quiqqer/core', 'workingtitle'),
                         dataIndex: 'workingTitle',
                         dataType : 'string',
                         width    : 200
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        header   : QUILocale.get('quiqqer/core', 'id'),
                         dataIndex: 'id',
                         dataType : 'number',
                         width    : 30
@@ -448,7 +448,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                 maxHeight  : 400,
                 maxWidth   : 600,
                 ok_button  : {
-                    text     : QUILocale.get('quiqqer/system', 'delete'),
+                    text     : QUILocale.get('quiqqer/core', 'delete'),
                     textimage: 'fa fa-trash'
                 },
                 events     : {
