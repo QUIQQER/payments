@@ -70,32 +70,32 @@ define('package/quiqqer/payments/bin/backend/controls/search/Search', [
             this.$Grid = new Grid(this.$Container, {
                 columnModel      : [
                     {
-                        header   : QUILocale.get('quiqqer/system', 'priority'),
+                        header   : QUILocale.get('quiqqer/core', 'priority'),
                         dataIndex: 'priority',
                         dataType : 'number',
                         width    : 50
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'status'),
+                        header   : QUILocale.get('quiqqer/core', 'status'),
                         dataIndex: 'status',
                         dataType : 'node',
                         width    : 60,
                         className: 'grid-align-center'
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        header   : QUILocale.get('quiqqer/core', 'title'),
                         dataIndex: 'title',
                         dataType : 'string',
                         width    : 200
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'workingtitle'),
+                        header   : QUILocale.get('quiqqer/core', 'workingtitle'),
                         dataIndex: 'workingTitle',
                         dataType : 'string',
                         width    : 200
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        header   : QUILocale.get('quiqqer/core', 'id'),
                         dataIndex: 'id',
                         dataType : 'number',
                         width    : 30

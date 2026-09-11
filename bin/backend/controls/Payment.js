@@ -110,7 +110,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
             this.addButton({
                 name: 'delete',
-                title: QUILocale.get('quiqqer/system', 'delete'),
+                title: QUILocale.get('quiqqer/core', 'delete'),
                 icon: 'fa fa-trash',
                 events: {
                     onClick: this.openDeleteDialog
@@ -123,7 +123,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
             this.addCategory({
                 name: 'information',
-                text: QUILocale.get('quiqqer/system', 'information'),
+                text: QUILocale.get('quiqqer/core', 'information'),
                 icon: 'fa fa-file-o',
                 events: {
                     onClick: this.showInformation
@@ -132,7 +132,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
 
             this.addCategory({
                 name: 'description',
-                text: QUILocale.get('quiqqer/system', 'description'),
+                text: QUILocale.get('quiqqer/core', 'description'),
                 icon: 'fa fa-file-text-o',
                 events: {
                     onClick: this.showDescription
@@ -371,7 +371,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                         id: QUILocale.get(lg, 'payment.edit.template.id'),
                         type: QUILocale.get(lg, 'payment.edit.template.type'),
                         title: QUILocale.get(lg, 'payment.edit.template.title'),
-                        workingTitle: QUILocale.get('quiqqer/system', 'workingtitle'),
+                        workingTitle: QUILocale.get('quiqqer/core', 'workingtitle'),
                         usageHeader: QUILocale.get(lg, 'payment.edit.template.usage'),
                         usageFrom: QUILocale.get(lg, 'payment.edit.template.usage.from'),
                         usageTo: QUILocale.get(lg, 'payment.edit.template.usage.to'),
@@ -541,7 +541,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payment', [
                 maxHeight: 400,
                 maxWidth: 600,
                 ok_button: {
-                    text: QUILocale.get('quiqqer/system', 'delete'),
+                    text: QUILocale.get('quiqqer/core', 'delete'),
                     textimage: 'fa fa-trash'
                 },
                 events: {
