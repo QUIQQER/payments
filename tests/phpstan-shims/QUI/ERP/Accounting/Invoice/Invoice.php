@@ -18,6 +18,12 @@ class Invoice
         return null;
     }
 
+    /** @return array<string, mixed> */
+    public function getPaidStatusInformation(): array
+    {
+        return [];
+    }
+
     public function isPaid(): bool
     {
         return false;

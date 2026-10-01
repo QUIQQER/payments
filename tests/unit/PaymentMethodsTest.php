@@ -272,6 +272,62 @@ class PaymentMethodsTest extends TestCase
         self::assertNotSame('', $Payment->getInvoiceInformationText($InvoiceView));
     }
 
+    /**
+     * @return iterable<string, array{class-string<Invoice|InvoiceTemporary|InvoiceView>, float, float, bool}>
+     */
+    public static function advancePaymentInvoiceProvider(): iterable
+    {
+        $invoiceClasses = [
+            InvoiceTemporary::class,
+            Invoice::class,
+            InvoiceView::class
+        ];
+
+        foreach ($invoiceClasses as $invoiceClass) {
+            yield $invoiceClass . ' unpaid' => [$invoiceClass, 0.0, 100.0, false];
+            yield $invoiceClass . ' partially paid' => [$invoiceClass, 40.0, 60.0, false];
+            yield $invoiceClass . ' fully paid' => [$invoiceClass, 100.0, 0.0, true];
+            yield $invoiceClass . ' overpaid' => [$invoiceClass, 110.0, -10.0, true];
+            yield $invoiceClass . ' no payment on zero total' => [$invoiceClass, 0.0, 0.0, false];
+        }
+    }
+
+    /** @param class-string<Invoice|InvoiceTemporary|InvoiceView> $invoiceClass */
+    #[DataProvider('advancePaymentInvoiceProvider')]
+    public function testAdvancePaymentOnlyConfirmsFullyReceivedPayments(
+        string $invoiceClass,
+        float $paid,
+        float $toPay,
+        bool $paymentReceived
+    ): void {
+        $this->requireInvoicePackage();
+
+        $entityClass = $invoiceClass === InvoiceView::class ? Invoice::class : $invoiceClass;
+        $Invoice = $this->createMock($entityClass);
+        $Invoice->expects(self::once())->method('getPaidStatusInformation')->willReturn([
+            'paid' => $paid,
+            'toPay' => $toPay
+        ]);
+        $Invoice->expects(self::never())->method('isPaid');
+
+        if ($invoiceClass === InvoiceView::class) {
+            $InvoiceView = $this->createMock(InvoiceView::class);
+            $InvoiceView->method('getInvoice')->willReturn($Invoice);
+            $Invoice = $InvoiceView;
+        }
+
+        $localeKey = 'invoice.information.text.advancedPayment.pending';
+
+        if ($paymentReceived) {
+            $localeKey = 'invoice.information.text.advancedPayment';
+        }
+
+        self::assertSame(
+            QUI::getLocale()->get('quiqqer/payments', $localeKey),
+            (new AdvancePayment\Payment())->getInvoiceInformationText($Invoice)
+        );
+    }
+
     public function testPaymentsFacadeDiscoversProviderTypesAndHost(): void
     {
         $Payments = Payments::getInstance();
