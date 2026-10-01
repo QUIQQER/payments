@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<quiqqer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://www.quiqqer.com/docs/schemas/2.x/locale.xsd">
 <locales>
     <groups name="quiqqer/payments" datatype="php,js">
         <locale name="package.title">
@@ -168,6 +170,9 @@
         </locale>
         <locale name="invoice.information.text.advancedPayment">
 <de><![CDATA[Betrag per Vorkasse erhalten]]></de>
+        </locale>
+        <locale name="invoice.information.text.advancedPayment.pending">
+<de><![CDATA[Zahlung per Vorkasse durch Überweisung]]></de>
         </locale>
         <locale name="ordering.step.title.Payment.supportedCurrencies">
 <de><![CDATA[Unterstützte Währungen:]]></de>
@@ -355,3 +360,4 @@ Beispiel: Nachnahmegebühr: 10,00 €
     </groups>
 
 </locales>
+</quiqqer>
