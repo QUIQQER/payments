@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<quiqqer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://www.quiqqer.com/docs/schemas/2.x/locale.xsd">
 <locales>
     <groups name="quiqqer/payments" datatype="php,js">
         <locale name="package.title">
@@ -168,6 +170,9 @@
         </locale>
         <locale name="invoice.information.text.advancedPayment">
 <en><![CDATA[Amount received in advance]]></en>
+        </locale>
+        <locale name="invoice.information.text.advancedPayment.pending">
+<en><![CDATA[Payment in advance by bank transfer]]></en>
         </locale>
         <locale name="ordering.step.title.Payment.supportedCurrencies">
 <en><![CDATA[Supported currencies:]]></en>
@@ -356,3 +361,4 @@
     </groups>
 
 </locales>
+</quiqqer>

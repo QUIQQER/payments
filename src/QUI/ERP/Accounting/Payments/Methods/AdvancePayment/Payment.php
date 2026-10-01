@@ -99,6 +99,21 @@ class Payment extends QUI\ERP\Accounting\Payments\Api\AbstractPayment
     public function getInvoiceInformationText(
         QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
     ): string {
-        return QUI::getLocale()->get('quiqqer/payments', 'invoice.information.text.advancedPayment');
+        if ($Invoice instanceof QUI\ERP\Accounting\Invoice\InvoiceView) {
+            $Invoice = $Invoice->getInvoice();
+        }
+
+        // Recalculate payments so the text reflects the balance when the invoice is posted.
+        $paymentStatus = $Invoice->getPaidStatusInformation();
+
+        if (
+            isset($paymentStatus['paid'], $paymentStatus['toPay'])
+            && $paymentStatus['paid'] > 0
+            && $paymentStatus['toPay'] <= 0
+        ) {
+            return QUI::getLocale()->get('quiqqer/payments', 'invoice.information.text.advancedPayment');
+        }
+
+        return QUI::getLocale()->get('quiqqer/payments', 'invoice.information.text.advancedPayment.pending');
     }
 }
