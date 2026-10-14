@@ -93,6 +93,9 @@
         <locale name="permission.quiqqer.payments._header">
 <it><![CDATA[Modalità di pagamento]]></it>
         </locale>
+        <locale name="permission.quiqqer.payments.mcp">
+<it><![CDATA[Può gestire i metodi di pagamento tramite MCP]]></it>
+        </locale>
         <locale name="permission.quiqqer.payments.delete">
 <it><![CDATA[Consente di eliminare modalità di pagamento]]></it>
         </locale>

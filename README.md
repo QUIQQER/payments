@@ -42,10 +42,30 @@ Gateway packages register their payment types through the `payment` provider in
 `QUI\ERP\Accounting\Payments\Payments::getInstance()` to retrieve configured or
 user-available payment methods.
 
+## MCP administration
+
+With the optional `quiqqer/ai-mcp` package installed, the MCP provider exposes
+`payments_list`, `payments_get`, `payments_types`, `payments_create`,
+`payments_update`, `payments_activate`, and `payments_deactivate`.
+Run setup after updating the provider declaration, then reconnect the MCP client.
+
+Grant `quiqqer.payments.mcp` to the AI account. Creation additionally requires
+`quiqqer.payments.create`; updates, activation, and deactivation require
+`quiqqer.payments.edit`. These tools administer global payment methods.
+Order-specific availability remains part of the order workflow.
+
+Use a payment type's `name` from `payments_types` to create a disabled method.
+Review its settings before activating it. Text fields accept objects keyed by
+installed language codes. Updates preserve omitted fields and translations;
+`paymentFee: null` explicitly removes a fee. Restriction fields use the same
+comma-separated identifiers as the administration; empty strings clear them.
+Dates use the server's local time as `YYYY-MM-DDTHH:MM[:SS]`.
+
 ## Technical notes
 
 - Package name: `quiqqer/payments`
 - Minimum PHP version: 8.2
+- Minimum QUIQQER Core version: 2.34 (scoped permission context for MCP calls)
 - Database access is provided by QUIQQER's CRUD and DBAL layers.
 - Payment-type implementations extend
   `QUI\ERP\Accounting\Payments\Api\AbstractPayment`.
