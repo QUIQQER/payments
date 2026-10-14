@@ -22,11 +22,14 @@
   },
   "require": {
     "php": "^8.2",
-    "quiqqer/core": "^2.26.1",
+    "quiqqer/core": "^2.34",
     "quiqqer/erp": "^3.12 || ^4.0.1",
     "quiqqer/areas": "^2",
     "quiqqer/products": "^2.8.2",
     "quiqqer/payment-transactions": "^2"
+  },
+  "suggest": {
+    "quiqqer/ai-mcp": "Expose payment method administration through MCP"
   },
   "autoload": {
     "psr-4": {
