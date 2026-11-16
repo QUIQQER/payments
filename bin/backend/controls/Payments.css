@@ -1,0 +1,16 @@
+.quiqqer-payments-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    padding: 0;
+}
+
+.quiqqer-payments-delete .qui-button-text {
+    display: none;
+}
+
+.quiqqer-payments-panel button:focus-visible {
+    outline: 2px solid var(--qui-colors-primary);
+    outline-offset: 1px;
+}
