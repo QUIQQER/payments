@@ -31,10 +31,11 @@ define('package/quiqqer/payments/bin/backend/classes/Handler', [
         /**
          * Return active payments
          *
+         * @param {boolean} [refresh] - Reload instead of using the cached list.
          * @return {Promise}
          */
-        getPayments: function () {
-            if (this.$payments) {
+        getPayments: function (refresh = false) {
+            if (this.$payments && !refresh) {
                 return Promise.resolve(this.$payments);
             }
 
