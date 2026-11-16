@@ -13,7 +13,8 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
     'package/quiqqer/payments/bin/backend/Payments',
     'controls/grid/Grid',
     'Mustache',
-    'Locale'
+    'Locale',
+    'css!package/quiqqer/payments/bin/backend/controls/Payments.css'
 
 ], function (QUI, QUIPanel, QUIConfirm, QUIButton, Payments, Grid, Mustache, QUILocale) {
     "use strict";
@@ -43,6 +44,8 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
             this.parent(options);
 
             this.$Grid = null;
+            this.$refreshRequest = 0;
+            this.$destroyed = false;
 
             this.setAttributes({
                 icon : 'fa fa-credit-card-alt',
@@ -69,13 +72,14 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
          * Refresh the value and the display
          */
         refresh: function () {
-            if (!this.$Elm) {
-                return;
+            if (!this.$Elm || !this.$Grid || this.$destroyed) {
+                return Promise.resolve();
             }
 
             this.Loader.show();
 
             const self = this;
+            const request = ++this.$refreshRequest;
 
             this.$Grid.getButtons().filter(function (Btn) {
                 return Btn.getAttribute('name') === 'edit';
@@ -86,7 +90,11 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
             })[0].disable();
 
 
-            Payments.getPayments().then(function (result) {
+            return Payments.getPayments(true).then(function (result) {
+                if (self.$destroyed || request !== self.$refreshRequest) {
+                    return;
+                }
+
                 const toggle = function (Btn) {
                     const data      = Btn.getAttribute('data'),
                           paymentId = data.id,
@@ -108,7 +116,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                 const gridResult = [];
 
                 for (i = 0, len = result.length; i < len; i++) {
-                    entry = result[i];
+                    entry = {...result[i]};
 
                     if (parseInt(entry.active)) {
                         entry.status = {
@@ -140,22 +148,20 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
 
                     entry.paymentType_display = '';
 
-                    if (typeof entry.title === 'undefined' ||
-                        typeof entry.title[current] === 'undefined') {
-                        title = '---';
-                    } else if (typeOf(entry.title) === 'string') {
+                    if (typeof entry.title === 'string') {
                         title = entry.title;
-                    } else if (typeof entry.title[current] !== 'undefined') {
+                    } else if (entry.title && typeof entry.title[current] !== 'undefined') {
                         title = entry.title[current];
+                    } else {
+                        title = '---';
                     }
 
-                    if (typeof entry.workingTitle === 'undefined' ||
-                        typeof entry.workingTitle[current] === 'undefined') {
-                        workingTitle = '---';
-                    } else if (typeOf(entry.workingTitle) === 'string') {
+                    if (typeof entry.workingTitle === 'string') {
                         workingTitle = entry.workingTitle;
-                    } else if (typeof entry.workingTitle[current] !== 'undefined') {
+                    } else if (entry.workingTitle && typeof entry.workingTitle[current] !== 'undefined') {
                         workingTitle = entry.workingTitle[current];
+                    } else {
+                        workingTitle = '---';
                     }
 
                     entry.title = title;
@@ -168,11 +174,40 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     gridResult.push(entry);
                 }
 
-                self.$Grid.setData({
-                    data: gridResult
-                });
+                self.$setGridPage(gridResult);
+            }).finally(() => {
+                if (!this.$destroyed && request === this.$refreshRequest) {
+                    this.Loader.hide();
+                    this.$onResize();
+                }
+            });
+        },
 
-                self.Loader.hide();
+        $setGridPage: function (rows) {
+            const options = this.$Grid.options;
+            const field = options.sortOn === 'status' ? 'active' : options.sortOn;
+            const direction = options.sortBy === 'DESC' ? -1 : 1;
+
+            if (['priority', 'active', 'title', 'workingTitle', 'id', 'paymentType_display'].includes(field)) {
+                rows.sort((left, right) => {
+                    if (['priority', 'active', 'id'].includes(field)) {
+                        return direction * (Number(left[field] || 0) - Number(right[field] || 0));
+                    }
+
+                    return direction * String(left[field] ?? '').localeCompare(
+                        String(right[field] ?? ''),
+                        undefined,
+                        {numeric: true, sensitivity: 'base'}
+                    );
+                });
+            }
+
+            const perPage = Math.max(1, Number(options.perPage) || 50);
+            const page = Math.max(1, Math.min(Number(options.page) || 1, Math.ceil(rows.length / perPage)));
+            this.$Grid.setData({
+                data: rows.slice((page - 1) * perPage, page * perPage),
+                total: rows.length,
+                page: page
             });
         },
 
@@ -180,29 +215,26 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
          * event: on create
          */
         $onCreate: function () {
-            const Container = new Element('div', {
-                styles: {
-                    minHeight: 300,
-                    width    : '100%'
-                }
-            }).inject(this.getContent());
+            this.getElm().classList.add('quiqqer-payments-panel');
+            this.getContent().style.padding = '10px';
+            const Container = document.createElement('div');
+            Container.style.height = '100%';
+            this.getContent().appendChild(Container);
+            const deleteLabel = QUILocale.get(lg, 'panel.button.delete');
 
             this.$Grid = new Grid(Container, {
                 buttons    : [
                     {
                         name     : 'add',
-                        text     : QUILocale.get('quiqqer/core', 'add'),
+                        text     : QUILocale.get(lg, 'panel.button.create'),
                         textimage: 'fa fa-plus',
                         events   : {
                             onClick: this.$openCreateDialog
                         }
                     },
                     {
-                        type: 'separator'
-                    },
-                    {
                         name     : 'edit',
-                        text     : QUILocale.get('quiqqer/core', 'edit'),
+                        text     : QUILocale.get(lg, 'panel.button.edit'),
                         textimage: 'fa fa-edit',
                         disabled : true,
                         events   : {
@@ -211,20 +243,39 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     },
                     {
                         name     : 'delete',
-                        text     : QUILocale.get('quiqqer/core', 'delete'),
-                        textimage: 'fa fa-trash',
+                        text     : deleteLabel,
+                        title    : deleteLabel,
+                        'class'  : 'quiqqer-payments-delete',
+                        icon     : 'fa fa-trash',
+                        position : 'right',
                         disabled : true,
                         events   : {
                             onClick: this.$openDeleteDialog
                         }
                     }
                 ],
+                pagination: true,
+                perPage: 50,
+                page: 1,
+                serverSort: true,
+                sortOn: 'priority',
+                sortBy: 'ASC',
                 columnModel: [
+                    {
+                        header: QUILocale.get('quiqqer/core', 'id'),
+                        dataIndex: 'id',
+                        dataType: 'number',
+                        width: 80,
+                        className: 'grid-align-right',
+                        styles: {'justify-content': 'flex-end'}
+                    },
                     {
                         header   : QUILocale.get('quiqqer/core', 'priority'),
                         dataIndex: 'priority',
                         dataType : 'number',
-                        width    : 50
+                        width    : 110,
+                        className: 'grid-align-right',
+                        styles: {'justify-content': 'flex-end'}
                     },
                     {
                         header   : QUILocale.get('quiqqer/core', 'status'),
@@ -246,12 +297,6 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                         width    : 200
                     },
                     {
-                        header   : QUILocale.get('quiqqer/core', 'id'),
-                        dataIndex: 'id',
-                        dataType : 'number',
-                        width    : 30
-                    },
-                    {
                         header   : QUILocale.get(lg, 'grid.payments.type'),
                         dataIndex: 'paymentType_display',
                         dataType : 'string',
@@ -259,6 +304,13 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                     }
                 ]
             });
+
+            for (const name of ['add', 'edit', 'delete']) {
+                const Button = this.$Grid.getButton(name).getElm();
+                Button.style.removeProperty('outline');
+                Button.firstElementChild?.setAttribute('aria-hidden', 'true');
+            }
+            this.$Grid.getButton('delete').getElm().setAttribute('aria-label', deleteLabel);
 
             this.$Grid.addEvents({
                 onRefresh : this.refresh,
@@ -271,13 +323,15 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
          * event : on inject
          */
         $onInject: function () {
-            this.refresh();
+            return this.refresh();
         },
 
         /**
          * event: on destroy
          */
         $onDestroy: function () {
+            this.$destroyed = true;
+            ++this.$refreshRequest;
             Payments.removeEvents({
                 onPaymentDeactivate: this.$onPaymentChange,
                 onPaymentActivate  : this.$onPaymentChange,
@@ -302,8 +356,10 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
             }
 
             const size = Body.getSize();
-            this.$Grid.setHeight(size.y - 40);
-            this.$Grid.setWidth(size.x - 40);
+            return Promise.all([
+                this.$Grid.setHeight(size.y - 20),
+                this.$Grid.setWidth(size.x - 20)
+            ]);
         },
 
         /**
@@ -336,7 +392,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
         $onEditClick: function () {
             const data = this.$Grid.getSelectedData();
 
-            if (data.length) {
+            if (data.length === 1) {
                 this.openPayment(data[0].id);
             }
         },
@@ -422,7 +478,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
         $openDeleteDialog: function () {
             const selected = this.$Grid.getSelectedData();
 
-            if (!selected.length) {
+            if (selected.length !== 1) {
                 return;
             }
 
@@ -480,7 +536,7 @@ define('package/quiqqer/payments/bin/backend/controls/Payments', [
                 return Btn.getAttribute('name') === 'delete';
             })[0];
 
-            if (!selected.length) {
+            if (selected.length !== 1) {
                 Edit.disable();
                 Delete.disable();
                 return;

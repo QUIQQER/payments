@@ -76,6 +76,15 @@
         <locale name="menu.erp.title">
 <pl><![CDATA[Sklep]]></pl>
         </locale>
+        <locale name="panel.button.create" context="administration">
+<pl><![CDATA[Utwórz metodę płatności]]></pl>
+        </locale>
+        <locale name="panel.button.edit" context="administration">
+<pl><![CDATA[Edytuj metodę płatności]]></pl>
+        </locale>
+        <locale name="panel.button.delete" context="administration">
+<pl><![CDATA[Usuń metodę płatności]]></pl>
+        </locale>
         <locale name="menu.erp.payments.title">
 <pl><![CDATA[Formy płatności]]></pl>
         </locale>

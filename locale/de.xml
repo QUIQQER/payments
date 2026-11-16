@@ -79,6 +79,15 @@
         <locale name="menu.erp.title">
 <de><![CDATA[Shop]]></de>
         </locale>
+        <locale name="panel.button.create" context="administration">
+<de><![CDATA[Zahlungsart anlegen]]></de>
+        </locale>
+        <locale name="panel.button.edit" context="administration">
+<de><![CDATA[Zahlungsart bearbeiten]]></de>
+        </locale>
+        <locale name="panel.button.delete" context="administration">
+<de><![CDATA[Zahlungsart löschen]]></de>
+        </locale>
         <locale name="menu.erp.payments.title">
 <de><![CDATA[Zahlungsarten]]></de>
         </locale>
